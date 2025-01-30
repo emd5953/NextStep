@@ -1,20 +1,36 @@
+// App.js
 import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Auth from './components/Auth';
+import About from './pages/About';
 
 const App = () => {
   return (
-    <div style={styles.container}>
-      <header style={styles.header}>
-        <h1 style={styles.title}>NextStep</h1>
-        <p style={styles.subtitle}>Your next career move starts here.</p>
-      </header>
-      <main style={styles.main}>
-        <button style={styles.button}>Browse Jobs</button>
-      </main>
-      <Auth />
-    </div>
+    <Router>
+      <div style={styles.container}>
+        <header style={styles.header}>
+          <h1 style={styles.title}>NextStep</h1>
+          <p style={styles.subtitle}>Your next career move starts here.</p>
+          <nav style={styles.nav}>
+            <Link to="/" style={styles.navLink}>Home</Link>
+            <Link to="/about" style={styles.navLink}>About</Link>
+          </nav>
+        </header>
+        <main style={styles.main}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+          </Routes>
+          <Auth />
+        </main>
+      </div>
+    </Router>
   );
 };
+
+const Home = () => (
+  <button style={styles.button}>Browse Jobs</button>
+);
 
 const styles = {
   container: {
@@ -42,8 +58,25 @@ const styles = {
     fontSize: '1.2rem',
     opacity: 0.8,
   },
+  nav: {
+    marginTop: '10px',
+  },
+  navLink: {
+    margin: '0 10px',
+    color: '#fff',
+    textDecoration: 'none',
+    fontSize: '1rem',
+    transition: 'color 0.3s',
+  },
+  navLinkHover: {
+    color: '#ff7eb3',
+  },
   main: {
     marginTop: '20px',
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   button: {
     padding: '15px 30px',
