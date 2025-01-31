@@ -2,7 +2,9 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import About from './pages/About';
 import Auth from './components/Auth';
-import Swipe from './components/Swipe'; // <-- Import the swipe component
+import Swipe from './components/Swipe'; 
+import Profile from './pages/Profile'; 
+import Login from './pages/Login';  // <-- Import login page
 import './styles/App.css';
 
 function App() {
@@ -13,6 +15,7 @@ function App() {
           <nav className="nav">
             <a className="navLink" href="/">Home</a>
             <a className="navLink" href="/about">About</a>
+            <a className="navLink" href="/profile">Profile</a> 
           </nav>
           <Auth />
         </header>
@@ -34,6 +37,8 @@ function App() {
               }
             />
             <Route path="/about" element={<About />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/login" element={<Login />} /> {/* New Login Route */}
           </Routes>
         </main>
       </div>

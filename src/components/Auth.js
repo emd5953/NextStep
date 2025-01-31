@@ -1,21 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Auth = () => {
-  const [isSignedIn, setIsSignedIn] = useState(false);
+  const navigate = useNavigate();
 
-  const handleAuth = () => {
-    setIsSignedIn(!isSignedIn); // Toggle sign-in state
+  const handleSignInClick = () => {
+    // Redirect to /login
+    navigate('/login');
   };
 
   return (
     <div>
-      {isSignedIn ? (
-        <p>Welcome back! 🎉</p>
-      ) : (
-        <button className="authButton" onClick={handleAuth}>
-          Sign In
-        </button>
-      )}
+      <button className="authButton" onClick={handleSignInClick}>
+        Sign In
+      </button>
     </div>
   );
 };
