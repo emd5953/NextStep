@@ -30,6 +30,7 @@
     padding-right: 0 !important;
     margin-left: 0 !important;
     margin-right: 0 !important;
+    
   }
   
   /* Remove Bootstrap row gutters */
@@ -66,4 +67,3 @@
     transform: scale(1.05);
     box-shadow: 0 8px 20px rgba(255, 118, 136, 0.6);
   }
-  

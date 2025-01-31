@@ -1,21 +1,20 @@
 @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700,800,900');
 
-/* Set the html background and ensure full viewport height */
+/* Set the html background to match the site gradient */
 html {
-  background-color: #1f2029;
+  background: linear-gradient(135deg, #667eea, #764ba2);
 }
 
 html, body {
   min-height: 100vh;
 }
 
-/* Login page styles */
 body {
   font-family: 'Poppins', sans-serif;
   font-weight: 300;
   line-height: 1.7;
-  color: #ffeba7;
-  background-color: #1f2029; /* Dark background for login */
+  color: #fff;  /* White text for readability */
+  background: linear-gradient(135deg, #667eea, #764ba2);
 }
 
 a:hover {
@@ -23,11 +22,11 @@ a:hover {
 }
 
 .link {
-  color: #ffeba7;
+  color: #fff;
 }
 
 .link:hover {
-  color: #c4c3ca;
+  color: #ff7eb3;
 }
 
 p {
@@ -40,8 +39,9 @@ h4 {
 }
 
 h6 span {
-  padding: 0 20px;
+  font-size: 36px; /* Reduced header size for a smaller feel */
   font-weight: 700;
+  padding: 0 20px;
 }
 
 .section {
@@ -50,15 +50,29 @@ h6 span {
   display: block;
 }
 
-.full-height {
-  min-height: 100vh;
+/* --- Outer Container Overrides --- */
+/* These selectors target the outer wrappers that may be adding an unwanted white transparent layer */
+.section,
+.container-fluid,
+.row.no-gutters.full-height.justify-content-center,
+.col-12.text-center.align-self-center.py-5,
+.section.pb-5.pt-5.pt-sm-2.text-center {
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
 }
 
+.full-height {
+  min-height: 80vh;
+}
+
+/* Hide checkboxes but still allow label clicks */
 [type="checkbox"]:checked,
 [type="checkbox"]:not(:checked) {
   display: none;
 }
 
+/* Updated checkbox toggle using a complementary blue tone */
 .checkbox:checked + label,
 .checkbox:not(:checked) + label {
   position: relative;
@@ -70,7 +84,7 @@ h6 span {
   padding: 0;
   margin: 10px auto;
   cursor: pointer;
-  background-color: #ffeba7;
+  background-color: #7a90f7;
 }
 
 .checkbox:checked + label:before,
@@ -80,8 +94,8 @@ h6 span {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  color: #ffeba7;
-  background-color: #020305;
+  color: #fff;
+  background: linear-gradient(135deg, #667eea, #764ba2);
   font-family: 'unicons';
   content: '\eb4f';
   z-index: 20;
@@ -97,14 +111,18 @@ h6 span {
   transform: translateX(44px) rotate(-270deg);
 }
 
+/* Slightly smaller card dimensions */
 .card-3d-wrap {
   position: relative;
-  width: 440px;
+  width: 440px;       /* or your desired width */
   max-width: 100%;
-  height: 400px;
+  height: 400px;      /* or your desired height */
   transform-style: preserve-3d;
   perspective: 800px;
   margin-top: 60px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #667eea, #764ba2); /* Initial gradient if needed */
+  border-radius: 8px;  /* Optional: adds a slight rounding around the gradient border */
 }
 
 .card-3d-wrapper {
@@ -113,19 +131,27 @@ h6 span {
   position: absolute;
   transform-style: preserve-3d;
   transition: all 600ms ease-out;
+  background: linear-gradient(135deg, #667eea, #764ba2); /* Initial gradient if needed */
 }
 
 .card-front,
 .card-back {
   width: 100%;
   height: 100%;
-  background-color: #2b2e38;
   position: absolute;
   border-radius: 6px;
   transform-style: preserve-3d;
+  backface-visibility: hidden;
 }
 
+/* Login side remains with a dark gradient */
+.card-front {
+  background: linear-gradient(135deg, rgba(20, 20, 20, 0.95), rgba(197, 35, 200, 0.95));
+}
+
+/* Signup side is now pure black */
 .card-back {
+  background: linear-gradient(135deg, rgba(20, 20, 20, 0.95), rgba(197, 35, 200, 0.95));
   transform: rotateY(180deg);
 }
 
@@ -133,10 +159,11 @@ h6 span {
   transform: rotateY(180deg);
 }
 
+/* Adjust the inner wrapper for a smaller card */
 .center-wrap {
   position: absolute;
   width: 100%;
-  padding: 0 35px;
+  padding: 0 35px;    /* Reduced padding */
   top: 50%;
   left: 0;
   transform: translate3d(0, -50%, 35px) perspective(100px);
@@ -151,42 +178,45 @@ h6 span {
   padding: 0;
 }
 
+/* Input fields adjusted for a smaller UI */
 .form-style {
-  padding: 13px 20px;
-  padding-left: 55px;
-  height: 48px;
+  padding: 13px 20px;      /* Slightly reduced padding */
+  padding-left: 55px;       /* Adjust left padding accordingly */
+  height: 48px;             /* Standard height */
   width: 100%;
   font-weight: 500;
   border-radius: 4px;
-  font-size: 14px;
+  font-size: 14px;          /* Reduced font size */
   line-height: 22px;
   letter-spacing: 0.5px;
   outline: none;
-  color: #c4c3ca;
-  background-color: #1f2029;
+  color: #fff;
+  background-color: rgba(255, 255, 255, 0.1);
   border: none;
   transition: all 200ms linear;
-  box-shadow: 0 4px 8px 0 rgba(21, 21, 21, 0.2);
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 }
 
 .form-style:focus,
 .form-style:active {
   border: none;
   outline: none;
-  box-shadow: 0 4px 8px 0 rgba(21, 21, 21, 0.2);
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 }
 
 .input-icon {
   position: absolute;
   top: 0;
-  left: 18px;
-  height: 48px;
-  font-size: 24px;
+  left: 18px;             /* Adjusted to match new input padding */
+  height: 48px;           /* Same as input height */
+  font-size: 24px;        /* Standard icon size */
   line-height: 48px;
   text-align: left;
   transition: all 200ms linear;
+  color: #fff;
 }
 
+/* Updated button using a gradient derived from your website colors */
 .btn {
   border-radius: 4px;
   height: 44px;
@@ -198,14 +228,21 @@ h6 span {
   letter-spacing: 1px;
   display: inline-flex;
   align-items: center;
-  background-color: #ffeba7;
-  color: #d419a8;
+  background: linear-gradient(90deg, #7489f4, #8e7df2);
+  color: #fff;
   border: none;
   cursor: pointer;
 }
 
 .btn:hover {
-  background-color: #554985;
-  color: #ffeba7;
-  box-shadow: 0 8px 24px 0 rgba(16, 39, 112, 0.2);
+  background: linear-gradient(90deg, #8e7df2, #7489f4);
+  box-shadow: 0 8px 24px 0 rgba(0,0,0,0.2);
+}
+
+/* --- Overrides to remove the unwanted transparent boxes in the inner 3D card --- */
+.card-3d-wrap,
+.card-3d-wrapper {
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
 }

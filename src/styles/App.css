@@ -7,7 +7,7 @@
   font-family: 'Poppins', sans-serif;
   min-height: 100vh;
   width: 100%;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, rgba(20,20,20,0.95), rgba(197,35,200,0.95));
   color: #fff;
   /* Remove any horizontal padding so the background spans edge-to-edge */
   padding: 0;

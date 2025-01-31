@@ -1,96 +1,105 @@
+/* Reset default margins/padding and disable scrolling globally */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
 /* About.css */
 .about-container {
-    font-family: 'Poppins', sans-serif;
-    text-align: center;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: #fff;
-    /* Remove horizontal padding */
-    padding: 40px 0;
-    box-sizing: border-box;
-  }
-  
-  /* Override global header styles by using a more specific selector */
-  .about-container .header {
-    display: block;
-    text-align: center;
-    margin-bottom: 40px;
-    padding: 0;
-  }
-  
-  .title {
-    font-size: 3rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    margin: 0 0 10px 0;
-  }
-  
-  .subtitle {
-    font-size: 1.2rem;
-    opacity: 0.9;
-  }
-  
-  .section {
-    background-color: rgba(255, 255, 255, 0.1);
-    padding: 30px 20px;
-    border-radius: 10px;
-    margin: 20px auto;
-    max-width: 800px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s, box-shadow 0.3s;
-  }
-  
-  .section:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-  }
-  
-  .iconContainer {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 15px;
-  }
-  
-  .icon {
-    font-size: 2rem;
-    color: #ff7eb3;
-  }
-  
-  .sectionTitle {
-    font-size: 1.8rem;
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .text {
-    font-size: 1rem;
-    line-height: 1.6;
-    max-width: 700px;
-    margin: 0 auto;
-  }
-  
-  .list {
-    list-style-type: none;
-    padding: 0;
-    text-align: left;
-    max-width: 700px;
-    margin: 0 auto;
-  }
-  
-  .listItem {
-    font-size: 1rem;
-    line-height: 1.8;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-  }
-  
-  .footer {
-    margin-top: 50px;
-    font-size: 1rem;
-    opacity: 0.8;
-  }
-  
+  font-family: 'Poppins', sans-serif;
+  text-align: center;
+  height: 100vh; /* Use exact viewport height instead of min-height */
+  background: linear-gradient(135deg, rgba(20,20,20,0.95), rgba(197,35,200,0.95));
+  color: #fff;
+  /* Remove extra vertical spacing */
+  padding: 40px 0;
+  box-sizing: border-box;
+  overflow: hidden; /* Ensure container does not allow scrolling */
+}
+
+/* Override global header styles by using a more specific selector */
+.about-container .header {
+  display: block;
+  text-align: center;
+  margin-bottom: 40px;
+  padding: 0;
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin: 0 0 10px 0;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  opacity: 0.9;
+}
+
+.section {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 30px 20px;
+  border-radius: 10px;
+  margin: 20px auto;  /* This margin centers the section, but if too many sections are added they might extend the container. */
+  max-width: 800px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.section:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.iconContainer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+
+.icon {
+  font-size: 2rem;
+  color: #ff7eb3;
+}
+
+.sectionTitle {
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.text {
+  font-size: 1rem;
+  line-height: 1.6;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.list {
+  list-style-type: none;
+  padding: 0;
+  text-align: left;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.listItem {
+  font-size: 1rem;
+  line-height: 1.8;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+/* Footer styling left in case you add footer content later */
+.footer {
+  margin-top: 50px;
+  font-size: 1rem;
+  opacity: 0.8;
+}
