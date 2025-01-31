@@ -1,36 +1,44 @@
-// App.js
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import Auth from './components/Auth';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import About from './pages/About';
-import './styles/App.css'; // Import the CSS file
+import Auth from './components/Auth';
+import Swipe from './components/Swipe'; // <-- Import the swipe component
+import './styles/App.css';
 
-const App = () => {
+function App() {
   return (
     <Router>
       <div className="container">
         <header className="header">
-          <h1 className="title">NextStep</h1>
-          <p className="subtitle">Your next career move starts here.</p>
           <nav className="nav">
-            <Link to="/" className="navLink">Home</Link>
-            <Link to="/about" className="navLink">About</Link>
+            <a className="navLink" href="/">Home</a>
+            <a className="navLink" href="/about">About</a>
           </nav>
+          <Auth />
         </header>
+
         <main className="main">
+          <div className="brandingCenter">
+            <h1 className="title">NextStep</h1>
+            <p className="subtitle">Your next career move, simplified.</p>
+          </div>
+
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route
+              path="/"
+              element={
+                <div className="content">
+                  {/* Our new swiping component! */}
+                  <Swipe />
+                </div>
+              }
+            />
             <Route path="/about" element={<About />} />
           </Routes>
-          <Auth />
         </main>
       </div>
     </Router>
   );
-};
-
-const Home = () => (
-  <button className="button">Browse Jobs</button>
-);
+}
 
 export default App;

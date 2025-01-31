@@ -8,30 +8,16 @@ const Auth = () => {
   };
 
   return (
-    <div style={styles.container}>
+    <div>
       {isSignedIn ? (
         <p>Welcome back! 🎉</p>
       ) : (
-        <button style={styles.button} onClick={handleAuth}>Sign In</button>
+        <button className="authButton" onClick={handleAuth}>
+          Sign In
+        </button>
       )}
     </div>
   );
-};
-
-const styles = {
-  container: {
-    textAlign: 'center',
-    marginTop: '20px',
-  },
-  button: {
-    padding: '10px 20px',
-    fontSize: '18px',
-    backgroundColor: '#28a745',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer',
-  },
 };
 
 export default Auth;

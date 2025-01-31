@@ -1,73 +1,140 @@
-/* styles/App.css */
+/* App.css */
 
+/* ===========================
+   Container
+=========================== */
 .container {
-    font-family: 'Poppins', sans-serif;
-    text-align: center;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: #fff;
-    padding: 20px;
-  }
-  
+  font-family: 'Poppins', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+  padding: 40px;
+  position: relative;
+}
+
+/* ===========================
+   Header
+=========================== */
+.header {
+  /* Place nav links and sign-in on one line */
+  display: flex;
+  align-items: center;
+  justify-content: space-between; 
+  margin-bottom: 40px;
+  padding: 0 10px; 
+}
+
+.nav {
+  display: flex;
+  gap: 20px;
+}
+
+/* Common button/link styles */
+.navLink,
+.authButton {
+  padding: 12px 25px;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 30px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navLink {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.navLink:hover {
+  background: linear-gradient(90deg, #ff758c, #ff7eb3);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 118, 136, 0.4);
+  border-color: transparent;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.authButton {
+  background: linear-gradient(90deg, #ff758c, #ff7eb3);
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  box-shadow: 0 5px 15px rgba(255, 118, 136, 0.4);
+}
+
+.authButton:hover {
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: 0 8px 25px rgba(255, 118, 136, 0.6);
+}
+
+/* ===========================
+   Main & Branding
+=========================== */
+.main {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  flex-grow: 1;
+}
+
+/* Center the branding vertically in the page 
+   (optional: you can tweak min-height if you want more or less vertical space) */
+.brandingCenter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 40vh; /* Adjust to push branding further down or up */
+  text-align: center;
+}
+
+.title {
+  font-size: 2.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  margin: 0;
+  background: linear-gradient(90deg, #fff, #ff7eb3);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  opacity: 0.9;
+  margin: 10px 0 0;
+  letter-spacing: 1px;
+}
+
+/* Home Page Content */
+.content {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+/* ===========================
+   Responsive
+=========================== */
+@media (max-width: 768px) {
   .header {
-    margin-bottom: 20px;
-  }
-  
-  .title {
-    font-size: 3rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-  }
-  
-  .subtitle {
-    font-size: 1.2rem;
-    opacity: 0.8;
-  }
-  
-  .nav {
-    margin-top: 10px;
-  }
-  
-  .navLink {
-    margin: 0 10px;
-    color: #fff;
-    text-decoration: none;
-    font-size: 1rem;
-    transition: color 0.3s;
-  }
-  
-  .navLink:hover {
-    color: #ff7eb3;
-  }
-  
-  .main {
-    margin-top: 20px;
-    width: 100%;
-    display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
   }
-  
-  .button {
-    padding: 15px 30px;
-    font-size: 18px;
-    font-weight: bold;
-    background: linear-gradient(90deg, #ff758c, #ff7eb3);
-    color: #fff;
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 5px 15px rgba(255, 118, 136, 0.4);
+
+  .nav {
+    margin-bottom: 10px;
   }
-  
-  .button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 20px rgba(255, 118, 136, 0.6);
+
+  .navLink,
+  .authButton {
+    width: 100%;
+    justify-content: center;
   }
-  
+}

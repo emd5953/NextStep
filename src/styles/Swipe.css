@@ -1,0 +1,44 @@
+/* Swipe.css */
+
+.swipeContainer {
+    position: relative;
+    width: 100%;
+    height: 400px; /* Adjust as needed */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  
+  .jobCard {
+    position: absolute;
+    width: 300px;
+    max-width: 90%;
+    background: #fff;
+    color: #333;
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    cursor: grab;
+    transition: transform 0.2s ease;
+    touch-action: none; /* important for mobile swipes */
+    user-select: none;           /* Standard CSS property */
+    -webkit-user-select: none;   /* For Safari */
+    -moz-user-select: none;      /* For older Firefox */
+    -ms-user-select: none;       /* For older IE/Edge */
+  }
+  
+  .jobCard:active {
+    cursor: grabbing;
+  }
+  
+  .jobCard h2 {
+    margin-top: 0;
+    color: #ff758c; /* accent color if you like */
+  }
+  
+  .jobCard p {
+    margin: 10px 0;
+    line-height: 1.4;
+  }
+  
