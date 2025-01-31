@@ -10,7 +10,7 @@ const Auth = () => {
   return (
     <div style={styles.container}>
       {isSignedIn ? (
-        <p style={styles.message}>Welcome back! 🎉</p>
+        <p>Welcome back! 🎉</p>
       ) : (
         <button style={styles.button} onClick={handleAuth}>Sign In</button>
       )}
@@ -21,24 +21,16 @@ const Auth = () => {
 const styles = {
   container: {
     textAlign: 'center',
-    marginTop: '30px',
+    marginTop: '20px',
   },
   button: {
-    padding: '12px 25px',
+    padding: '10px 20px',
     fontSize: '18px',
-    fontWeight: 'bold',
-    background: 'linear-gradient(90deg, #ff9966, #ff5e62)',
+    backgroundColor: '#28a745',
     color: '#fff',
     border: 'none',
-    borderRadius: '25px',
+    borderRadius: '5px',
     cursor: 'pointer',
-    transition: 'all 0.3s ease',
-    boxShadow: '0 5px 15px rgba(255, 94, 98, 0.4)',
-  },
-  message: {
-    fontSize: '1.2rem',
-    fontWeight: 'bold',
-    color: '#fff',
   },
 };
 
