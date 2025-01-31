@@ -1,16 +1,16 @@
 /* App.css */
 
 /* ===========================
-   Container
+   App Container (full width)
 =========================== */
-.container {
+.app-container {
   font-family: 'Poppins', sans-serif;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+  width: 100%;
   background: linear-gradient(135deg, #667eea, #764ba2);
   color: #fff;
-  padding: 40px;
+  /* Remove any horizontal padding so the background spans edge-to-edge */
+  padding: 0;
   position: relative;
 }
 
@@ -18,12 +18,12 @@
    Header
 =========================== */
 .header {
-  /* Place nav links and sign-in on one line */
+  /* Adjust as needed; note that here we only add minimal horizontal padding */
   display: flex;
   align-items: center;
   justify-content: space-between; 
   margin-bottom: 40px;
-  padding: 0 10px; 
+  padding: 0 10px;
 }
 
 .nav {
@@ -31,7 +31,6 @@
   gap: 20px;
 }
 
-/* Common button/link styles */
 .navLink,
 .authButton {
   padding: 12px 25px;
@@ -79,19 +78,16 @@
 =========================== */
 .main {
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
+  /* Remove max-width/margin auto so main spans the full width if desired */
   flex-grow: 1;
 }
 
-/* Center the branding vertically in the page 
-   (optional: you can tweak min-height if you want more or less vertical space) */
 .brandingCenter {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 40vh; /* Adjust to push branding further down or up */
+  min-height: 40vh;
   text-align: center;
 }
 
@@ -113,7 +109,6 @@
   letter-spacing: 1px;
 }
 
-/* Home Page Content */
 .content {
   text-align: center;
   padding: 40px 20px;
@@ -127,11 +122,9 @@
     flex-direction: column;
     align-items: flex-start;
   }
-
   .nav {
     margin-bottom: 10px;
   }
-
   .navLink,
   .authButton {
     width: 100%;

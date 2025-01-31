@@ -4,13 +4,14 @@ import About from './pages/About';
 import Auth from './components/Auth';
 import Swipe from './components/Swipe'; 
 import Profile from './pages/Profile'; 
-import Login from './pages/Login';  // <-- Import login page
+import Login from './pages/Login';
 import './styles/App.css';
 
 function App() {
   return (
     <Router>
-      <div className="container">
+      {/* Use a custom class name ("app-container") to avoid Bootstrap’s container defaults */}
+      <div className="app-container">
         <header className="header">
           <nav className="nav">
             <a className="navLink" href="/">Home</a>
@@ -31,14 +32,13 @@ function App() {
               path="/"
               element={
                 <div className="content">
-                  {/* Our new swiping component! */}
                   <Swipe />
                 </div>
               }
             />
             <Route path="/about" element={<About />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/login" element={<Login />} /> {/* New Login Route */}
+            <Route path="/login" element={<Login />} />
           </Routes>
         </main>
       </div>
