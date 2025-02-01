@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import '../styles/Profile.css';
 
 const Profile = () => {
-  // Local state (for now) to track the form
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [phone, setPhone] = useState('');
@@ -20,7 +19,6 @@ const Profile = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // For now, just console log the data
     console.log({
       firstName,
       lastName,

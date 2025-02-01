@@ -1,19 +1,14 @@
-// About.js
 import React, { useEffect } from 'react';
 import { FaBullseye, FaRocket, FaShieldAlt, FaChartLine } from 'react-icons/fa';
 import '../styles/About.css';
 
 const About = () => {
   useEffect(() => {
-    // Save original overflow and height values
     const originalBodyOverflow = document.body.style.overflow;
     const originalHtmlOverflow = document.documentElement.style.overflow;
-    
-    // Disable scrolling on body and html
     document.body.style.overflow = 'hidden';
     document.documentElement.style.overflow = 'hidden';
 
-    // Also disable overflow on the app container
     const appContainer = document.querySelector('.app-container');
     let originalAppContainerOverflow = '';
     let originalAppContainerHeight = '';
@@ -25,7 +20,6 @@ const About = () => {
     }
 
     return () => {
-      // Restore original overflow/height values on unmount
       document.body.style.overflow = originalBodyOverflow;
       document.documentElement.style.overflow = originalHtmlOverflow;
       if (appContainer) {
@@ -84,8 +78,6 @@ const About = () => {
           NextStep helps users <strong>track and analyze</strong> job applications with built-in insights, so they can refine their job search strategy.
         </p>
       </section>
-      
-      {/* Footer removed as requested */}
     </div>
   );
 };

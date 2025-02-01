@@ -1,4 +1,3 @@
-// pages/Login.js
 import React, { useState } from 'react';
 import '../styles/Login.css';
 
@@ -15,14 +14,12 @@ const Login = () => {
 
   const handleLoginSubmit = (e) => {
     e.preventDefault();
-    // Handle login logic (API calls, etc.)
     console.log('Logging in with:', { loginEmail, loginPassword });
     alert('Login button clicked! (Check console)');
   };
 
   const handleSignupSubmit = (e) => {
     e.preventDefault();
-    // Handle registration logic (API calls, etc.)
     console.log('Registering with:', {
       signupName,
       signupPhone,

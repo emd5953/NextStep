@@ -1,9 +1,16 @@
-/* Reset default margins/padding and disable scrolling globally */
+/* Reset default margins/padding and enable vertical scrolling while hiding the scrollbar globally */
 html,
 body {
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  overflow-y: scroll;      /* Allow vertical scrolling */
+  scrollbar-width: none;   /* Hide scrollbar in Firefox */
+}
+
+/* Hide scrollbar for WebKit browsers (Chrome, Safari, etc.) globally */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
 }
 
 /* About.css */
@@ -13,10 +20,15 @@ body {
   height: 100vh; /* Use exact viewport height instead of min-height */
   background: linear-gradient(135deg, rgba(20,20,20,0.95), rgba(197,35,200,0.95));
   color: #fff;
-  /* Remove extra vertical spacing */
   padding: 40px 0;
   box-sizing: border-box;
-  overflow: hidden; /* Ensure container does not allow scrolling */
+  overflow-y: auto;  /* Enable scrolling on this container */
+  scrollbar-width: none; /* Hide scrollbar in Firefox */
+}
+
+/* Hide scrollbar for WebKit browsers on .about-container */
+.about-container::-webkit-scrollbar {
+  display: none;
 }
 
 /* Override global header styles by using a more specific selector */
@@ -44,7 +56,7 @@ body {
   background-color: rgba(255, 255, 255, 0.1);
   padding: 30px 20px;
   border-radius: 10px;
-  margin: 20px auto;  /* This margin centers the section, but if too many sections are added they might extend the container. */
+  margin: 20px auto;  /* This margin centers the section */
   max-width: 800px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s, box-shadow 0.3s;
