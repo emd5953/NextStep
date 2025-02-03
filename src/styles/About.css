@@ -1,45 +1,41 @@
-/* Reset default margins/padding and enable vertical scrolling while hiding the scrollbar globally */
+/* File: /src/styles/About.css */
+
 html,
 body {
   margin: 0;
   padding: 0;
-  overflow-y: scroll;      /* Allow vertical scrolling */
-  scrollbar-width: none;   /* Hide scrollbar in Firefox */
+  overflow-y: scroll;
+  scrollbar-width: none;
 }
 
-/* Hide scrollbar for WebKit browsers (Chrome, Safari, etc.) globally */
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
   display: none;
 }
 
-/* About.css */
 .about-container {
   font-family: 'Poppins', sans-serif;
   text-align: center;
-  height: 100vh; /* Use exact viewport height instead of min-height */
+  height: 100vh;
   background: linear-gradient(135deg, rgba(20,20,20,0.95), rgba(197,35,200,0.95));
   color: #fff;
   padding: 40px 0;
   box-sizing: border-box;
-  overflow-y: auto;  /* Enable scrolling on this container */
-  scrollbar-width: none; /* Hide scrollbar in Firefox */
+  overflow-y: auto;
+  scrollbar-width: none;
 }
 
-/* Hide scrollbar for WebKit browsers on .about-container */
 .about-container::-webkit-scrollbar {
   display: none;
 }
 
-/* Override global header styles by using a more specific selector */
-.about-container .header {
-  display: block;
-  text-align: center;
+/* Header for About page */
+.about-header {
   margin-bottom: 40px;
   padding: 0;
 }
 
-.title {
+.about-header__title {
   font-size: 3rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -47,38 +43,39 @@ body::-webkit-scrollbar {
   margin: 0 0 10px 0;
 }
 
-.subtitle {
+.about-header__subtitle {
   font-size: 1.2rem;
   opacity: 0.9;
 }
 
-.section {
+/* About sections */
+.about-section {
   background-color: rgba(255, 255, 255, 0.1);
   padding: 30px 20px;
   border-radius: 10px;
-  margin: 20px auto;  /* This margin centers the section */
+  margin: 20px auto;
   max-width: 800px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.section:hover {
+.about-section:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
 }
 
-.iconContainer {
+.about-section__icon-container {
   display: flex;
   justify-content: center;
   margin-bottom: 15px;
 }
 
-.icon {
+.about-section__icon {
   font-size: 2rem;
   color: #ff7eb3;
 }
 
-.sectionTitle {
+.about-section__title {
   font-size: 1.8rem;
   margin-bottom: 15px;
   display: flex;
@@ -86,14 +83,14 @@ body::-webkit-scrollbar {
   justify-content: center;
 }
 
-.text {
+.about-section__text {
   font-size: 1rem;
   line-height: 1.6;
   max-width: 700px;
   margin: 0 auto;
 }
 
-.list {
+.about-section__list {
   list-style-type: none;
   padding: 0;
   text-align: left;
@@ -101,17 +98,10 @@ body::-webkit-scrollbar {
   margin: 0 auto;
 }
 
-.listItem {
+.about-section__list-item {
   font-size: 1rem;
   line-height: 1.8;
   margin-bottom: 10px;
   display: flex;
   align-items: center;
-}
-
-/* Footer styling left in case you add footer content later */
-.footer {
-  margin-top: 50px;
-  font-size: 1rem;
-  opacity: 0.8;
 }

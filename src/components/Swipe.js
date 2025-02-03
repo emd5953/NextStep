@@ -1,3 +1,4 @@
+// File: /src/components/Swipe.js
 import React, { useState } from 'react';
 import '../styles/Swipe.css';
 
@@ -38,8 +39,8 @@ const jobs = [
 // A simple single-card “infinite” swiping component
 const Swipe = () => {
   const [currentIndex, setCurrentIndex] = useState(0); // Which job we’re on
-  const [isSwiping, setIsSwiping] = useState(false); 
-  const [startX, setStartX] = useState(0); 
+  const [isSwiping, setIsSwiping] = useState(false);
+  const [startX, setStartX] = useState(0);
   const [currentX, setCurrentX] = useState(0);
 
   // The currently visible job object
@@ -93,14 +94,14 @@ const Swipe = () => {
 
   return (
     <div
-      className="swipeContainer"
+      className="swipe-container"
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp} /* if they drag off the card area */
     >
       {/* The main job card */}
       <div
-        className="jobCard"
+        className="swipe-job-card"
         style={{
           transform: `translateX(${currentX}px) rotate(${currentX * 0.05}deg)`,
         }}

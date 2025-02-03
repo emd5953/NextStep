@@ -1,3 +1,4 @@
+// File: /src/components/Auth.js
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,7 +12,7 @@ const Auth = () => {
 
   return (
     <div>
-      <button className="authButton" onClick={handleSignInClick}>
+      <button className="auth__button" onClick={handleSignInClick}>
         Sign In
       </button>
     </div>

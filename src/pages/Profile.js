@@ -1,3 +1,4 @@
+// File: /src/pages/Profile.js
 import React, { useState } from 'react';
 import '../styles/Profile.css';
 

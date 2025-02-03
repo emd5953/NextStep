@@ -1,3 +1,4 @@
+// File: /src/pages/Login.js
 import React, { useState } from 'react';
 import '../styles/Login.css';
 
@@ -31,48 +32,48 @@ const Login = () => {
 
   return (
     <div className="login-page">
-      <div className="section">
+      <div className="login-section">
         <div className="container-fluid">
           <div className="row no-gutters full-height justify-content-center">
             <div className="col-12 text-center align-self-center py-5">
-              <div className="section pb-5 pt-5 pt-sm-2 text-center">
+              <div className="login-section pb-5 pt-5 pt-sm-2 text-center">
                 <h6 className="mb-0 pb-3">
                   <span>Log In </span>
                   <span>Sign Up</span>
                 </h6>
-                <input className="checkbox" type="checkbox" id="reg-log" name="reg-log" />
+                <input className="login-checkbox" type="checkbox" id="reg-log" name="reg-log" />
                 <label htmlFor="reg-log"></label>
-                <div className="card-3d-wrap mx-auto">
-                  <div className="card-3d-wrapper">
+                <div className="login-card-3d-wrap mx-auto">
+                  <div className="login-card-3d-wrapper">
                     {/* Card Front – Login */}
-                    <div className="card-front">
-                      <div className="center-wrap">
-                        <div className="section text-center">
+                    <div className="login-card-front">
+                      <div className="login-center-wrap">
+                        <div className="login-section-content text-center">
                           <h4 className="mb-4 pb-3">Log In</h4>
                           <form onSubmit={handleLoginSubmit}>
-                            <div className="form-group">
+                            <div className="login-form-group">
                               <input
                                 type="email"
-                                className="form-style"
+                                className="login-form-input"
                                 placeholder="Email"
                                 value={loginEmail}
                                 onChange={(e) => setLoginEmail(e.target.value)}
                                 required
                               />
-                              <i className="input-icon uil uil-at"></i>
+                              <i className="login-form-icon uil uil-at"></i>
                             </div>
-                            <div className="form-group mt-2">
+                            <div className="login-form-group mt-2">
                               <input
                                 type="password"
-                                className="form-style"
+                                className="login-form-input"
                                 placeholder="Password"
                                 value={loginPassword}
                                 onChange={(e) => setLoginPassword(e.target.value)}
                                 required
                               />
-                              <i className="input-icon uil uil-lock-alt"></i>
+                              <i className="login-form-icon uil uil-lock-alt"></i>
                             </div>
-                            <button type="submit" className="btn mt-4">Login</button>
+                            <button type="submit" className="login-btn mt-4">Login</button>
                           </form>
                           <p className="mb-0 mt-4 text-center">
                             <a href="https://www.web-leb.com/code" className="link">Forgot your password?</a>
@@ -81,64 +82,64 @@ const Login = () => {
                       </div>
                     </div>
                     {/* Card Back – Sign Up */}
-                    <div className="card-back">
-                      <div className="center-wrap">
-                        <div className="section text-center">
+                    <div className="login-card-back">
+                      <div className="login-center-wrap">
+                        <div className="login-section-content text-center">
                           <h4 className="mb-3 pb-3">Sign Up</h4>
                           <form onSubmit={handleSignupSubmit}>
-                            <div className="form-group">
+                            <div className="login-form-group">
                               <input
                                 type="text"
-                                className="form-style"
+                                className="login-form-input"
                                 placeholder="Full Name"
                                 value={signupName}
                                 onChange={(e) => setSignupName(e.target.value)}
                                 required
                               />
-                              <i className="input-icon uil uil-user"></i>
+                              <i className="login-form-icon uil uil-user"></i>
                             </div>
-                            <div className="form-group mt-2">
+                            <div className="login-form-group mt-2">
                               <input
                                 type="tel"
-                                className="form-style"
+                                className="login-form-input"
                                 placeholder="Phone Number"
                                 value={signupPhone}
                                 onChange={(e) => setSignupPhone(e.target.value)}
                                 required
                               />
-                              <i className="input-icon uil uil-phone"></i>
+                              <i className="login-form-icon uil uil-phone"></i>
                             </div>
-                            <div className="form-group mt-2">
+                            <div className="login-form-group mt-2">
                               <input
                                 type="email"
-                                className="form-style"
+                                className="login-form-input"
                                 placeholder="Email"
                                 value={signupEmail}
                                 onChange={(e) => setSignupEmail(e.target.value)}
                                 required
                               />
-                              <i className="input-icon uil uil-at"></i>
+                              <i className="login-form-icon uil uil-at"></i>
                             </div>
-                            <div className="form-group mt-2">
+                            <div className="login-form-group mt-2">
                               <input
                                 type="password"
-                                className="form-style"
+                                className="login-form-input"
                                 placeholder="Password"
                                 value={signupPassword}
                                 onChange={(e) => setSignupPassword(e.target.value)}
                                 required
                               />
-                              <i className="input-icon uil uil-lock-alt"></i>
+                              <i className="login-form-icon uil uil-lock-alt"></i>
                             </div>
-                            <button type="submit" className="btn mt-4">Register</button>
+                            <button type="submit" className="login-btn mt-4">Register</button>
                           </form>
                         </div>
                       </div>
                     </div>
-                    {/* End card-3d-wrapper */}
+                    {/* End of login-card-3d-wrapper */}
                   </div>
                 </div>
-                {/* End card-3d-wrap */}
+                {/* End of login-card-3d-wrap */}
               </div>
             </div>
           </div>

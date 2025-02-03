@@ -1,4 +1,4 @@
-// App.js
+// File: /src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
@@ -12,16 +12,16 @@ function App() {
   return (
     <Router>
       <div className="app-container">
-        <header className="header">
-          <nav className="nav">
-            <a className="navLink" href="/">Home</a>
-            <a className="navLink" href="/about">About</a>
-            <a className="navLink" href="/profile">Profile</a>
+        <header className="app-header">
+          <nav className="app-nav">
+            <a className="app-nav__link" href="/">Home</a>
+            <a className="app-nav__link" href="/about">About</a>
+            <a className="app-nav__link" href="/profile">Profile</a>
           </nav>
           <Auth />
         </header>
 
-        <main className="main">
+        <main className="app-main">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />

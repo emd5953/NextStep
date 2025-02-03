@@ -1,69 +1,61 @@
+/* File: /src/styles/global.css */
+
 /* Global Reset */
 *, *::before, *::after {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  /* Ensure html, body, and #root fill the viewport and have the correct background */
-  html {
-    width: 100%;
-    height: 100%;
-    /* Set the background to your app’s gradient so that scrolling shows the correct background */
-    background: linear-gradient(135deg, #667eea, #764ba2);
-  }
-  
-  body, #root {
-    width: 100%;
-    height: 100%;
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow-x: hidden;
-    /* Remove any default background so the html background shows through */
-    background: transparent;
-  }
-  
-  /* Force the container-fluid to take up the full available width */
-  .container-fluid {
-    width: 100% !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    
-  }
-  
-  /* Remove Bootstrap row gutters */
-  .row, .row.no-gutters {
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-  }
-  
-  /* Remove column side padding */
-  [class*="col-"] {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-  
-  /* Global body styles */
-  body {
-    font-family: 'Arial', sans-serif;
-    /* Note: we now let html’s background show through */
-    text-align: center;
-  }
-  
-  /* Button styling */
-  button {
-    padding: 10px 20px;
-    font-size: 18px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 20px rgba(255, 118, 136, 0.6);
-  }
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+body, #root {
+  width: 100%;
+  height: 100%;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow-x: hidden;
+  background: transparent;
+}
+
+.container-fluid {
+  width: 100% !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+.row, .row.no-gutters {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+[class*="col-"] {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  text-align: center;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 18px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(255, 118, 136, 0.6);
+}

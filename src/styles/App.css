@@ -1,24 +1,18 @@
-/* App.css */
+/* File: /src/styles/App.css */
 
-/* ===========================
-   App Container (full width)
-=========================== */
+/* App container */
 .app-container {
   font-family: 'Poppins', sans-serif;
   min-height: 100vh;
   width: 100%;
   background: linear-gradient(135deg, rgba(20,20,20,0.95), rgba(197,35,200,0.95));
   color: #fff;
-  /* Remove any horizontal padding so the background spans edge-to-edge */
   padding: 0;
   position: relative;
 }
 
-/* ===========================
-   Header
-=========================== */
-.header {
-  /* Adjust as needed; note that here we only add minimal horizontal padding */
+/* App header */
+.app-header {
   display: flex;
   align-items: center;
   justify-content: space-between; 
@@ -26,13 +20,13 @@
   padding: 0 10px;
 }
 
-.nav {
+.app-nav {
   display: flex;
   gap: 20px;
 }
 
-.navLink,
-.authButton {
+.app-nav__link,
+.auth__button {
   padding: 12px 25px;
   font-size: 1rem;
   font-weight: 500;
@@ -45,13 +39,13 @@
   justify-content: center;
 }
 
-.navLink {
+.app-nav__link {
   background: rgba(255, 255, 255, 0.1);
   color: #fff;
   border: 2px solid rgba(255, 255, 255, 0.2);
 }
 
-.navLink:hover {
+.app-nav__link:hover {
   background: linear-gradient(90deg, #ff758c, #ff7eb3);
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(255, 118, 136, 0.4);
@@ -60,7 +54,7 @@
   -webkit-text-fill-color: transparent;
 }
 
-.authButton {
+.auth__button {
   background: linear-gradient(90deg, #ff758c, #ff7eb3);
   color: #fff;
   border: none;
@@ -68,21 +62,19 @@
   box-shadow: 0 5px 15px rgba(255, 118, 136, 0.4);
 }
 
-.authButton:hover {
+.auth__button:hover {
   transform: scale(1.05) translateY(-2px);
   box-shadow: 0 8px 25px rgba(255, 118, 136, 0.6);
 }
 
-/* ===========================
-   Main & Branding
-=========================== */
-.main {
+/* Main content area */
+.app-main {
   width: 100%;
-  /* Remove max-width/margin auto so main spans the full width if desired */
   flex-grow: 1;
 }
 
-.brandingCenter {
+/* Home branding (used on Home page) */
+.home-branding {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -91,7 +83,7 @@
   text-align: center;
 }
 
-.title {
+.home-branding__title {
   font-size: 2.8rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -102,31 +94,30 @@
   -webkit-text-fill-color: transparent;
 }
 
-.subtitle {
+.home-branding__subtitle {
   font-size: 1.2rem;
   opacity: 0.9;
   margin: 10px 0 0;
   letter-spacing: 1px;
 }
 
-.content {
+/* App content */
+.app-content {
   text-align: center;
   padding: 40px 20px;
 }
 
-/* ===========================
-   Responsive
-=========================== */
+/* Responsive adjustments */
 @media (max-width: 768px) {
-  .header {
+  .app-header {
     flex-direction: column;
     align-items: flex-start;
   }
-  .nav {
+  .app-nav {
     margin-bottom: 10px;
   }
-  .navLink,
-  .authButton {
+  .app-nav__link,
+  .auth__button {
     width: 100%;
     justify-content: center;
   }

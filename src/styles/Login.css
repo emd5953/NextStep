@@ -1,6 +1,6 @@
+/* File: /src/styles/Login.css */
 @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700,800,900');
 
-/* Set the html background to match the site gradient */
 html {
   background: linear-gradient(135deg, #667eea, #764ba2);
 }
@@ -13,7 +13,7 @@ body {
   font-family: 'Poppins', sans-serif;
   font-weight: 300;
   line-height: 1.7;
-  color: #fff;  /* White text for readability */
+  color: #fff;
   background: linear-gradient(135deg, #667eea, #764ba2);
 }
 
@@ -39,24 +39,22 @@ h4 {
 }
 
 h6 span {
-  font-size: 36px; /* Reduced header size for a smaller feel */
+  font-size: 36px;
   font-weight: 700;
   padding: 0 20px;
 }
 
-.section {
+.login-section {
   position: relative;
   width: 100%;
   display: block;
 }
 
-/* --- Outer Container Overrides --- */
-/* These selectors target the outer wrappers that may be adding an unwanted white transparent layer */
-.section,
+.login-section,
 .container-fluid,
 .row.no-gutters.full-height.justify-content-center,
 .col-12.text-center.align-self-center.py-5,
-.section.pb-5.pt-5.pt-sm-2.text-center {
+.login-section.pb-5.pt-5.pt-sm-2.text-center {
   background: transparent !important;
   box-shadow: none !important;
   backdrop-filter: none !important;
@@ -66,29 +64,25 @@ h6 span {
   min-height: 80vh;
 }
 
-/* Hide checkboxes but still allow label clicks */
-[type="checkbox"]:checked,
-[type="checkbox"]:not(:checked) {
+.login-checkbox {
   display: none;
 }
 
-/* Updated checkbox toggle using a complementary blue tone */
-.checkbox:checked + label,
-.checkbox:not(:checked) + label {
+.login-checkbox:checked + label,
+.login-checkbox:not(:checked) + label {
   position: relative;
   display: block;
   text-align: center;
   width: 60px;
   height: 16px;
   border-radius: 8px;
-  padding: 0;
   margin: 10px auto;
   cursor: pointer;
   background-color: #7a90f7;
 }
 
-.checkbox:checked + label:before,
-.checkbox:not(:checked) + label:before {
+.login-checkbox:checked + label:before,
+.login-checkbox:not(:checked) + label:before {
   position: absolute;
   display: block;
   width: 36px;
@@ -107,35 +101,34 @@ h6 span {
   transition: all 0.5s ease;
 }
 
-.checkbox:checked + label:before {
+.login-checkbox:checked + label:before {
   transform: translateX(44px) rotate(-270deg);
 }
 
-/* Slightly smaller card dimensions */
-.card-3d-wrap {
+.login-card-3d-wrap {
   position: relative;
-  width: 440px;       /* or your desired width */
+  width: 440px;
   max-width: 100%;
-  height: 400px;      /* or your desired height */
+  height: 400px;
   transform-style: preserve-3d;
   perspective: 800px;
   margin-top: 60px;
   overflow: hidden;
-  background: linear-gradient(135deg, #667eea, #764ba2); /* Initial gradient if needed */
-  border-radius: 8px;  /* Optional: adds a slight rounding around the gradient border */
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border-radius: 8px;
 }
 
-.card-3d-wrapper {
+.login-card-3d-wrapper {
   width: 100%;
   height: 100%;
   position: absolute;
   transform-style: preserve-3d;
   transition: all 600ms ease-out;
-  background: linear-gradient(135deg, #667eea, #764ba2); /* Initial gradient if needed */
+  background: linear-gradient(135deg, #667eea, #764ba2);
 }
 
-.card-front,
-.card-back {
+.login-card-front,
+.login-card-back {
   width: 100%;
   height: 100%;
   position: absolute;
@@ -144,26 +137,23 @@ h6 span {
   backface-visibility: hidden;
 }
 
-/* Login side remains with a dark gradient */
-.card-front {
+.login-card-front {
   background: linear-gradient(135deg, rgba(20, 20, 20, 0.95), rgba(197, 35, 200, 0.95));
 }
 
-/* Signup side is now pure black */
-.card-back {
+.login-card-back {
   background: linear-gradient(135deg, rgba(20, 20, 20, 0.95), rgba(197, 35, 200, 0.95));
   transform: rotateY(180deg);
 }
 
-.checkbox:checked ~ .card-3d-wrap .card-3d-wrapper {
+.login-checkbox:checked ~ .login-card-3d-wrap .login-card-3d-wrapper {
   transform: rotateY(180deg);
 }
 
-/* Adjust the inner wrapper for a smaller card */
-.center-wrap {
+.login-center-wrap {
   position: absolute;
   width: 100%;
-  padding: 0 35px;    /* Reduced padding */
+  padding: 0 35px;
   top: 50%;
   left: 0;
   transform: translate3d(0, -50%, 35px) perspective(100px);
@@ -171,22 +161,21 @@ h6 span {
   display: block;
 }
 
-.form-group {
+.login-form-group {
   position: relative;
   display: block;
   margin: 0;
   padding: 0;
 }
 
-/* Input fields adjusted for a smaller UI */
-.form-style {
-  padding: 13px 20px;      /* Slightly reduced padding */
-  padding-left: 55px;       /* Adjust left padding accordingly */
-  height: 48px;             /* Standard height */
+.login-form-input {
+  padding: 13px 20px;
+  padding-left: 55px;
+  height: 48px;
   width: 100%;
   font-weight: 500;
   border-radius: 4px;
-  font-size: 14px;          /* Reduced font size */
+  font-size: 14px;
   line-height: 22px;
   letter-spacing: 0.5px;
   outline: none;
@@ -197,27 +186,26 @@ h6 span {
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 }
 
-.form-style:focus,
-.form-style:active {
+.login-form-input:focus,
+.login-form-input:active {
   border: none;
   outline: none;
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 }
 
-.input-icon {
+.login-form-icon {
   position: absolute;
   top: 0;
-  left: 18px;             /* Adjusted to match new input padding */
-  height: 48px;           /* Same as input height */
-  font-size: 24px;        /* Standard icon size */
+  left: 18px;
+  height: 48px;
+  font-size: 24px;
   line-height: 48px;
   text-align: left;
   transition: all 200ms linear;
   color: #fff;
 }
 
-/* Updated button using a gradient derived from your website colors */
-.btn {
+.login-btn {
   border-radius: 4px;
   height: 44px;
   font-size: 13px;
@@ -234,14 +222,13 @@ h6 span {
   cursor: pointer;
 }
 
-.btn:hover {
+.login-btn:hover {
   background: linear-gradient(90deg, #8e7df2, #7489f4);
   box-shadow: 0 8px 24px 0 rgba(0,0,0,0.2);
 }
 
-/* --- Overrides to remove the unwanted transparent boxes in the inner 3D card --- */
-.card-3d-wrap,
-.card-3d-wrapper {
+.login-card-3d-wrap,
+.login-card-3d-wrapper {
   background: transparent !important;
   box-shadow: none !important;
   backdrop-filter: none !important;
