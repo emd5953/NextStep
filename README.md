@@ -1,70 +1,86 @@
-# Getting Started with Create React App
+# NextStep - A Swipe-Based Job Matching App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<img src="assets/NextStep_Logo.png">
 
-## Available Scripts
+NextStep is a **web and mobile job-matching platform** designed to simplify the job search process using a **swipe-based** interface. It leverages **AI-driven recommendations** and **real-time tracking** to connect job seekers with employers efficiently.
 
-In the project directory, you can run:
+##  Table of Contents
+- [Overview](#overview)
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Project Structure](#project-structure)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Running the Application](#running-the-application)
+- [API Endpoints](#api-endpoints)
+- [Contributing](#contributing)
+- [License](#license)
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 🚀 Overview
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+**NextStep** is a job-matching application with a **swipe-based** interface that helps job seekers efficiently browse and apply for jobs. Employers can post job listings, track applications, and connect with candidates in real time.
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 🎯 **Core Objectives**
+✅ **Swipe-Based Job Discovery** – Browse jobs with a swipe-like/scroll experience inspired from popular apps such as Hinge, Tiktok, Tinder.
+✅ **AI-Powered Job Recommendations** – Tailored job suggestions based on profile & history  
+✅ **One-Click Apply** – Apply instantly with stored profile/resume  
+✅ **Application Tracking** – Track job application statuses in real-time  
+✅ **Employer Dashboard** – Post jobs, review candidates, and schedule interviews  
+✅ **Multi-Platform Support** – Accessible via Web and Mobile  
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 🛠 **Technologies Used**
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### **Backend**
+- **Node.js** – Server-side runtime
+- **Express.js** – Web framework
+- **MongoDB Atlas** – Cloud-based NoSQL database
+- **Mongoose** – ODM for MongoDB schema validation
+- **JWT (JSON Web Tokens)** – Authentication system
+- **Firebase Cloud Messaging (FCM)** – Push notifications
+- **AWS/GCP** – Cloud hosting (for scalability)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### **Frontend**
+- **React.js (Web App)**
+- **React Native (Mobile App)**
+- **React Router** – Frontend navigation
+- **Axios** – API communication
 
-### `npm run eject`
+### **DevOps & Deployment**
+- pending.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 🔧 **Installation**
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### **1️⃣ Clone the Repository**
+```bash
+git clone https://github.com/yourusername/nextstep.git
+cd nextstep
 
-## Learn More
+### **2️⃣ Install Backend Dependencies**
+cd backend
+npm install
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### **3️⃣ Install Frontend Dependencies**
+cd ../frontend
+npm install
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
+## ⚙️ **Configuration**
+Before running the app, configure the environment variables.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+**Backend .env File**
 
-### Analyzing the Bundle Size
+MONGO_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/nextstep
+PORT=5000
+JWT_SECRET=your_jwt_secret
+FIREBASE_SERVER_KEY=your_firebase_server_key
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+**Frontend .env File**
+REACT_APP_BACKEND_URL=http://localhost:5000
