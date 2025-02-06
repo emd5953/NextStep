@@ -24,12 +24,12 @@ NextStep is a **web and mobile job-matching platform** designed to simplify the 
 
 
 ### 🎯 **Core Objectives**
-✅ **Swipe-Based Job Discovery** – Browse jobs with a swipe-like/scroll experience inspired from popular apps such as Hinge, Tiktok, Tinder.
-✅ **AI-Powered Job Recommendations** – Tailored job suggestions based on profile & history  
-✅ **One-Click Apply** – Apply instantly with stored profile/resume  
-✅ **Application Tracking** – Track job application statuses in real-time  
-✅ **Employer Dashboard** – Post jobs, review candidates, and schedule interviews  
-✅ **Multi-Platform Support** – Accessible via Web and Mobile  
+ **Swipe-Based Job Discovery** – Browse jobs with a swipe-like/scroll experience inspired from popular apps such as Hinge, Tiktok, Tinder.
+ **AI-Powered Job Recommendations** – Tailored job suggestions based on profile & history  
+ **One-Click Apply** – Apply instantly with stored profile/resume  
+ **Application Tracking** – Track job application statuses in real-time  
+ **Employer Dashboard** – Post jobs, review candidates, and schedule interviews  
+ **Multi-Platform Support** – Accessible via Web and Mobile  
 
 ---
 
