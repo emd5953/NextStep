@@ -44,7 +44,9 @@ NextStep is a **web and mobile job-matching platform** designed to simplify the 
 - **Express.js** – Hosting
 - **MongoDB Atlas** – Cloud-based NoSQL database
 
-   Future Use?
+
+   **<u>Future Use?</u>**
+
 - **Mongoose** – ODM for MongoDB schema validation
 - **JWT (JSON Web Tokens)** – Authentication system
 - **Firebase Cloud Messaging (FCM)** – Push notifications
@@ -53,7 +55,6 @@ NextStep is a **web and mobile job-matching platform** designed to simplify the 
 
 ### **DevOps & Deployment**
 - pending.
-
 
 ---
 
@@ -74,12 +75,12 @@ npm install
 ### **Configuration**
 Before running the app, configure the environment variables.
 
-**Frontend .env File**
+#### Frontend .env File
 ```bash
-REACT_APP_BACKEND_URL=http://localhost:5000
+REACT_APP_BACKEND_URL=http://localhost:5500
 ```
 
-**Backend .env File**
+#### Backend .env File
 ```bash
 MONGO_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/nextstep
 PORT=5500
