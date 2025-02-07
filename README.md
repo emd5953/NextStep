@@ -1,6 +1,6 @@
 # NextStep - A Swipe-Based Job Matching App
 
-<img src="assets/NextStep_Logo.png">
+<img src="src/assets//NextStep_Logo.png">
 
 NextStep is a **web and mobile job-matching platform** designed to simplify the job search process using a **swipe-based** interface. It leverages **AI-driven recommendations** and **real-time tracking** to connect job seekers with employers efficiently.
 
