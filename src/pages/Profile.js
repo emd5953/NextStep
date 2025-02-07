@@ -59,6 +59,7 @@ const Profile = () => {
       email,
       photo,
       resume,
+      location,
     };
     try {
       const response = await axios.post('http://localhost:4000/updateprofile', profileData, {
