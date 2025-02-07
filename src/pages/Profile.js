@@ -1,15 +1,45 @@
 // File: /src/pages/Profile.js
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import '../styles/Profile.css';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom'
+import { TokenContext } from '../components/TokenContext';
 
 const Profile = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
-  const [location, setLocation] = useState(''); // New state for location
   const [photo, setPhoto] = useState(null);
   const [resume, setResume] = useState(null);
+  const [location, setLocation] = useState('');
+  const navigate = useNavigate(1);
+  //const location = useLocation();
+  const { token, setToken } = useContext(TokenContext);
+
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (token) {
+        try {
+          const response = await axios.get(`http://localhost:4000/profile`, {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          console.log(`${response.status} ${response.statusText}\n`);
+          console.log('Get Profile Response:', response.data.email);    
+          setEmail(response.data.email);
+          setPhone(response.data.phone);
+          setFirstName(response.data.firstName);
+          setLastName(response.data.lastName);
+        } catch (error) {
+          console.error('Profile error:', error.response.data);
+        }
+      }
+    };
+
+    fetchProfile();
+
+  }, [token, navigate, setToken]);
 
   const handlePhotoChange = (e) => {
     setPhoto(e.target.files[0]);
@@ -19,18 +49,29 @@ const Profile = () => {
     setResume(e.target.files[0]);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log({
+    
+    const profileData = {
       firstName,
       lastName,
       phone,
       email,
-      location, // Include location in submission data
       photo,
       resume,
-    });
-    alert('Profile info submitted!');
+    };
+    try {
+      const response = await axios.post('http://localhost:4000/updateprofile', profileData, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      console.log(`${response.status} ${response.statusText}\n`);
+      console.log('Update Profile Response:', response.data);
+      alert("Profile Updated");
+    } catch (error) {
+      console.error('Update Profile error:', error.response.data);
+    }
+    //setAuthToken(response.data.token);
+    // You can handle the response data as needed
   };
 
   return (
@@ -40,10 +81,10 @@ const Profile = () => {
         {/* Photo Upload */}
         <div className="profile-form-group">
           <label className="profile-label">Profile Photo</label>
-          <input 
-            type="file" 
-            accept="image/*" 
-            onChange={handlePhotoChange} 
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handlePhotoChange}
             className="profile-input"
           />
         </div>
@@ -51,10 +92,10 @@ const Profile = () => {
         {/* Resume Upload */}
         <div className="profile-form-group">
           <label className="profile-label">Resume (PDF or DOC)</label>
-          <input 
-            type="file" 
-            accept=".pdf,.doc,.docx" 
-            onChange={handleResumeChange} 
+          <input
+            type="file"
+            accept=".pdf,.doc,.docx"
+            onChange={handleResumeChange}
             className="profile-input"
           />
         </div>

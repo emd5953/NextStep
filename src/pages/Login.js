@@ -1,6 +1,10 @@
 // File: /src/pages/Login.js
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import '../styles/Login.css';
+import axios from 'axios'; 
+import { useNavigate } from 'react-router-dom'
+import { TokenContext } from '../components/TokenContext';
+
 
 const Login = () => {
   // Login form state
@@ -12,22 +16,56 @@ const Login = () => {
   const [signupPhone, setSignupPhone] = useState('');
   const [signupEmail, setSignupEmail] = useState('');
   const [signupPassword, setSignupPassword] = useState('');
+  //const [authToken, setAuthToken] = useState('')
+  const navigate = useNavigate();
+  const { token, setToken } = useContext(TokenContext);
 
-  const handleLoginSubmit = (e) => {
+  useEffect(() => {
+    if (token) {
+      setToken(token)
+      navigate('/profile'); //{ state: { token: token } }
+    }
+  }, [token, navigate, setToken]);
+
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
     console.log('Logging in with:', { loginEmail, loginPassword });
-    alert('Login button clicked! (Check console)');
+    try {
+      const signinData = {
+        email: loginEmail,
+        password: loginPassword
+      };
+      
+      const response = await axios.post('http://localhost:4000/signin', signinData);
+      setToken(response.data.token);
+      //setAuthToken(response.data.token);
+      // You can handle the response data as needed
+      
+    } catch (error) {
+      console.error('Login error:', error);
+      alert('Login failed. Please check the console for more details.');
+    }
   };
 
-  const handleSignupSubmit = (e) => {
+  const handleSignupSubmit = async (e) => {
     e.preventDefault();
-    console.log('Registering with:', {
-      signupName,
-      signupPhone,
-      signupEmail,
-      signupPassword,
-    });
-    alert('Register button clicked! (Check console)');
+    const signupData ={
+      full_name: signupName,
+      phone: signupPhone,
+      email: signupEmail,
+      password: signupPassword,
+    };
+
+    try{
+      await axios.post('http://localhost:4000/signup', signupData);
+      // You can handle the response data as needed
+      navigate('/login');
+  
+    }catch(error){
+      console.error('Signup error:', error);
+      alert('Error. Please check the console for more details.');
+    }
+
   };
 
   return (
