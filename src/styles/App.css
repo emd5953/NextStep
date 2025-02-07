@@ -7,7 +7,7 @@
   width: 100%;
   background: linear-gradient(135deg, rgba(20,20,20,0.95), rgba(197,35,200,0.95));
   color: #fff;
-  padding: 0;
+  padding: 20px 0 0 0; /* added top padding */
   position: relative;
 }
 
@@ -15,7 +15,8 @@
 .app-header {
   display: flex;
   align-items: center;
-  justify-content: space-between; 
+  justify-content: space-between;
+  margin-top: 20px;
   margin-bottom: 40px;
   padding: 0 10px;
 }

@@ -7,6 +7,7 @@ const Profile = () => {
   const [lastName, setLastName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
+  const [location, setLocation] = useState(''); // New state for location
   const [photo, setPhoto] = useState(null);
   const [resume, setResume] = useState(null);
 
@@ -25,6 +26,7 @@ const Profile = () => {
       lastName,
       phone,
       email,
+      location, // Include location in submission data
       photo,
       resume,
     });
@@ -104,6 +106,19 @@ const Profile = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="example@email.com"
+            required
+            className="profile-input"
+          />
+        </div>
+
+        {/* Location */}
+        <div className="profile-form-group">
+          <label className="profile-label">Location</label>
+          <input
+            type="text"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            placeholder="Enter your location"
             required
             className="profile-input"
           />

@@ -16,18 +16,17 @@ body::-webkit-scrollbar {
 .about-container {
   font-family: 'Poppins', sans-serif;
   text-align: center;
-  height: 100vh;
-  background: linear-gradient(135deg, rgba(20,20,20,0.95), rgba(197,35,200,0.95));
+  min-height: 100vh; /* allow the container to grow if needed */
   color: #fff;
   padding: 40px 0;
   box-sizing: border-box;
-  overflow-y: auto;
   scrollbar-width: none;
 }
 
 .about-container::-webkit-scrollbar {
   display: none;
 }
+
 
 /* Header for About page */
 .about-header {
