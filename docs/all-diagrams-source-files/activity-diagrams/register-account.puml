@@ -1,0 +1,16 @@
+@startuml Register Account Activity Diagram
+title Register Account Activity Diagram
+
+start
+
+:Fill out registration form;
+:Submit registration form;
+
+:Create new account in AccountDB;
+:AccountDB confirms account creation;
+
+:Display registration confirmation to JobSeeker;
+
+stop
+
+@enduml

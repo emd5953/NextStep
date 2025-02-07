@@ -1,0 +1,13 @@
+@startuml Track Applications Activity Diagram
+title Track Applications Activity Diagram
+
+start
+
+:Visit Track Applications Page;
+:Retrieve applications from ApplicationsDB;
+
+:Display application details;
+
+stop
+
+@enduml

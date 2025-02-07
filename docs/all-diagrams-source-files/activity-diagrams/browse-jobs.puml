@@ -1,0 +1,29 @@
+@startuml Browse Jobs Activity Diagram
+title Browse Jobs Activity Diagram
+
+start
+
+:View jobs page;
+:Enter search criteria;
+:Retrieve job listings based on criteria;
+
+if (At least one listing found?) then (yes)
+
+
+    while (More jobs to show?)
+        :Display job details of current match;
+        
+        if ("Swipe Right/Apply Clicked") then (yes)
+            :Submit application to DB;
+            :Display confirmation;
+        endif
+
+    endwhile
+
+else
+    :Display "No more jobs to show" message;
+endif
+
+stop
+
+@enduml
