@@ -126,7 +126,6 @@ We welcome contributions! Follow these steps:
 This project is licensed under the MIT License.
 
 ### 📢 **Future Enhancements**
--Real-Time Chat for Employers & Candidates
--AI-Powered Resume Screening
--Interview Scheduling with Google Calendar
--Subscription Plans for Employers
+- Real-Time Chat for Employers & Candidates
+- AI-Powered Resume Screening
+- Interview Scheduling with Google Calendar
