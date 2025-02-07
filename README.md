@@ -116,15 +116,11 @@ Frontend will run on http://localhost:3000
 ### **Contributing**
 We welcome contributions! Follow these steps:
 
--Fork the repository 
-
--Create a new branch (feature/your-feature-name)
-
--Commit your changes
-
--Push to your fork
-
--Submit a pull request
+- Fork the repository 
+- Create a new branch (feature/your-feature-name)
+- Commit your changes
+- Push to your fork
+- Submit a pull request
 
 ### **License**
 This project is licensed under the MIT License.
