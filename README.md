@@ -103,22 +103,27 @@ npm start
 Frontend will run on http://localhost:3000
 ```
 ### **API Endpoints**
-Method	   Endpoint	            Description
-POST	/api/register	        Register a new user
-POST	/api/login	            Authenticate user
-GET	    /api/jobs	            Retrieve job listings
-POST	/api/apply	            Apply for a job
-GET	    /api/applications	    Get user’s job applications
-DELETE	/api/applications/:id	Withdraw an application
+|Method	 |    Endpoint	            |    Description                |
+|--------|--------------------------|-------------------------------|
+|POST	 |  /api/register	        |   Register a new user         |
+|POST	 |  /api/login	            |   Authenticate user           |
+|GET	 |  /api/jobs	            |   Retrieve job listings       |
+|POST	 |  /api/apply	            |   Apply for a job             |
+|GET	 |  /api/applications       |	Get user’s job applications |
+|DELETE	 |  /api/applications/:id	|   Withdraw an application     |
 
 
 ### **Contributing**
 We welcome contributions! Follow these steps:
 
--Fork the repository
+-Fork the repository 
+
 -Create a new branch (feature/your-feature-name)
+
 -Commit your changes
+
 -Push to your fork
+
 -Submit a pull request
 
 ### **License**
