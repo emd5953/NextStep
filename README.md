@@ -33,13 +33,13 @@ NextStep is a **web and mobile job-matching platform** designed to simplify the 
 
 ### 🛠 **Technology Stack**
 
-### **Frontend**
+#### **Frontend**
 - **Framework**: React.js(Web)/React Native (Mobile)
 - **Styling**: TailwindCSS
 - **React Router** – Frontend navigation
 - **Axios** – API communication
 
-### **Backend**
+#### **Backend**
 - **Node.js** – Server-side runtime
 - **Express.js** – Hosting
 - **MongoDB Atlas** – Cloud-based NoSQL database
@@ -53,12 +53,12 @@ NextStep is a **web and mobile job-matching platform** designed to simplify the 
 - **AWS/GCP** – Cloud hosting (for scalability)
 
 
-### **DevOps & Deployment**
+#### **DevOps & Deployment**
 - pending.
 
 ---
 
-## 🔧 **Installation**
+### 🔧 **Installation**
 ```bash
 # 1️⃣ Clone the Repository
 git clone https://github.com/drewstake/nextstep.git
