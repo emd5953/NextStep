@@ -6,8 +6,8 @@ NextStep is a **web and mobile job-matching platform** designed to simplify the 
 
 ###  Table of Contents
 - [Overview](#overview)
-- [Features](#features)
-- [Technologies Used](#technologies-used)
+- [Core Objectives](#core-objectives)
+- [Technology Stack](#technology-stack)
 - [Installation](#installation)
 - [Configuration](#configuration)
 - [Running the Application](#running-the-application)
