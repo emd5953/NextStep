@@ -16,12 +16,12 @@ NextStep is a **web and mobile job-matching platform** designed to simplify the 
 - [License](#license)
 ---
 
-### Overview 🚀
+### Overview 
 
 **NextStep** is a job-matching application with a **swipe-based** interface that helps job seekers efficiently browse and apply for jobs. Employers can post job listings, track applications, and connect with candidates in real time.
 
 
-### **Core Objectives** 🎯
+### **Core Objectives** 
 - **Swipe-Based Job Discovery** – Browse jobs with a swipe-like/scroll experience inspired from popular apps such as Hinge, Tiktok, Tinder.
 - **AI-Powered Job Recommendations** – Tailored job suggestions based on profile & history  
 - **One-Click Apply** – Apply instantly with stored profile/resume  
@@ -31,7 +31,7 @@ NextStep is a **web and mobile job-matching platform** designed to simplify the 
 
 ---
 
-### **Technology Stack** 🛠
+### **Technology Stack** 
 
 #### **Frontend**
 - **Framework**: React.js(Web)/React Native (Mobile)
