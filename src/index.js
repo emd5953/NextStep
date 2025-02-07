@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import './styles/global.css'; // Global styles
-import { TokenContext, TokenProvider } from './components/TokenContext';
+import { TokenProvider } from './components/TokenContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
