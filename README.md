@@ -58,7 +58,7 @@ NextStep is a **web and mobile job-matching platform** designed to simplify the 
 
 ---
 
-### **Installation** 🔧
+### **Installation** 
 ```bash
 # 1️⃣ Clone the Repository
 git clone https://github.com/drewstake/nextstep.git
