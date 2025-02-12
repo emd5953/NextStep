@@ -1,0 +1,23 @@
+Enrin
+1. Add Project Structure section to Readme
+
+
+TO-DO 2/13
+1. Create main ForYou page (Andrew(Frontend) & Bryan & Soli)
+2. Create application tracking (Andrew(Frontend) & Bryan & Soli)
+3. Robustness Diagram (Enrin)
+
+
+
+ #Add search function from database on BrowseJobs.js
+ #Fix About.js scrolling issue
+ #Create StatusTracking page
+ #Bookmark page (pre-req: bookmark feature)
+ #Implement Notifications
+ #Set up mobile side of application 
+
+
+ #Robustness Diagrams brainstorm
+
+
+
