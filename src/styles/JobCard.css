@@ -1,0 +1,55 @@
+/* File: /src/styles/JobCard.css */
+.job-card {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    color: #fff;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin: 0 auto;
+    max-width: 800px;
+  }
+  
+  .job-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+  }
+  
+  .job-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    background: linear-gradient(90deg, #fff, #ff7eb3);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .company-name a {
+    color: #ff7eb3;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  
+  .company-name a:hover {
+    color: #fff;
+  }
+  
+  .salary-range,
+  .job-schedule,
+  .job-locations,
+  .job-benefits {
+    margin: 5px 0;
+  }
+  
+  .job-description {
+    margin: 10px 0;
+    line-height: 1.6;
+  }
+  
+  .job-skills ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin: 5px 0;
+  }
+  
