@@ -1,4 +1,4 @@
-// File: /src/components/Auth.js
+  // File: /src/components/Auth.js
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
