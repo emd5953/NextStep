@@ -1,35 +1,9 @@
 // File: /src/pages/About.js
-import React, { useEffect } from 'react';
+import React from 'react';
 import { FaBullseye, FaRocket, FaShieldAlt, FaChartLine } from 'react-icons/fa';
 import '../styles/About.css';
 
 const About = () => {
-  useEffect(() => {
-    const originalBodyOverflow = document.body.style.overflow;
-    const originalHtmlOverflow = document.documentElement.style.overflow;
-    document.body.style.overflow = 'hidden';
-    document.documentElement.style.overflow = 'hidden';
-
-    const appContainer = document.querySelector('.app-container');
-    let originalAppContainerOverflow = '';
-    let originalAppContainerHeight = '';
-    if (appContainer) {
-      originalAppContainerOverflow = appContainer.style.overflow;
-      originalAppContainerHeight = appContainer.style.height;
-      appContainer.style.overflow = 'hidden';
-      appContainer.style.height = '100vh';
-    }
-
-    return () => {
-      document.body.style.overflow = originalBodyOverflow;
-      document.documentElement.style.overflow = originalHtmlOverflow;
-      if (appContainer) {
-        appContainer.style.overflow = originalAppContainerOverflow;
-        appContainer.style.height = originalAppContainerHeight;
-      }
-    };
-  }, []);
-
   return (
     <div className="about-container">
       <header className="about-header">
