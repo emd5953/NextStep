@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const cors = require('cors');
 
+const multer = require("multer");
 
 const router = express.Router();
 console.log('Startup...');
@@ -33,7 +34,7 @@ const client = new MongoClient(uri);
 console.log('Connecting to MongoDB');
 client.connect()
   .then(() => {
-
+    const db = client.db(dbName);
     // display the current time so that we know
     const currentDateTime = new Date().toLocaleString();
     console.log(`Connected to MongoDB at ${currentDateTime}`);
@@ -41,7 +42,7 @@ client.connect()
     router.post('/signin', async (req, res) => {
       try {
         console.log("/signin called");
-        const db = client.db(dbName);
+
 
 
         const collection = db.collection(USER_PROFILES_COLLECTION);
@@ -78,7 +79,7 @@ client.connect()
         }
         const { full_name, phone, email, password } = req.body;
         // Access the database
-        const db = client.db(dbName);
+
 
         // Access the collection (replace USER_PROFILES_COLLECTION with your collection name)
         const collection = db.collection(USER_PROFILES_COLLECTION);
@@ -111,12 +112,12 @@ client.connect()
     router.get("/jobs", async (req, res) => {
       try {
         if (req.headers.authorization) {
-            const token = req.headers.authorization.split(" ")[1];
-            const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            console.log('Auth token is valid');
+          const token = req.headers.authorization.split(" ")[1];
+          const decoded = jwt.verify(token, process.env.JWT_SECRET);
+          console.log('Auth token is valid');
         }
         console.log("in job search");
-        const db = client.db(dbName);
+
         const collection = db.collection(JOBS_COLLECTION);
         query = {
           "$or": [
@@ -150,7 +151,7 @@ client.connect()
             const token = req.headers.authorization.split(" ")[1];
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             console.log('Auth token is valid');
-            const db = client.db(dbName);
+
             const collection = db.collection(USER_PROFILES_COLLECTION);
 
             // lookup the record in MongoDB using the id decoded from the token
@@ -188,19 +189,45 @@ client.connect()
 
     });
 
-    router.post("/updateprofile", async (req, res) => {
+
+    const storage = multer.memoryStorage();
+
+    const upload = multer({ storage: storage });
+
+    router.post("/updateprofile", upload.fields([{ name: "photo" }, { name: "resume" }]), async (req, res) => {
       try {
         if (req.headers.authorization) {
           try {
             const token = req.headers.authorization.split(" ")[1];
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             console.log('Auth token is valid');
-            const { firstName, lastName, phone, email, location, photo, resume } = req.body;
+            const { firstName, lastName, phone, email, location } = req.body;
             // Access the database
-            const db = client.db(dbName);
+
 
             // Access the collection (replace USER_PROFILES_COLLECTION with your collection name)
             const collection = db.collection(USER_PROFILES_COLLECTION);
+
+            let resumeFile = null;
+            let encodedPhoto = null;
+
+            //console.log("Uploaded files:", req.files);
+            if (req.files) {
+              if (req.files["photo"]) {
+                let photo = req.files["photo"][0];
+                if (photo) {
+                  const base64Encoded = photo.buffer.toString('base64');
+                  encodedPhoto = `data:${photo.mimetype};base64,${base64Encoded}`;
+                }
+              }
+
+              if (req.files["resume"]) {
+                let resume = req.files["resume"][0];
+                if (resume) {
+                  resumeFile = req.files["resume"][0];
+                }
+              }
+            }
 
             const updatedProfileData = {
               firstName,
@@ -208,8 +235,8 @@ client.connect()
               phone,
               email,
               location,
-              photo,
-              resume
+              ...(encodedPhoto && { encodedPhoto }), // elipses - include it only if it is not null
+              ...(resumeFile && { resumeFile }) // elipses - include it only if it is not null
             };
 
             const result = await collection.updateOne(

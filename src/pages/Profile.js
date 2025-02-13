@@ -10,13 +10,15 @@ const Profile = () => {
   const [lastName, setLastName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
-  const [photo, setPhoto] = useState(null);
+  const [profileImage, setProfileImage] = useState(null); // for local photo viewer
+  const [photo, setPhoto] = useState(null); // for mongo field
+  const [encodedPhoto, setEncodedPhoto] = useState(null);
   const [resume, setResume] = useState(null);
   const [location, setLocation] = useState('');
   const navigate = useNavigate(1);
   //const location = useLocation();
   const { token, setToken } = useContext(TokenContext);
-
+  const [ updateFlag, setUpdateFlag] = useState(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -26,11 +28,16 @@ const Profile = () => {
             headers: { Authorization: `Bearer ${token}` }
           });
           console.log(`${response.status} ${response.statusText}\n`);
-          console.log('Get Profile Response:', response.data.email);    
-          setEmail(response.data.email);
-          setPhone(response.data.phone);
+          console.log('Get Profile Response:', response.data.email);
+          setEncodedPhoto(response.data.encodedPhoto);
+          setResume(response.data.resume);
           setFirstName(response.data.firstName);
           setLastName(response.data.lastName);
+          setPhone(response.data.phone);
+          setEmail(response.data.email);
+          setLocation(response.data.location); 
+          setProfileImage(response.data.encodedPhoto);         
+          
         } catch (error) {
           console.error('Profile error:', error.response.data);
         }
@@ -39,10 +46,20 @@ const Profile = () => {
 
     fetchProfile();
 
-  }, [token, navigate, setToken]);
+  }, [updateFlag, token, navigate, setToken]);
 
   const handlePhotoChange = (e) => {
-    setPhoto(e.target.files[0]);
+    const file = e.target.files[0];
+    if (file) {
+        setPhoto(file);
+
+        // Preview the selected image
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setProfileImage(reader.result);
+        };
+        reader.readAsDataURL(file);
+    }
   };
 
   const handleResumeChange = (e) => {
@@ -51,22 +68,40 @@ const Profile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    const profileData = {
-      firstName,
-      lastName,
-      phone,
-      email,
-      photo,
-      resume,
-      location,
-    };
+    /*
+        const profileData = {
+          firstName,
+          lastName,
+          phone,
+          email,
+          photo,
+          resume,
+          location,
+        };*/
+
+    const formData = new FormData();
+    formData.append("firstName", firstName);
+    formData.append("lastName", lastName);
+    //formData.append("full_name", full_name);
+    formData.append("phone", phone);
+    formData.append("email", email);
+    formData.append("location", location);
+
+    if (photo) {
+      formData.append("photo", photo); 
+    }
+
+    if (resume) {
+      formData.append("resume", resume);
+    }
+
     try {
-      const response = await axios.post('http://localhost:4000/updateprofile', profileData, {
-        headers: { Authorization: `Bearer ${token}` }
+      const response = await axios.post('http://localhost:4000/updateprofile', formData, {
+        headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" }
       });
       console.log(`${response.status} ${response.statusText}\n`);
       console.log('Update Profile Response:', response.data);
+      setUpdateFlag(true);
       alert("Profile Updated");
     } catch (error) {
       console.error('Update Profile error:', error.response.data);
@@ -80,6 +115,12 @@ const Profile = () => {
       <h2>Profile</h2>
       <form onSubmit={handleSubmit} className="profile-form">
         {/* Photo Upload */}
+        <div>
+          <img className="profile-image"
+            src={profileImage}
+            alt="Profile"
+          />
+        </div>
         <div className="profile-form-group">
           <label className="profile-label">Profile Photo</label>
           <input

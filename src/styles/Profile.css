@@ -42,3 +42,11 @@
   cursor: pointer;
   font-size: 1rem;
 }
+
+.profile-image {
+  width: 120px;
+  height: 120px;
+  display: block;
+  margin: 0 auto 20px;
+ /* objectFit: "cover",*/
+}
