@@ -8,6 +8,8 @@ TO-DO 2/13
 3. Robustness Diagram (Enrin)
 
 
+#Idea for 4th point (IF WE CANNOT COMEUP WITH SOMETHING)
+ for to do next week: Start working on Employer pages 
 
 
  #Add search function from database on BrowseJobs.js
@@ -46,4 +48,3 @@ TO-DO 2/13
  Finalize to-do list and updates
  Practice Comprehension real quick
  Did we implement Edit My Profile feature in profiles page? #3 of to do list due today
- 
