@@ -13,8 +13,8 @@ const BrowseJobs = () => {
     const fetchJobs = async () => {
       try {
         // Replace the URL with your actual API endpoint.
-        const response = await axios.get('http://localhost:4000/jobs');
-        setJobs(response.data);
+       // const response = await axios.get('http://localhost:4000/jobs?keyword=');
+       // setJobs(response.data);
       } catch (error) {
         console.error('Error fetching jobs:', error);
       }
@@ -23,10 +23,12 @@ const BrowseJobs = () => {
     fetchJobs();
   }, []);
 
-  const handleSearch = (e) => {
+  const handleSearch = async (e) => {
     e.preventDefault();
     // For now, just log the search query. Later, you could use this to filter the jobs or make a new API call.
     console.log('Searching for:', searchQuery);
+    const response = await axios.get('http://localhost:4000/jobs?q=' + searchQuery);
+        setJobs(response.data);
   };
 
   return (

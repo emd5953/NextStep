@@ -26,6 +26,7 @@ const app = express();
 
 const PORT = process.env.PORT;
 const USER_PROFILES_COLLECTION = 'users';
+const JOBS_COLLECTION = 'Jobs';
 
 const client = new MongoClient(uri);
 
@@ -107,6 +108,40 @@ client.connect()
       }
     });
 
+    router.get("/jobs", async (req, res) => {
+      try {
+        if (req.headers.authorization) {
+            const token = req.headers.authorization.split(" ")[1];
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            console.log('Auth token is valid');
+        }
+        console.log("in job search");
+        const db = client.db(dbName);
+        const collection = db.collection(JOBS_COLLECTION);
+        query = {
+          "$or": [
+            { "title": { "$regex": req.query.q, "$options": "i" } },
+            { "jobDescription": { "$regex": req.query.q, "$options": "i" } },
+            { "skills": { "$regex": req.query.q, "$options": "i" } },
+            { "locations": { "$regex": req.query.q, "$options": "i" } },
+            { "benefits": { "$regex": req.query.q, "$options": "i" } },
+            { "schedule": { "$regex": req.query.q, "$options": "i" } },
+            { "salary": { "$regex": req.query.q, "$options": "i" } },
+          ]
+        }
+        // lookup the record in MongoDB using the id decoded from the token
+        //console.log(query);
+        const jobs = await collection.find(query).toArray();
+
+        //console.log(jobs);
+
+        res.status(200).json(jobs);
+      } catch (error) {
+        console.log(`Error in /jobs. ${error}`);
+        res.status(500).json({ error: `Error searching jobs. ${error}` });
+      }
+    });
+
     router.get("/profile", async (req, res) => {
       try {
         if (req.headers.authorization) {
@@ -117,13 +152,14 @@ client.connect()
             console.log('Auth token is valid');
             const db = client.db(dbName);
             const collection = db.collection(USER_PROFILES_COLLECTION);
-           
+
             // lookup the record in MongoDB using the id decoded from the token
             const profile = await collection.findOne(
               { _id: ObjectId.createFromHexString(decoded.id) },
-              { projection: { password: 0 } // This causes all fields to be retrieved except the
-                                            // password field to be removed from the response
-            });
+              {
+                projection: { password: 0 } // This causes all fields to be retrieved except the
+                // password field to be removed from the response
+              });
 
             if (profile) {
               res.status(200).json(profile);
@@ -183,8 +219,8 @@ client.connect()
             );
             //chick if we got back our record
             if (result.matchedCount === 0) {
-              res.status(404).json({ error: "User profile not found"});
-            }else{
+              res.status(404).json({ error: "User profile not found" });
+            } else {
               res.status(200).json({ message: "Profile updated successfully" });
             }
 

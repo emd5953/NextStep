@@ -60,6 +60,7 @@ const Login = () => {
       await axios.post('http://localhost:4000/signup', signupData);
       // You can handle the response data as needed
       navigate('/login');
+      alert('Sign up successful!');
   
     }catch(error){
       console.error('Signup error:', error);
