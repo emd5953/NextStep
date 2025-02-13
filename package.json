@@ -5,6 +5,8 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.9",
     "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.13.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-icons": "^5.4.0",
@@ -17,7 +19,8 @@
     "start": "npx concurrently \"react-scripts start\" \"cd server && npm start\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "postinstall": "cd server && npm install"
   },
   "eslintConfig": {
     "extends": [
