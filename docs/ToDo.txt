@@ -3,9 +3,10 @@ Enrin
 
 
 TO-DO 2/13
-1. Create main ForYou page (Andrew(Frontend) & Bryan & Soli)
-2. Create application tracking (Andrew(Frontend) & Bryan & Soli)
-3. Robustness Diagram (Enrin)
+1. Create main ForYou page (Andrew(Frontend) & Bryan & Soli) which interacts with to pull jobs from the database and accepts and rejects jobs based on swiping.
+2. Create application tracking (Andrew(Frontend) & Bryan & Soli) which interacts with the database and actively tracks jobs applied
+3. Robustness Diagram & Schema Diagram(Enrin) full stack
+4. Styling (Andrew)
 
 
 #Idea for 4th point (IF WE CANNOT COMEUP WITH SOMETHING)
@@ -27,7 +28,6 @@ TO-DO 2/13
  However, these do not affect the application to run.
 .Maybe we should not let users sign up if the email is not a valid one.
  Add authentication with email such as (one time codes) 
-.Profile page photo submission. HOW?
 .Upload resume storage. HOW?
 .Location submitted then use gps type thing to be able to shortlist with location preference.
  Maybe some feautre that has the location bar to automatically fillup
