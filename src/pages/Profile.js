@@ -122,22 +122,26 @@ const Profile = () => {
         </div>
         <div className="profile-form-group">
           <label className="profile-label">Profile Photo</label>
+          <label htmlFor="photo-upload" className="upload-label">Upload...</label>
           <input
+            id="photo-upload"
             type="file"
             accept="image/*"
             onChange={handlePhotoChange}
-            className="profile-input"
+            className="file-input"
           />
         </div>
 
         {/* Resume Upload */}
         <div className="profile-form-group">
           <label className="profile-label">Resume (PDF or DOC)</label>
+          <label htmlFor="resume-upload" className="upload-label">Upload...</label>
           <input
+            id="resume-upload"
             type="file"
             accept=".pdf,.doc,.docx"
             onChange={handleResumeChange}
-            className="profile-input"
+            className="file-input"
           />
         </div>
 

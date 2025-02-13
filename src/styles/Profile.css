@@ -32,6 +32,17 @@
   font-size: 1rem;
 }
 
+.file-input{
+  display: none;
+}
+
+.upload-label{
+  margin-left: 10px;
+  border-radius: 2px;
+  border-width: 1px;
+  border-color: aliceblue;
+}
+
 .profile-button {
   padding: 12px 20px;
   border: none;
