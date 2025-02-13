@@ -12,7 +12,6 @@ const Profile = () => {
   const [email, setEmail] = useState('');
   const [profileImage, setProfileImage] = useState(null); // for local photo viewer
   const [photo, setPhoto] = useState(null); // for mongo field
-  const [encodedPhoto, setEncodedPhoto] = useState(null);
   const [resume, setResume] = useState(null);
   const [location, setLocation] = useState('');
   const navigate = useNavigate(1);
@@ -29,7 +28,6 @@ const Profile = () => {
           });
           console.log(`${response.status} ${response.statusText}\n`);
           console.log('Get Profile Response:', response.data.email);
-          setEncodedPhoto(response.data.encodedPhoto);
           setResume(response.data.resume);
           setFirstName(response.data.firstName);
           setLastName(response.data.lastName);
@@ -53,7 +51,8 @@ const Profile = () => {
     if (file) {
         setPhoto(file);
 
-        // Preview the selected image
+        // Preview the selected image so the user may 
+        // verify that correct images is being uploaded
         const reader = new FileReader();
         reader.onloadend = () => {
             setProfileImage(reader.result);
