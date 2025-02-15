@@ -7,6 +7,7 @@ import Auth from './components/Auth';
 import Profile from './pages/Profile';
 import Login from './pages/Login';
 import BrowseJobs from './pages/BrowseJobs';
+import YourJobs from './pages/YourJobs';
 import './styles/App.css';
 import { TokenContext } from './components/TokenContext';
 
@@ -22,7 +23,10 @@ function App() {
             <Link className="app-nav__link" to="/jobs">Jobs</Link>
             {token && <Link className="app-nav__link" to="/profile">Profile</Link>}
           </nav>
-          <Auth />
+          <div className="auth-container">
+            <Link className="app-nav__link" to="/your-jobs">Your Jobs</Link>
+            <Auth />
+          </div>
         </header>
 
         <main className="app-main">
@@ -32,6 +36,7 @@ function App() {
             <Route path="/jobs" element={<BrowseJobs />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/your-jobs" element={<YourJobs />} />
           </Routes>
         </main>
       </div>

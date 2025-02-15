@@ -1,17 +1,15 @@
 /* File: /src/styles/App.css */
 
-/* App container */
 .app-container {
   font-family: 'Poppins', sans-serif;
   min-height: 100vh;
   width: 100%;
   background: linear-gradient(135deg, rgba(20,20,20,0.95), rgba(197,35,200,0.95));
   color: #fff;
-  padding: 20px 0 0 0; /* added top padding */
+  padding: 20px 0 0 0;
   position: relative;
 }
 
-/* App header */
 .app-header {
   display: flex;
   align-items: center;
@@ -66,6 +64,13 @@
 .auth__button:hover {
   transform: scale(1.05) translateY(-2px);
   box-shadow: 0 8px 25px rgba(255, 118, 136, 0.6);
+}
+
+/* New container style for the Application Tracker link and Auth component */
+.auth-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 /* Main content area */

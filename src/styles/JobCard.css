@@ -1,55 +1,104 @@
 /* File: /src/styles/JobCard.css */
 .job-card {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    color: #fff;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    margin: 0 auto;
-    max-width: 800px;
-  }
-  
-  .job-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-  }
-  
-  .job-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 10px;
-    background: linear-gradient(90deg, #fff, #ff7eb3);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  
-  .company-name a {
-    color: #ff7eb3;
-    text-decoration: none;
-    transition: color 0.3s;
-  }
-  
-  .company-name a:hover {
-    color: #fff;
-  }
-  
-  .salary-range,
-  .job-schedule,
-  .job-locations,
-  .job-benefits {
-    margin: 5px 0;
-  }
-  
-  .job-description {
-    margin: 10px 0;
-    line-height: 1.6;
-  }
-  
-  .job-skills ul {
-    list-style-type: disc;
-    padding-left: 20px;
-    margin: 5px 0;
-  }
-  
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 20px;
+  border-radius: 8px;
+  width: 800px;   /* Fixed width */
+  height: 450px;  /* Fixed height */
+  margin: 20px auto;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  color: #fff;
+  font-family: 'Poppins', sans-serif;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.job-card-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  flex-shrink: 0;
+}
+
+.job-title {
+  font-size: 1.8rem;
+  margin: 0;
+  background: linear-gradient(90deg, #fff, #ff7eb3);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.job-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+  font-size: 0.9rem;
+}
+
+.company-name a {
+  color: #ff7eb3;
+  text-decoration: none;
+}
+
+.company-name a:hover {
+  text-decoration: underline;
+}
+
+.job-location {
+  color: #ddd;
+}
+
+.job-card-body {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.job-details {
+  margin-bottom: 10px;
+  flex-shrink: 0;
+}
+
+.job-info-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.job-details p {
+  margin: 5px 0;
+}
+
+.salary-range,
+.job-benefits {
+  width: 48%;
+}
+
+.job-schedule {
+  font-size: 0.9rem;
+  color: #ddd;
+  flex-shrink: 0;
+}
+
+.job-description {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 10px;
+  overflow-y: auto; /* Scrolls if content overflows */
+}
+
+.job-skills {
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.job-skills ul {
+  list-style-type: disc;
+  list-style-position: inside;
+  margin: 5px 0;
+  padding-left: 0;
+}
