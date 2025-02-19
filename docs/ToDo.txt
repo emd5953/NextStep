@@ -7,7 +7,30 @@ TO-DO 2/13
 2. Create application tracking (Andrew(Frontend) & Bryan & Soli) which interacts with the database and actively tracks jobs applied
 3. Robustness Diagram & Schema Diagram(Enrin) full stack
 4. Styling (Andrew)
+##################################################################################################################################################################
+Meeting 2/19
+AI Uses
+ 1. Resume and cover letter generation, Resume scanning
+ 2. Interview questions & prep
+ 3. Career advice (interview, resume, etc.)
+ 4. Job searching recommendations (Semantic Search)
+ 5. Fraud Detection
+To-Do
 
+Questions
+ 1. Frontend design
+ 2. Deep linking and External APIs
+
+
+Misc. 
+ Tri-fold poster
+ Monitor
+ Tablet
+
+.External API supporting deep linking and in app browsers.
+ API deep linking and in app browser. 
+.Modeled after linkedIn and Indeed. 
+##################################################################################################################################################################
 
 #Idea for 4th point (IF WE CANNOT COMEUP WITH SOMETHING)
  for to do next week: Start working on Employer pages 
@@ -42,6 +65,10 @@ TO-DO 2/13
  profile is created when they reach profile AFTER they sign up
 .Database does not store timestamps of users logins, signups, registrations.
  Also have logs?
+
+.External API supporting deep linking and in app browsers.
+ API deep linking and in app browser. 
+.Modeled after linkedIn and Indeed. 
 
 
 #WEEKLY MEETING 3
