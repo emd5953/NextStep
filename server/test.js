@@ -254,7 +254,7 @@ function delay(ms) {
   await testSignin();
   //await testProfile();
   //await testUpdateProfile();
-  await testApplyForJob();
+ // await testApplyForJob();
   await testGetApplications();
   //await testLogout();
 

@@ -26,7 +26,7 @@ function App() {
             {token && <Link className="app-nav__link" to="/employer-dashboard">Employer Dashboard</Link>}
           </nav>
           <div className="auth-container">
-            <Link className="app-nav__link" to="/your-jobs">Your Jobs</Link>
+            {token && <Link className="app-nav__link" to="/your-jobs">Your Jobs</Link> }
             <Auth />
           </div>
         </header>

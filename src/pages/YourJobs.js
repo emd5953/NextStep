@@ -1,64 +1,58 @@
 // File: /src/pages/YourJobs.js
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
+import axios from 'axios';
+import moment from 'moment';
+
+
 import '../styles/YourJobs.css';
+import { TokenContext } from '../components/TokenContext';
 
 const YourJobs = () => {
-  const initialJobs = [
-    {
-      id: 1,
-      title: "Software Engineer",
-      company: "Tech Corp",
-      dateApplied: "2025-01-10",
-      status: "Interview",
-      notes: "Follow up next week",
-      isEditing: false
-    },
-    {
-      id: 2,
-      title: "Frontend Developer",
-      company: "Web Solutions",
-      dateApplied: "2025-01-12",
-      status: "Pending",
-      notes: "Waiting for feedback",
-      isEditing: false
-    },
-    {
-      id: 3,
-      title: "Backend Developer",
-      company: "Data Systems",
-      dateApplied: "2025-01-15",
-      status: "Rejected",
-      notes: "Sent thank you note",
-      isEditing: false
-    },
-    {
-      id: 4,
-      title: "Full Stack Developer",
-      company: "Innovatech",
-      dateApplied: "2025-01-18",
-      status: "Offer",
-      notes: "Offer received, reviewing terms",
-      isEditing: false
-    }
-  ];
+  const { token } = useContext(TokenContext);
 
-  const [jobs, setJobs] = useState(initialJobs);
+  const [ myApplications, setMyApplications ] = useState([]);
+
+  const formatDate = (dateString) => {
+    return moment(dateString).format("MMM D, YYYY");
+  };
+
+  useEffect(() => {
+    const fetchMyApplications = async () =>{
+      console.log("fetching applications");
+      if (token) {
+        try {
+          const response = await axios.get(`http://localhost:4000/applications`, {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          console.log(`${response.status} ${response.statusText}\n`);
+          setMyApplications(response.data);
+          
+        } catch (error) {
+          console.error('Applications error:', error);
+        }
+      }
+    };
+
+    fetchMyApplications();
+  },
+  [token]);
+  //const [jobs, setJobs] = useState(initialJobs);
   const [editedNote, setEditedNote] = useState("");
   const saveInitiated = useRef(false);
 
   const handleEdit = (id) => {
-    const job = jobs.find(job => job.id === id);
+    const job = myApplications.find(job => job.jobDetails._id === id);
     setEditedNote(job.notes);
-    setJobs(jobs.map(job => job.id === id ? { ...job, isEditing: true } : job));
+    setMyApplications(myApplications.map(job => job.jobDetails._id === id ? { ...job, isEditing: true } : job));
   };
 
   const handleCancel = (id) => {
-    setJobs(jobs.map(job => job.id === id ? { ...job, isEditing: false } : job));
+    setMyApplications(myApplications.map(job => job.jobDetails._id === id ? { ...job, isEditing: false } : job));
     setEditedNote("");
   };
 
   const handleSave = (id) => {
-    setJobs(jobs.map(job => job.id === id ? { ...job, notes: editedNote, isEditing: false } : job));
+    setMyApplications(myApplications.map(job => job.jobDetails._id === id ? { ...job, notes: editedNote, isEditing: false } : job));
     setEditedNote("");
   };
 
@@ -77,11 +71,11 @@ const YourJobs = () => {
           </tr>
         </thead>
         <tbody>
-          {jobs.map(job => (
-            <tr key={job.id}>
-              <td>{job.title}</td>
-              <td>{job.company}</td>
-              <td>{job.dateApplied}</td>
+          {myApplications.map(job => (
+            <tr key={job.jobDetails._id}>
+              <td>{job.jobDetails.title}</td>
+              <td>{job.jobDetails.companyName}</td>
+              <td>{formatDate(job.date_applied)}</td>
               <td>{job.status}</td>
               <td>
                 {job.isEditing ? (
@@ -108,7 +102,7 @@ const YourJobs = () => {
                 ) : (
                   <div className="notes-display">
                     <span>{job.notes}</span>
-                    <button onClick={() => handleEdit(job.id)}>Edit</button>
+                    <button onClick={() => handleEdit(job.jobDetails._id)}>Edit</button>
                   </div>
                 )}
               </td>

@@ -3,6 +3,7 @@ import React from 'react';
 import '../styles/JobCard.css';
 
 const JobCard = ({
+  job_id,
   title,
   companyName,
   companyWebsite,
@@ -11,12 +12,18 @@ const JobCard = ({
   locations,
   schedule,
   jobDescription,
-  skills,
+  skills, 
+  onApplyClick
 }) => {
   const description =
     jobDescription ||
     "We are seeking an experienced professional to join our team. In this role, you will work on cutting-edge projects, collaborate with a talented group, and contribute to innovative solutions. Responsibilities include project management, client engagement, and strategic planning. Enjoy a competitive salary, excellent benefits, and a dynamic work environment.";
 
+    const handleApply = () => {
+      // Pass the job_id to the parent component's click handler
+      console.log("Clicked job id " + job_id);
+      onApplyClick(job_id);
+    };
   return (
     <div className="job-card">
       <div className="job-card-header">
@@ -57,6 +64,11 @@ const JobCard = ({
             </ul>
           </div>
         )}
+        <div>
+          <button onClick={handleApply}>
+            Apply
+          </button>
+        </div>
       </div>
     </div>
   );
