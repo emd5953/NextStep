@@ -28,6 +28,7 @@ const app = express();
 const PORT = process.env.PORT;
 const USER_PROFILES_COLLECTION = 'users';
 const JOBS_COLLECTION = 'Jobs';
+const APPLICATIONS_COLLECTION = 'applications';
 
 const client = new MongoClient(uri);
 
@@ -38,6 +39,50 @@ client.connect()
     // display the current time so that we know
     const currentDateTime = new Date().toLocaleString();
     console.log(`Connected to MongoDB at ${currentDateTime}`);
+
+    router.post('/apply', async (req, res) => {
+      //console.log("/apply was called");
+      const applications_collection = db.collection(APPLICATIONS_COLLECTION);
+
+      // retrieve job._id from req.body
+      const { _id } = req.body;
+
+      // decode user._id
+      const token = req.headers.authorization.split(" ")[1];
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+      const application_info = {
+        job_id: ObjectId.createFromHexString(_id),
+        user_id: ObjectId.createFromHexString(decoded.id),
+        date_applied: new Date(),
+        status: 'Pending',
+      };
+
+      // date_applied, status, 
+      // j_coll = obtain reference to Applications collection
+      // does the job._id , user._id combo exists
+      try {
+        // Check if the combination of job_id and user_id already exists
+        const existingApplication = await applications_collection.findOne({
+          job_id: ObjectId.createFromHexString(_id),
+          user_id: ObjectId.createFromHexString(decoded.id)
+        });
+
+        if (existingApplication) { // if the combination already exists
+          return res.status(400).json({ error: 'An application for this job already exists for this user.' });
+        }
+
+        // otherwise proceed to insert the combination
+        applications_collection.insertOne(application_info);
+        res.status(200).json({
+          job_id: _id,
+          user_id: decoded.id
+        });
+      } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to save job application ' + "Job id " + _id + " User " + decoded.id });
+      }
+    });
 
     router.post('/signin', async (req, res) => {
       try {
@@ -106,6 +151,50 @@ client.connect()
       } catch (error) {
         console.log(error);
         res.status(400).json({ error: `Error creating user. ${error}` });
+      }
+    });
+
+    router.get("/applications", async (req, res) => {
+      try {
+        if (req.headers.authorization) {
+          const token = req.headers.authorization.split(" ")[1];
+          const decoded = jwt.verify(token, process.env.JWT_SECRET);
+          console.log('Auth token is valid');
+          console.log("in applications list");
+
+          const applications_collection = db.collection(APPLICATIONS_COLLECTION);
+
+          try {
+
+            const applicationsWithJobDetails = await applications_collection.aggregate([
+              {
+                $match: { // match all applications for this user id
+                  user_id: ObjectId.createFromHexString(decoded.id)
+                }
+              },
+              {
+                $lookup: { // equivalent to JOIN in RDBMS
+                  from: 'Jobs',
+                  localField: 'job_id',
+                  foreignField: '_id',
+                  as: 'jobDetails' // pick any name, used below in $unwind 
+                }
+              },
+              { $unwind: '$jobDetails' } // since we are expecting it to match 0 or 1 instance, this prevents it from being turned into an array 
+            ]).toArray();
+
+            res.status(200).json(applicationsWithJobDetails);
+
+          } catch (error) {
+            console.log(`Error in /applications. ${error}`);
+            res.status(500).json({ error: `Error searching applications. ${error}` });
+          }
+        } else {
+          res.status(401).json({ message: 'User not authenticated' });
+        }
+      } catch (error) {
+        console.log(`Error in /applications. ${error}`);
+        res.status(500).json({ error: `Error searching applications. ${error}` });
       }
     });
 
