@@ -68,8 +68,9 @@ client.connect()
           user_id: ObjectId.createFromHexString(decoded.id)
         });
 
-        if (existingApplication) { // if the combination already exists
-          return res.status(400).json({ error: 'An application for this job already exists for this user.' });
+        if (existingApplication) {
+          //i am using a custom error code. We will handle this particular code in the UI
+          return res.status(407).json({ error: 'You’ve already applied for this job. Check your application status in "Your Jobs".' });
         }
 
         // otherwise proceed to insert the combination
