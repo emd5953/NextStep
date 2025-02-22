@@ -13,7 +13,7 @@ import './styles/App.css';
 import { TokenContext } from './components/TokenContext';
 
 function App() {
-  const { token } = useContext(TokenContext);
+  const { token, employerFlag } = useContext(TokenContext);
   return (
     <Router>
       <div className="app-container">
@@ -23,10 +23,10 @@ function App() {
             <Link className="app-nav__link" to="/about">About</Link>
             <Link className="app-nav__link" to="/jobs">Jobs</Link>
             {token && <Link className="app-nav__link" to="/profile">Profile</Link>}
-            {token && <Link className="app-nav__link" to="/employer-dashboard">Employer Dashboard</Link>}
+            {(token && employerFlag) && <Link className="app-nav__link" to="/employer-dashboard">Employer Dashboard</Link>}
           </nav>
           <div className="auth-container">
-            {token && <Link className="app-nav__link" to="/your-jobs">Your Jobs</Link> }
+            {(token && !employerFlag)  && <Link className="app-nav__link" to="/your-jobs">Your Jobs</Link> }
             <Auth />
           </div>
         </header>

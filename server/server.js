@@ -101,10 +101,10 @@ client.connect()
           const passwordMatch = await bcrypt.compare(password, user.password); //now let's see if the hashes match
           if (passwordMatch) { // if the two hashed passwords match, then set the authentication cookie and reprt success
 
-            const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+            const token = jwt.sign({ id: user._id, isEmployer: user.employerFlag }, process.env.JWT_SECRET, {
               expiresIn: "1h",
             });
-            res.status(200).json({ token, message: 'Login success' });
+            res.status(200).json({ token, message: 'Login success', isEmployer: user.employerFlag });
           } else {
             res.status(401).json({ message: 'Invalid password.' });
           }
@@ -123,7 +123,7 @@ client.connect()
         if (!req.body || !req.body.full_name) {
           return res.status(400).send({ error: 'Invalid request body' });
         }
-        const { full_name, phone, email, password } = req.body;
+        const { full_name, phone, email, password, employerFlag } = req.body;
         // Access the database
 
 
@@ -136,13 +136,14 @@ client.connect()
           return res.status(400).json({ error: "Email already registered" });
         }
 
-        // test
+        
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = {
           full_name,
           phone,
           email,
           password: hashedPassword,
+          employerFlag: employerFlag
         };
 
 

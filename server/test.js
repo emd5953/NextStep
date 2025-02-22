@@ -14,7 +14,7 @@ async function connectToMongoDB() {
 
     const uri = process.env.MONGODB_URI;
     const dbName = 'mydb';
-    
+
     const USER_PROFILES_COLLECTION = 'users';
     const JOBS_COLLECTION = 'Jobs';
     const APPLICATIONS_COLLECTION = 'applications';
@@ -50,9 +50,10 @@ async function connectToMongoDB() {
                     as: 'userDetails',
                     pipeline: [
                         {
-                            $project: { encodedPhoto: 0,
+                            $project: {
+                                encodedPhoto: 0,
                                 password: 0
-                             } // Exclude the 'encodedPhoto' field
+                            } // Exclude the 'encodedPhoto' field
                         }
                     ]
                 }
@@ -143,8 +144,9 @@ const updateProfileData = {
 
 let token = '';
 
-async function testSignup() {
+async function testSignup(asEmployer) {
     try {
+        signupData.employerFlag = asEmployer;
         const response = await axios.post(`${BASE_URL}/signup`, signupData);
         console.log(`${response.status} ${response.statusText}\n`);
         console.log('Signup Response:', response.data);
@@ -249,14 +251,15 @@ function delay(ms) {
 }
 
 // Run tests
-(async function() {
-  //await testSignup();
-  await testSignin();
-  //await testProfile();
-  //await testUpdateProfile();
- // await testApplyForJob();
-  await testGetApplications();
-  //await testLogout();
+(async function () {
+    const asEmployer = true; // set this to false to register as an applicant/job seeker
+    await testSignup(asEmployer);
+    await testSignin();
+    //await testProfile();
+    //await testUpdateProfile();
+    // await testApplyForJob();
+    //await testGetApplications();
+    //await testLogout();
 
 })();
 

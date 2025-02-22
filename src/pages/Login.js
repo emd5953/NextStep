@@ -1,7 +1,7 @@
 // File: /src/pages/Login.js
 import React, { useState, useEffect, useContext } from 'react';
 import '../styles/Login.css';
-import axios from 'axios'; 
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom'
 import { TokenContext } from '../components/TokenContext';
 
@@ -16,9 +16,9 @@ const Login = () => {
   const [signupPhone, setSignupPhone] = useState('');
   const [signupEmail, setSignupEmail] = useState('');
   const [signupPassword, setSignupPassword] = useState('');
-  //const [authToken, setAuthToken] = useState('')
+
   const navigate = useNavigate();
-  const { token, setToken } = useContext(TokenContext);
+  const { token, setToken, employerFlag, setEmployerFlag } = useContext(TokenContext);
 
   useEffect(() => {
     if (token) {
@@ -35,12 +35,11 @@ const Login = () => {
         email: loginEmail,
         password: loginPassword
       };
-      
+
       const response = await axios.post('http://localhost:4000/signin', signinData);
       setToken(response.data.token);
-      //setAuthToken(response.data.token);
-      // You can handle the response data as needed
-      
+      setEmployerFlag(response.data.isEmployer);
+
     } catch (error) {
       console.error('Login error:', error);
       alert('Login failed. Please check the console for more details.');
@@ -49,20 +48,21 @@ const Login = () => {
 
   const handleSignupSubmit = async (e) => {
     e.preventDefault();
-    const signupData ={
+    const signupData = {
       full_name: signupName,
       phone: signupPhone,
       email: signupEmail,
       password: signupPassword,
+      employerFlag: employerFlag,
     };
 
-    try{
+    try {
       await axios.post('http://localhost:4000/signup', signupData);
       // You can handle the response data as needed
       navigate('/login');
       alert('Sign up successful!');
-  
-    }catch(error){
+
+    } catch (error) {
       console.error('Signup error:', error);
       alert('Error. Please check the console for more details.');
     }
@@ -74,7 +74,7 @@ const Login = () => {
       <div className="login-section">
         <div className="container-fluid">
           <div className="row no-gutters full-height justify-content-center">
-            <div className="col-12 text-center align-self-center py-5">
+            <div className="col-12 text-center align-self-center">
               <div className="login-section pb-5 pt-5 pt-sm-2 text-center">
                 <h6 className="mb-0 pb-3">
                   <span>Log In </span>
@@ -126,6 +126,15 @@ const Login = () => {
                         <div className="login-section-content text-center">
                           <h4 className="mb-3 pb-3">Sign Up</h4>
                           <form onSubmit={handleSignupSubmit}>
+                            <div className="login-form-group">
+                              <label>
+                                <input
+                                  type="checkbox"
+                                  checked={employerFlag}
+                                  onChange={(e) => setEmployerFlag(e.target.checked)}
+                                /> Signup as an Employer
+                              </label>
+                            </div>
                             <div className="login-form-group">
                               <input
                                 type="text"
