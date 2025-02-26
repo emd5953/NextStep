@@ -19,12 +19,13 @@
   /* Grid container with 4 columns (each 400px wide) and 2 rows */
   .dashboard-boxes {
     display: grid;
-    grid-template-columns: repeat(4, 400px);  /* Each box is now 400px wide */
-    grid-auto-rows: 300px;  /* Height remains 300px */
+    grid-template-columns: repeat(4, 300px); /* Each box is now 300px wide */
+    grid-auto-rows: 200px;                  /* Height is now 200px */
     gap: 20px;
-    justify-content: center;  /* Centers the grid in the container */
+    justify-content: center;
     width: 100%;
   }
+  
   
   .dashboard-box {
     background: rgba(255, 255, 255, 0.1);
