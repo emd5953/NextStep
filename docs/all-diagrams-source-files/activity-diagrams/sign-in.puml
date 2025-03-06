@@ -3,17 +3,18 @@ title Sign-In Activity Diagram
 
 start
 
-:Enter credentials in SignInForm;
-:Submit credentials for verification;
+:Visit Home Page;
+:Click "Sign In";
+:Enter Emailid and Password;
+:Submit credentials /sign-in;
 
-:Verify credentials in AccountDB;
-:AccountDB returns verification result;
+:Verify credentials in DB;
+:API returns verification result;
 
 if (Credentials are valid?) then (yes)
-    :Display sign-in successful message to JobSeeker;
-    :Display home page;
+    :Display Profile page;
 else
-    :Display error message to JobSeeker;
+    :Display error message;
 endif
 
 stop

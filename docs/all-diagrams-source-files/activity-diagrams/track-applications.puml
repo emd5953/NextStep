@@ -1,10 +1,11 @@
 @startuml Track Applications Activity Diagram
-title Track Applications Activity Diagram
+title Track Applications(Your Jobs) Activity Diagram
 
 start
 
-:Visit Track Applications Page;
-:Retrieve applications from ApplicationsDB;
+:Complete Sign-in;
+:Navigate to Your Jobs Page;
+:Retrieve applications from /applications;
 
 :Display application details;
 

@@ -3,25 +3,22 @@ title Browse Jobs Activity Diagram
 
 start
 
-:View jobs page;
+:Navigate to Jobs Page;
 :Enter search criteria;
-:Retrieve job listings based on criteria;
+:Retrieve job listings from /jobs;
 
 if (At least one listing found?) then (yes)
 
-
     while (More jobs to show?)
-        :Display job details of current match;
+        :Display job details tile;
         
-        if ("Swipe Right/Apply Clicked") then (yes)
-            :Submit application to DB;
+        if ("Apply Clicked") then (yes)
+            :Submit application to /apply;
             :Display confirmation;
         endif
 
     endwhile
 
-else
-    :Display "No more jobs to show" message;
 endif
 
 stop

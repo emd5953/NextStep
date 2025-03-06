@@ -3,16 +3,16 @@ title Manage Profile Activity Diagram
 
 start
 
-:Navigate to profile page;
-:Retrieve profile information from ProfileDB;
+:Navigate to Profile Page;
+:Retrieve profile information from /profile;
 :Display profile details;
 
 :Update profile information;
 
-:Save updated profile to ProfileDB;
-:ProfileDB confirms profile update;
+:Save updated profile to /UpdateProfile;
+:API confirms profile update;
 
-:Display profile update confirmation to JobSeeker;
+:Display profile update confirmation message;
 
 stop
 

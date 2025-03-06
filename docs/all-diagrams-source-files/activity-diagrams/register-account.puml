@@ -1,15 +1,25 @@
 @startuml Register Account Activity Diagram
-title Register Account Activity Diagram
+title Sign-Up Activity Diagram
 
 start
 
-:Fill out registration form;
-:Submit registration form;
+:Visit Home Page;
 
-:Create new account in AccountDB;
-:AccountDB confirms account creation;
+:Click "Sign In";
 
-:Display registration confirmation to JobSeeker;
+:Fill out Sign-Up form;
+
+:Submit Sign-Up data to /sign-up;
+
+if (User selected Sign-up as Employer option?) then (yes)
+    :Create new employer account in DB;
+else
+    :Create new job seeker account in DB;
+endif
+
+:API confirms account creation;
+
+:Display registration confirmation message;
 
 stop
 
