@@ -5,6 +5,8 @@
 /.pnp
 .pnp.js
 node_modules/
+# Ignore all .env files in any folder
+.env
 
 # testing
 /coverage
