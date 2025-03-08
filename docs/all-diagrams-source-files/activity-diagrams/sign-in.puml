@@ -3,6 +3,7 @@ title Sign-In Activity Diagram
 
 start
 
+<<<<<<< HEAD
 :Enter credentials in SignInForm;
 :Submit credentials for verification;
 
@@ -14,6 +15,20 @@ if (Credentials are valid?) then (yes)
     :Display home page;
 else
     :Display error message to JobSeeker;
+=======
+:Visit Home Page;
+:Click "Sign In";
+:Enter Emailid and Password;
+:Submit credentials /sign-in;
+
+:Verify credentials in DB;
+:API returns verification result;
+
+if (Credentials are valid?) then (yes)
+    :Display Profile page;
+else
+    :Display error message;
+>>>>>>> c385fae2c82551af2029c416a05994df92289c1f
 endif
 
 stop

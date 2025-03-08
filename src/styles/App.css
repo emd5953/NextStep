@@ -19,6 +19,15 @@
   padding: 0 10px;
 }
 
+<<<<<<< HEAD
+=======
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+>>>>>>> c385fae2c82551af2029c416a05994df92289c1f
 .app-nav {
   display: flex;
   gap: 20px;
@@ -66,20 +75,29 @@
   box-shadow: 0 8px 25px rgba(255, 118, 136, 0.6);
 }
 
+<<<<<<< HEAD
 /* New container style for the Application Tracker link and Auth component */
+=======
+>>>>>>> c385fae2c82551af2029c416a05994df92289c1f
 .auth-container {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
+<<<<<<< HEAD
 /* Main content area */
+=======
+>>>>>>> c385fae2c82551af2029c416a05994df92289c1f
 .app-main {
   width: 100%;
   flex-grow: 1;
 }
 
+<<<<<<< HEAD
 /* Home branding (used on Home page) */
+=======
+>>>>>>> c385fae2c82551af2029c416a05994df92289c1f
 .home-branding {
   display: flex;
   flex-direction: column;
@@ -107,18 +125,50 @@
   letter-spacing: 1px;
 }
 
+<<<<<<< HEAD
 /* App content */
+=======
+>>>>>>> c385fae2c82551af2029c416a05994df92289c1f
 .app-content {
   text-align: center;
   padding: 40px 20px;
 }
 
+<<<<<<< HEAD
 /* Responsive adjustments */
 @media (max-width: 768px) {
+=======
+/* Hamburger button styling */
+.hamburger {
+  display: none; /* Hidden on larger screens */
+  flex-direction: column;
+  gap: 5px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+}
+
+.hamburger .bar {
+  width: 25px;
+  height: 3px;
+  background-color: #fff;
+  border-radius: 2px;
+}
+
+/* Responsive adjustments for small screens */
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+  }
+  
+  /* Adjust header layout for mobile */
+>>>>>>> c385fae2c82551af2029c416a05994df92289c1f
   .app-header {
     flex-direction: column;
     align-items: flex-start;
   }
+<<<<<<< HEAD
   .app-nav {
     margin-bottom: 10px;
   }
@@ -127,4 +177,41 @@
     width: 100%;
     justify-content: center;
   }
+=======
+}
+
+/* Modal overlay for mobile nav */
+.nav-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.nav-overlay-content {
+  background-color: rgba(20,20,20,0.95);
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  text-align: center;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  font-size: 2rem;
+  color: #fff;
+  align-self: flex-end;
+  cursor: pointer;
+>>>>>>> c385fae2c82551af2029c416a05994df92289c1f
 }
