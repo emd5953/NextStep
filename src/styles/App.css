@@ -19,15 +19,12 @@
   padding: 0 10px;
 }
 
-<<<<<<< HEAD
-=======
 .nav-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
->>>>>>> c385fae2c82551af2029c416a05994df92289c1f
 .app-nav {
   display: flex;
   gap: 20px;
@@ -59,6 +56,7 @@
   box-shadow: 0 5px 15px rgba(255, 118, 136, 0.4);
   border-color: transparent;
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -75,29 +73,17 @@
   box-shadow: 0 8px 25px rgba(255, 118, 136, 0.6);
 }
 
-<<<<<<< HEAD
-/* New container style for the Application Tracker link and Auth component */
-=======
->>>>>>> c385fae2c82551af2029c416a05994df92289c1f
 .auth-container {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-<<<<<<< HEAD
-/* Main content area */
-=======
->>>>>>> c385fae2c82551af2029c416a05994df92289c1f
 .app-main {
   width: 100%;
   flex-grow: 1;
 }
 
-<<<<<<< HEAD
-/* Home branding (used on Home page) */
-=======
->>>>>>> c385fae2c82551af2029c416a05994df92289c1f
 .home-branding {
   display: flex;
   flex-direction: column;
@@ -115,6 +101,7 @@
   margin: 0;
   background: linear-gradient(90deg, #fff, #ff7eb3);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -125,19 +112,11 @@
   letter-spacing: 1px;
 }
 
-<<<<<<< HEAD
-/* App content */
-=======
->>>>>>> c385fae2c82551af2029c416a05994df92289c1f
 .app-content {
   text-align: center;
   padding: 40px 20px;
 }
 
-<<<<<<< HEAD
-/* Responsive adjustments */
-@media (max-width: 768px) {
-=======
 /* Hamburger button styling */
 .hamburger {
   display: none; /* Hidden on larger screens */
@@ -163,21 +142,10 @@
   }
   
   /* Adjust header layout for mobile */
->>>>>>> c385fae2c82551af2029c416a05994df92289c1f
   .app-header {
     flex-direction: column;
     align-items: flex-start;
   }
-<<<<<<< HEAD
-  .app-nav {
-    margin-bottom: 10px;
-  }
-  .app-nav__link,
-  .auth__button {
-    width: 100%;
-    justify-content: center;
-  }
-=======
 }
 
 /* Modal overlay for mobile nav */
@@ -213,5 +181,4 @@
   color: #fff;
   align-self: flex-end;
   cursor: pointer;
->>>>>>> c385fae2c82551af2029c416a05994df92289c1f
 }

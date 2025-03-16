@@ -6,6 +6,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.9",
     "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.7",
     "jsonwebtoken": "^9.0.2",
     "modules": "^0.4.0",
     "moment": "^2.30.1",

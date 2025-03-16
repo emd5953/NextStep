@@ -1,5 +1,3 @@
-// File: /src/App.js
-import React, { useContext } from 'react';
 import React, { useContext, useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Home from './pages/Home';

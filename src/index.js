@@ -1,9 +1,3 @@
-// File: /src/index.js
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
-import './styles/global.css'; // Global styles
-import { TokenProvider } from './components/TokenContext';
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
