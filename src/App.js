@@ -1,9 +1,6 @@
 // File: /src/App.js
-<<<<<<< HEAD
 import React, { useContext } from 'react';
-=======
 import React, { useContext, useState, useEffect } from 'react';
->>>>>>> c385fae2c82551af2029c416a05994df92289c1f
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Home from './pages/Home';
 import About from './pages/About';
@@ -15,11 +12,6 @@ import YourJobs from './pages/YourJobs';
 import EmployerDashboard from './pages/EmployerDashboard';
 import './styles/App.css';
 import { TokenContext } from './components/TokenContext';
-<<<<<<< HEAD
-
-function App() {
-  const { token, employerFlag } = useContext(TokenContext);
-=======
 
 function App() {
   const { token, employerFlag } = useContext(TokenContext);
@@ -43,12 +35,10 @@ function App() {
     return () => window.removeEventListener('resize', handleResize);
   }, [isNavOpen]);
 
->>>>>>> c385fae2c82551af2029c416a05994df92289c1f
   return (
     <Router>
       <div className="app-container">
         <header className="app-header">
-<<<<<<< HEAD
           <nav className="app-nav">
             <Link className="app-nav__link" to="/">Home</Link>
             <Link className="app-nav__link" to="/about">About</Link>
@@ -62,7 +52,6 @@ function App() {
           </div>
         </header>
 
-=======
           <div className="nav-container">
             {isMobile && (
               <button className="hamburger" onClick={toggleNav}>
@@ -81,15 +70,14 @@ function App() {
               </nav>
             )}
           </div>
-          {!isMobile && (
-            <div className="auth-container">
-              {(token && !employerFlag) && (
-                <Link className="app-nav__link" to="/your-jobs">Your Jobs</Link>
-              )}
-              <Auth />
-            </div>
-          )}
-        </header>
+        {!isMobile && (
+          <div className="auth-container">
+            {(token && !employerFlag) && (
+              <Link className="app-nav__link" to="/your-jobs">Your Jobs</Link>
+            )}
+            <Auth />
+          </div>
+        )}
 
         {/* Mobile modal overlay */}
         {isMobile && isNavOpen && (
@@ -119,7 +107,6 @@ function App() {
           </div>
         )}
 
->>>>>>> c385fae2c82551af2029c416a05994df92289c1f
         <main className="app-main">
           <Routes>
             <Route path="/" element={<Home />} />

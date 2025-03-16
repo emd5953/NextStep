@@ -1,50 +1,3 @@
-// File: /src/pages/Login.js
-<<<<<<< HEAD
-import React, { useState, useEffect, useContext } from 'react';
-import '../styles/Login.css';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom'
-import { TokenContext } from '../components/TokenContext';
-
-
-const Login = () => {
-  // Login form state
-  const [loginEmail, setLoginEmail] = useState('');
-  const [loginPassword, setLoginPassword] = useState('');
-
-  // Sign up form state
-  const [signupName, setSignupName] = useState('');
-  const [signupPhone, setSignupPhone] = useState('');
-  const [signupEmail, setSignupEmail] = useState('');
-  const [signupPassword, setSignupPassword] = useState('');
-
-  const navigate = useNavigate();
-  const { token, setToken, employerFlag, setEmployerFlag } = useContext(TokenContext);
-
-  useEffect(() => {
-    if (token) {
-      setToken(token)
-      navigate('/profile'); //{ state: { token: token } }
-    }
-  }, [token, navigate, setToken]);
-
-  const handleLoginSubmit = async (e) => {
-    e.preventDefault();
-    console.log('Logging in with:', { loginEmail, loginPassword });
-    try {
-      const signinData = {
-        email: loginEmail,
-        password: loginPassword
-      };
-
-      const response = await axios.post('http://localhost:4000/signin', signinData);
-      setToken(response.data.token);
-      setEmployerFlag(response.data.isEmployer);
-
-    } catch (error) {
-      console.error('Login error:', error);
-      alert('Login failed. Please check the console for more details.');
-=======
 import React, { useState, useEffect, useContext } from "react";
 import "../styles/Login.css";
 import axios from "axios";
@@ -75,6 +28,7 @@ const Login = () => {
 
   useEffect(() => {
     if (token) {
+      // If there's already a token, redirect to profile
       setToken(token);
       navigate("/profile");
     }
@@ -105,16 +59,12 @@ const Login = () => {
           ? { email: loginEmail, password: loginPassword }
           : { phone: loginPhone, verificationCode };
 
-      const response = await axios.post(
-        "http://localhost:4000/signin",
-        loginData
-      );
+      const response = await axios.post("http://localhost:4000/signin", loginData);
       setToken(response.data.token);
       setEmployerFlag(response.data.isEmployer);
     } catch (error) {
       console.error("Login error:", error);
       alert("Login failed. Please check the console for more details.");
->>>>>>> c385fae2c82551af2029c416a05994df92289c1f
     }
   };
 
@@ -125,36 +75,16 @@ const Login = () => {
       phone: signupPhone,
       email: signupEmail,
       password: signupPassword,
-<<<<<<< HEAD
       employerFlag: employerFlag,
     };
 
     try {
-      await axios.post('http://localhost:4000/signup', signupData);
-      // You can handle the response data as needed
-      navigate('/login');
-      alert('Sign up successful!');
-
-    } catch (error) {
-      console.error('Signup error:', error);
-      alert('Error. Please check the console for more details.');
-    }
-
-=======
-      employerFlag,
-      verificationCode: signupVerificationCode,
-    };
-
-    try {
       await axios.post("http://localhost:4000/signup", signupData);
-      navigate("/login");
       alert("Sign up successful!");
+      navigate("/login");
     } catch (error) {
       console.error("Signup error:", error);
-      alert(
-        error.response?.data?.error ||
-          "Error. Please check the console for more details."
-      );
+      alert("Error. Please check the console for more details.");
     }
   };
 
@@ -175,7 +105,6 @@ const Login = () => {
   const handleGoogleError = () => {
     console.error("Google login failed");
     alert("Google login failed. Please try again.");
->>>>>>> c385fae2c82551af2029c416a05994df92289c1f
   };
 
   return (
@@ -185,69 +114,41 @@ const Login = () => {
           <div className="row no-gutters full-height justify-content-center">
             <div className="col-12 text-center align-self-center">
               <div className="login-section pb-5 pt-5 pt-sm-2 text-center">
+                {/* Toggle Title */}
                 <h6 className="mb-0 pb-3">
                   <span>Log In </span>
                   <span>Sign Up</span>
                 </h6>
-<<<<<<< HEAD
-                <input className="login-checkbox" type="checkbox" id="reg-log" name="reg-log" />
-=======
+                {/* This single checkbox toggles the 3D card (front/back) */}
                 <input
                   className="login-checkbox"
                   type="checkbox"
                   id="reg-log"
                   name="reg-log"
                 />
->>>>>>> c385fae2c82551af2029c416a05994df92289c1f
                 <label htmlFor="reg-log"></label>
+
+                {/* 3D Card Container */}
                 <div className="login-card-3d-wrap mx-auto">
                   <div className="login-card-3d-wrapper">
+                    {/* =================== */}
                     {/* Card Front – Login */}
+                    {/* =================== */}
                     <div className="login-card-front">
                       <div className="login-center-wrap">
                         <div className="login-section-content text-center">
                           <h4 className="mb-4 pb-3">Log In</h4>
+
+                          {/* Login Form */}
                           <form onSubmit={handleLoginSubmit}>
-                            <div className="login-form-group">
-<<<<<<< HEAD
-                              <input
-                                type="email"
-                                className="login-form-input"
-                                placeholder="Email"
-                                value={loginEmail}
-                                onChange={(e) => setLoginEmail(e.target.value)}
-                                required
-                              />
-                              <i className="login-form-icon uil uil-at"></i>
-                            </div>
-                            <div className="login-form-group mt-2">
-                              <input
-                                type="password"
-                                className="login-form-input"
-                                placeholder="Password"
-                                value={loginPassword}
-                                onChange={(e) => setLoginPassword(e.target.value)}
-                                required
-                              />
-                              <i className="login-form-icon uil uil-lock-alt"></i>
-                            </div>
-                            <button type="submit" className="login-btn mt-4">Login</button>
-                          </form>
-                          <p className="mb-0 mt-4 text-center">
-                            <a href="https://www.web-leb.com/code" className="link">Forgot your password?</a>
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-=======
+                            {/* Radio Buttons for Login Method */}
+                            <div className="login-form-group text-left">
                               <label>
                                 <input
                                   type="radio"
                                   value="email"
                                   checked={loginMethod === "email"}
-                                  onChange={(e) =>
-                                    setLoginMethod(e.target.value)
-                                  }
+                                  onChange={(e) => setLoginMethod(e.target.value)}
                                 />{" "}
                                 Email Login
                               </label>
@@ -256,25 +157,22 @@ const Login = () => {
                                   type="radio"
                                   value="phone"
                                   checked={loginMethod === "phone"}
-                                  onChange={(e) =>
-                                    setLoginMethod(e.target.value)
-                                  }
+                                  onChange={(e) => setLoginMethod(e.target.value)}
                                 />{" "}
                                 Phone Login
                               </label>
                             </div>
 
+                            {/* Conditional Fields for Email or Phone */}
                             {loginMethod === "email" ? (
                               <>
-                                <div className="login-form-group">
+                                <div className="login-form-group mt-2">
                                   <input
                                     type="email"
                                     className="login-form-input"
                                     placeholder="Email"
                                     value={loginEmail}
-                                    onChange={(e) =>
-                                      setLoginEmail(e.target.value)
-                                    }
+                                    onChange={(e) => setLoginEmail(e.target.value)}
                                     required
                                   />
                                   <i className="login-form-icon uil uil-at"></i>
@@ -285,9 +183,7 @@ const Login = () => {
                                     className="login-form-input"
                                     placeholder="Password"
                                     value={loginPassword}
-                                    onChange={(e) =>
-                                      setLoginPassword(e.target.value)
-                                    }
+                                    onChange={(e) => setLoginPassword(e.target.value)}
                                     required
                                   />
                                   <i className="login-form-icon uil uil-lock-alt"></i>
@@ -295,15 +191,13 @@ const Login = () => {
                               </>
                             ) : (
                               <>
-                                <div className="login-form-group">
+                                <div className="login-form-group mt-2">
                                   <input
                                     type="tel"
                                     className="login-form-input"
                                     placeholder="Phone Number"
                                     value={loginPhone}
-                                    onChange={(e) =>
-                                      setLoginPhone(e.target.value)
-                                    }
+                                    onChange={(e) => setLoginPhone(e.target.value)}
                                     required
                                   />
                                   <i className="login-form-icon uil uil-phone"></i>
@@ -313,7 +207,7 @@ const Login = () => {
                                     type="button"
                                     className="login-btn mt-4"
                                     onClick={() =>
-                                      handleSendVerificationCode(loginPhone)
+                                      handleSendVerificationCode(loginPhone, false)
                                     }
                                   >
                                     Get Code via Call
@@ -325,9 +219,7 @@ const Login = () => {
                                       className="login-form-input"
                                       placeholder="Verification Code"
                                       value={verificationCode}
-                                      onChange={(e) =>
-                                        setVerificationCode(e.target.value)
-                                      }
+                                      onChange={(e) => setVerificationCode(e.target.value)}
                                       required
                                     />
                                     <i className="login-form-icon uil uil-key-skeleton"></i>
@@ -335,46 +227,56 @@ const Login = () => {
                                 )}
                               </>
                             )}
+
+                            {/* Login Button */}
                             <button type="submit" className="login-btn mt-4">
                               Login
                             </button>
-                            <div className="mt-4">
-                              <GoogleLogin
-                                onSuccess={handleGoogleSuccess}
-                                onError={handleGoogleError}
-                                useOneTap
-                              />
-                            </div>
                           </form>
+
+                          {/* Google Login */}
+                          <div className="mt-4">
+                            <GoogleLogin
+                              onSuccess={handleGoogleSuccess}
+                              onError={handleGoogleError}
+                              useOneTap
+                            />
+                          </div>
+
+                          {/* Forgot Password Link */}
+                          <p className="mb-0 mt-4 text-center">
+                            <a href="#!" className="link">
+                              Forgot your password?
+                            </a>
+                          </p>
                         </div>
                       </div>
                     </div>
+                    {/* End Card Front */}
 
->>>>>>> c385fae2c82551af2029c416a05994df92289c1f
+                    {/* =================== */}
                     {/* Card Back – Sign Up */}
+                    {/* =================== */}
                     <div className="login-card-back">
                       <div className="login-center-wrap">
                         <div className="login-section-content text-center">
                           <h4 className="mb-3 pb-3">Sign Up</h4>
+
+                          {/* Sign Up Form */}
                           <form onSubmit={handleSignupSubmit}>
-                            <div className="login-form-group">
+                            {/* Employer Flag */}
+                            <div className="login-form-group text-left">
                               <label>
                                 <input
                                   type="checkbox"
                                   checked={employerFlag}
-<<<<<<< HEAD
                                   onChange={(e) => setEmployerFlag(e.target.checked)}
-                                /> Signup as an Employer
-=======
-                                  onChange={(e) =>
-                                    setEmployerFlag(e.target.checked)
-                                  }
                                 />{" "}
                                 Signup as an Employer
->>>>>>> c385fae2c82551af2029c416a05994df92289c1f
                               </label>
                             </div>
-                            <div className="login-form-group">
+
+                            <div className="login-form-group mt-2">
                               <input
                                 type="text"
                                 className="login-form-input"
@@ -385,6 +287,7 @@ const Login = () => {
                               />
                               <i className="login-form-icon uil uil-user"></i>
                             </div>
+
                             <div className="login-form-group mt-2">
                               <input
                                 type="tel"
@@ -396,8 +299,8 @@ const Login = () => {
                               />
                               <i className="login-form-icon uil uil-phone"></i>
                             </div>
-<<<<<<< HEAD
-=======
+
+                            {/* Verification Call Button / Input */}
                             {!showSignupVerification ? (
                               <button
                                 type="button"
@@ -423,7 +326,7 @@ const Login = () => {
                                 <i className="login-form-icon uil uil-key-skeleton"></i>
                               </div>
                             )}
->>>>>>> c385fae2c82551af2029c416a05994df92289c1f
+
                             <div className="login-form-group mt-2">
                               <input
                                 type="email"
@@ -435,43 +338,30 @@ const Login = () => {
                               />
                               <i className="login-form-icon uil uil-at"></i>
                             </div>
+
                             <div className="login-form-group mt-2">
                               <input
                                 type="password"
                                 className="login-form-input"
                                 placeholder="Password"
                                 value={signupPassword}
-<<<<<<< HEAD
                                 onChange={(e) => setSignupPassword(e.target.value)}
-=======
-                                onChange={(e) =>
-                                  setSignupPassword(e.target.value)
-                                }
->>>>>>> c385fae2c82551af2029c416a05994df92289c1f
                                 required
                               />
                               <i className="login-form-icon uil uil-lock-alt"></i>
                             </div>
-<<<<<<< HEAD
-                            <button type="submit" className="login-btn mt-4">Register</button>
-=======
+
                             <button type="submit" className="login-btn mt-4">
                               Register
                             </button>
->>>>>>> c385fae2c82551af2029c416a05994df92289c1f
                           </form>
                         </div>
                       </div>
                     </div>
-<<<<<<< HEAD
-                    {/* End of login-card-3d-wrapper */}
+                    {/* End Card Back */}
                   </div>
                 </div>
-                {/* End of login-card-3d-wrap */}
-=======
-                  </div>
-                </div>
->>>>>>> c385fae2c82551af2029c416a05994df92289c1f
+                {/* End 3D Card Container */}
               </div>
             </div>
           </div>
