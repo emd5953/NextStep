@@ -24,18 +24,6 @@ const Auth = () => {
 
   return (
     <div>
-      {
-        !token &&
-        <button className="auth__button" onClick={handleSignInClick}>
-          Sign In
-        </button>
-      }
-      {
-        token &&
-        <button className="auth__button" onClick={handleSignOutClick}>
-          Sign Out
-        </button>
-      }
       {!token && (
         <button className="auth__button" onClick={handleSignInClick}>
           Sign In

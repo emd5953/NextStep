@@ -6,7 +6,9 @@ import { TokenContext } from "../components/TokenContext";
 import { GoogleLogin } from "@react-oauth/google";
 
 const Login = () => {
+  // ======================
   // Login form state
+  // ======================
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [loginPhone, setLoginPhone] = useState("");
@@ -14,7 +16,9 @@ const Login = () => {
   const [verificationCode, setVerificationCode] = useState("");
   const [showVerification, setShowVerification] = useState(false);
 
+  // ======================
   // Sign up form state
+  // ======================
   const [signupName, setSignupName] = useState("");
   const [signupPhone, setSignupPhone] = useState("");
   const [signupEmail, setSignupEmail] = useState("");
@@ -22,18 +26,24 @@ const Login = () => {
   const [signupVerificationCode, setSignupVerificationCode] = useState("");
   const [showSignupVerification, setShowSignupVerification] = useState(false);
 
+  // ======================
+  // Context & Navigation
+  // ======================
   const navigate = useNavigate();
   const { token, setToken, employerFlag, setEmployerFlag } =
     useContext(TokenContext);
 
+  // If a token already exists, redirect to profile
   useEffect(() => {
     if (token) {
-      // If there's already a token, redirect to profile
       setToken(token);
       navigate("/profile");
     }
   }, [token, navigate, setToken]);
 
+  // ======================
+  // Phone Verification
+  // ======================
   const handleSendVerificationCode = async (phone, isSignup = false) => {
     try {
       await axios.post("http://localhost:4000/send-verification", {
@@ -51,6 +61,9 @@ const Login = () => {
     }
   };
 
+  // ======================
+  // Login Submit
+  // ======================
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -60,6 +73,7 @@ const Login = () => {
           : { phone: loginPhone, verificationCode };
 
       const response = await axios.post("http://localhost:4000/signin", loginData);
+
       setToken(response.data.token);
       setEmployerFlag(response.data.isEmployer);
     } catch (error) {
@@ -68,6 +82,9 @@ const Login = () => {
     }
   };
 
+  // ======================
+  // Sign Up Submit
+  // ======================
   const handleSignupSubmit = async (e) => {
     e.preventDefault();
     const signupData = {
@@ -88,6 +105,9 @@ const Login = () => {
     }
   };
 
+  // ======================
+  // Google OAuth
+  // ======================
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
       const response = await axios.post("http://localhost:4000/auth/google", {
@@ -107,6 +127,9 @@ const Login = () => {
     alert("Google login failed. Please try again.");
   };
 
+  // ======================
+  // JSX Return
+  // ======================
   return (
     <div className="login-page">
       <div className="login-section">
@@ -119,6 +142,7 @@ const Login = () => {
                   <span>Log In </span>
                   <span>Sign Up</span>
                 </h6>
+
                 {/* This single checkbox toggles the 3D card (front/back) */}
                 <input
                   className="login-checkbox"
@@ -146,6 +170,7 @@ const Login = () => {
                               <label>
                                 <input
                                   type="radio"
+                                  name="loginMethod"
                                   value="email"
                                   checked={loginMethod === "email"}
                                   onChange={(e) => setLoginMethod(e.target.value)}
@@ -155,6 +180,7 @@ const Login = () => {
                               <label className="ml-3">
                                 <input
                                   type="radio"
+                                  name="loginMethod"
                                   value="phone"
                                   checked={loginMethod === "phone"}
                                   onChange={(e) => setLoginMethod(e.target.value)}
