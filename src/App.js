@@ -42,11 +42,7 @@ function App() {
   return (
     <Router>
       <div className="app-container">
-        {/* Header (brand + nav) */}
         <header className="app-header">
-          <Link className="brand" to="/">
-            NextStep
-          </Link>
 
           {/* Desktop Nav vs. Mobile Hamburger */}
           {isMobile ? (
