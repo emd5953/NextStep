@@ -55,17 +55,18 @@ client
     app.post("/apply", async (req, res) => {
       try {
         const applicationsCollection = db.collection("applications");
-
         // retrieve job._id from req.body
         const { _id } = req.body;
 
         // decode user._id from token
         const token = req.headers.authorization?.split(" ")[1];
         if (!token) {
+
           return res
             .status(401)
             .json({ error: "Unauthorized. Missing or invalid token." });
         }
+
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
@@ -83,7 +84,7 @@ client
         });
 
         if (existingApplication) {
-          return res.status(407).json({
+          return res.status(409).json({
             error:
               "You've already applied for this job. Check your application status in 'Your Jobs'.",
           });
@@ -91,6 +92,7 @@ client
 
         // otherwise proceed to insert the combination
         await applicationsCollection.insertOne(applicationInfo);
+
         res.status(200).json({
           job_id: _id,
           user_id: decoded.id,
@@ -487,7 +489,8 @@ client
           audience: process.env.GOOGLE_CLIENT_ID,
         });
 
-        const { email, name } = ticket.getPayload();
+        const { email, name, given_name, family_name, picture } = ticket.getPayload();
+        //console.log(ticket.getPayload());
         const collection = db.collection("users");
 
         // Check if user exists
@@ -497,6 +500,9 @@ client
           // Create new user if doesn't exist
           const newUser = {
             full_name: name,
+            lastName: family_name,
+            firstName: given_name,
+            pictureUrl: picture,
             email,
             employerFlag: false,
             emailVerified: true,

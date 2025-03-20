@@ -10,14 +10,17 @@ const Profile = () => {
   const [lastName, setLastName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
-  const [profileImage, setProfileImage] = useState(null); // for local photo viewer
+  const [profileImage, setProfileImage] = useState(null); // for local photo viewer
   const [photo, setPhoto] = useState(null); // for mongo field
+  const [profilePic, setProfilePic] = useState(null);
   const [resume, setResume] = useState(null);
   const [location, setLocation] = useState('');
+  const [profilePicAlt, setProfilePicAlt] = useState("Profile"); // Default alt text
+
   const navigate = useNavigate(1);
   //const location = useLocation();
   const { token, setToken } = useContext(TokenContext);
-  const [ updateFlag, setUpdateFlag] = useState(null);
+  const [updateFlag, setUpdateFlag] = useState(null);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -26,16 +29,15 @@ const Profile = () => {
           const response = await axios.get(`http://localhost:4000/profile`, {
             headers: { Authorization: `Bearer ${token}` }
           });
-          console.log(`${response.status} ${response.statusText}\n`);
-          console.log('Get Profile Response:', response.data.email);
           setResume(response.data.resume);
           setFirstName(response.data.firstName);
           setLastName(response.data.lastName);
           setPhone(response.data.phone);
           setEmail(response.data.email);
-          setLocation(response.data.location); 
-          setProfileImage(response.data.encodedPhoto);         
-          
+          setLocation(response.data.location);
+          setProfileImage(response.data.encodedPhoto);
+          setProfilePic(response.data.pictureUrl);
+
         } catch (error) {
           console.error('Profile error:', error.response.data);
         }
@@ -49,15 +51,15 @@ const Profile = () => {
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-        setPhoto(file);
+      setPhoto(file);
 
-        // Preview the selected image so the user may 
-        // verify that correct images is being uploaded
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            setProfileImage(reader.result);
-        };
-        reader.readAsDataURL(file);
+      // Preview the selected image so the user may 
+      // verify that correct images is being uploaded
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImage(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -87,7 +89,7 @@ const Profile = () => {
     formData.append("location", location);
 
     if (photo) {
-      formData.append("photo", photo); 
+      formData.append("photo", photo);
     }
 
     if (resume) {
@@ -115,10 +117,23 @@ const Profile = () => {
       <form onSubmit={handleSubmit} className="profile-form">
         {/* Photo Upload */}
         <div>
-          <img className="profile-image"
-            src={profileImage}
-            alt="Profile"
-          />
+          {profileImage ? (
+            <img className="profile-image"
+              src={profileImage}
+              alt="Profile"
+            />
+          ) : (
+            <img
+              className="profile-image"
+              src={profilePic}
+              alt={profilePicAlt} // Use the state variable for alt text
+              onError={() => {
+                // Simulate an HTTP 409 error by setting the alt text
+                setProfilePicAlt("Too many requests");
+                setProfilePic(null); //clear the image.
+              }}
+            />
+          )}
         </div>
         <div className="profile-form-group">
           <label className="profile-label">Profile Photo</label>

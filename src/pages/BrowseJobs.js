@@ -45,7 +45,9 @@ const BrowseJobs = () => {
       console.log(`${response.status} ${response.statusText}\n`);
       alert("Applied successfully!");
     } catch (error) {
-      if (error.response && error.response.status === 407) {
+      //debugger;
+      if (error.response && error.response.status === 409) {
+        console.log(error.response.data.error + jobId);
         alert(error.response.data.error); // Display the error message from API
       } else {
         alert('An unexpected error occurred. Please try again later.');
