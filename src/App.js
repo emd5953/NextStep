@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import BrowseJobs from "./pages/BrowseJobs";
 import YourJobs from "./pages/YourJobs";
 import EmployerDashboard from "./pages/EmployerDashboard";
+import EmployerApplicationTracker from "./pages/EmployerApplicationTracker"; // <-- New import
 import "./styles/App.css";
 import { TokenContext } from "./components/TokenContext";
 
@@ -43,7 +44,6 @@ function App() {
     <Router>
       <div className="app-container">
         <header className="app-header">
-
           {/* Desktop Nav vs. Mobile Hamburger */}
           {isMobile ? (
             <button className="hamburger" onClick={toggleNav}>
@@ -145,6 +145,10 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/your-jobs" element={<YourJobs />} />
             <Route path="/employer-dashboard" element={<EmployerDashboard />} />
+            <Route
+              path="/employer-application-tracker"
+              element={<EmployerApplicationTracker />}
+            />
           </Routes>
         </main>
       </div>

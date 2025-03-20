@@ -1,12 +1,15 @@
 // File: /src/pages/EmployerDashboard.js
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/EmployerDashboard.css';
 
 const EmployerDashboard = () => {
+  const navigate = useNavigate();
+
   const functions = [
     { label: "Create Job Posting", action: () => { /* TODO: Hook up create job posting functionality */ } },
     { label: "Manage Job Postings", action: () => { /* TODO: Hook up manage job postings functionality */ } },
-    { label: "Applicant Tracking", action: () => { /* TODO: Hook up applicant tracking functionality */ } },
+    { label: "Applicant Tracking", action: () => { navigate('/employer-application-tracker'); } },
     { label: "Communication Tools", action: () => { /* TODO: Hook up communication tools functionality */ } },
     { label: "Analytics & Reporting", action: () => { /* TODO: Hook up analytics & reporting functionality */ } },
     { label: "Candidate Profiles", action: () => { /* TODO: Hook up candidate profiles functionality */ } },
