@@ -132,6 +132,8 @@ client
           }
         } else {
           // If signing in with email, verify password
+          console.log("Plain password:", password);
+          console.log("Hashed password from DB:", user.password);
           const passwordMatch = await bcrypt.compare(password, user.password);
           if (!passwordMatch) {
             return res.status(401).json({ message: "Invalid password." });
