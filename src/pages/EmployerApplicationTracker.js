@@ -10,6 +10,7 @@ const EmployerApplicationTracker = () => {
       dateApplied: "2025-01-10",
       status: "Interview Scheduled",
       notes: "Interview scheduled for 2025-01-20",
+      resume: "https://example.com/resumes/john_doe.pdf",
       editing: false,
     },
     {
@@ -19,6 +20,7 @@ const EmployerApplicationTracker = () => {
       dateApplied: "2025-01-12",
       status: "Under Review",
       notes: "Review in progress",
+      resume: "https://example.com/resumes/jane_smith.pdf",
       editing: false,
     },
     {
@@ -28,6 +30,7 @@ const EmployerApplicationTracker = () => {
       dateApplied: "2025-01-15",
       status: "Rejected",
       notes: "Not a good fit for the role",
+      resume: "https://example.com/resumes/alice_johnson.pdf",
       editing: false,
     },
     {
@@ -37,6 +40,7 @@ const EmployerApplicationTracker = () => {
       dateApplied: "2025-01-18",
       status: "Offer Extended",
       notes: "Offer extended, awaiting response",
+      resume: "https://example.com/resumes/bob_brown.pdf",
       editing: false,
     },
   ];
@@ -82,6 +86,15 @@ const EmployerApplicationTracker = () => {
 
   const handleChange = (id, field, value) => {
     setEditedValues(prev => ({ ...prev, [id]: { ...prev[id], [field]: value } }));
+  };
+
+  const handleViewResume = (id) => {
+    const application = applications.find(app => app.id === id);
+    if (application && application.resume) {
+      window.open(application.resume, "_blank");
+    } else {
+      alert("Resume not available");
+    }
   };
 
   useEffect(() => {
@@ -145,6 +158,7 @@ const EmployerApplicationTracker = () => {
                   </td>
                   <td>
                     <button onClick={() => handleSave(application.id)}>Save</button>
+                    <button onClick={() => handleViewResume(application.id)}>View Resume</button>
                   </td>
                 </tr>
               );
@@ -158,6 +172,7 @@ const EmployerApplicationTracker = () => {
                   <td>{application.notes}</td>
                   <td>
                     <button onClick={() => handleEdit(application.id)}>Edit</button>
+                    <button onClick={() => handleViewResume(application.id)}>View Resume</button>
                   </td>
                 </tr>
               );
