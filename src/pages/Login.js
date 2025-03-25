@@ -100,8 +100,12 @@ const Login = () => {
       alert("Sign up successful!");
       navigate("/login");
     } catch (error) {
-      console.error("Signup error:", error);
-      alert("Error. Please check the console for more details.");
+      debugger; 
+      if (error.response && error.response.status === 409) {
+        alert(error.response.data.error); // Display the error message from API
+      } else {
+        alert('An unexpected error occurred. Please try again later.');
+      }
     }
   };
 

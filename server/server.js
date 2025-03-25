@@ -119,6 +119,7 @@ client
         const user = await collection.findOne({
           $or: [{ email }, { phone }],
         });
+        console.log(user);
 
         if (!user) {
           return res.status(401).json({ message: "No matching user found." });
@@ -228,7 +229,7 @@ client
         });
 
         if (existingUser) {
-          return res.status(400).json({
+          return res.status(409).json({
             error:
               existingUser.email === email
                 ? "Email already registered"
@@ -357,7 +358,7 @@ client
         console.log("Auth token is valid");
 
         const collection = db.collection("users");
-
+        //finds profile in MongoDB
         const profile = await collection.findOne(
           { _id: ObjectId.createFromHexString(decoded.id) },
           { projection: { password: 0 } }
@@ -368,7 +369,7 @@ client
             message: "No matching record found. Check your access token.",
           });
         }
-
+        //retrieves all of profile's attributes
         res.status(200).json(profile);
       } catch (error) {
         if (error.name === "TokenExpiredError") {
@@ -489,15 +490,17 @@ client
           audience: process.env.GOOGLE_CLIENT_ID,
         });
 
+        //Retrieve user profile properties from verifyIdToken/ticket
+        //IN this case we retrieve email, full name, first name, last name, and profile picture if present 
         const { email, name, given_name, family_name, picture } = ticket.getPayload();
         //console.log(ticket.getPayload());
-        const collection = db.collection("users");
+        const collection = db.collection("users"); 
 
         // Check if user exists
         let user = await collection.findOne({ email });
 
         if (!user) {
-          // Create new user if doesn't exist
+          // Create new user if doesn't exist in MongoDB
           const newUser = {
             full_name: name,
             lastName: family_name,
@@ -507,7 +510,7 @@ client
             employerFlag: false,
             emailVerified: true,
           };
-
+          //create a new profile in MongoDB if one doesn't already exist
           const result = await collection.insertOne(newUser);
           user = { ...newUser, _id: result.insertedId };
         }
