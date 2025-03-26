@@ -117,9 +117,8 @@ client
 
         // Find user by email or phone
         const user = await collection.findOne({
-          $or: [{ email }, { phone }],
+          $or: [{ email }],
         });
-        console.log(user);
 
         if (!user) {
           return res.status(401).json({ message: "No matching user found." });
@@ -530,6 +529,102 @@ client
       } catch (error) {
         console.error("Google authentication error:", error);
         res.status(401).json({ error: "Invalid Google token" });
+      }
+    });
+
+    /* ------------------
+       Get All Users (for messenger)
+    ------------------ */
+    app.get("/users", async (req, res) => {
+      try {
+        const token = req.headers.authorization?.split(" ")[1];
+        if (!token) {
+          return res.status(401).json({ message: "User not authenticated" });
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const collection = db.collection("users");
+        
+        // Get all users except the current user
+        const users = await collection.find(
+          { 
+            _id: { $ne: ObjectId.createFromHexString(decoded.id) }
+          },
+          { 
+            projection: { 
+              _id: 1,
+              full_name: 1,
+              email: 1
+            }
+          }
+        ).toArray();
+
+        res.status(200).json(users);
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Failed to retrieve users" });
+      }
+    });
+
+    /* ------------------
+       Get Messages
+    ------------------ */
+    app.get("/messages", async (req, res) => {
+      try {
+        const token = req.headers.authorization?.split(" ")[1];
+        if (!token) {
+          return res.status(401).json({ message: "User not authenticated" });
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const messagesCollection = db.collection("messages");
+        
+        // Get all messages where the user is either sender or receiver
+        const messages = await messagesCollection.find({
+          $or: [
+            { senderId: decoded.id },
+            { receiverId: decoded.id }
+          ]
+        }).sort({ createdAt: -1 }).toArray();
+
+        res.status(200).json(messages);
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Failed to retrieve messages" });
+      }
+    });
+
+    /* ------------------
+       Send Message
+    ------------------ */
+    app.post("/messages", async (req, res) => {
+      try {
+        const token = req.headers.authorization?.split(" ")[1];
+        if (!token) {
+          return res.status(401).json({ message: "User not authenticated" });
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const { receiverId, content } = req.body;
+
+        if (!content || !receiverId) {
+          return res.status(400).json({ error: "Message content and receiver ID are required" });
+        }
+
+        const messagesCollection = db.collection("messages");
+        
+        const message = {
+          senderId: decoded.id,
+          receiverId,
+          content,
+          createdAt: new Date(),
+        };
+
+        await messagesCollection.insertOne(message);
+        res.status(201).json(message);
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Failed to send message" });
       }
     });
 

@@ -8,7 +8,8 @@ import Login from "./pages/Login";
 import BrowseJobs from "./pages/BrowseJobs";
 import YourJobs from "./pages/YourJobs";
 import EmployerDashboard from "./pages/EmployerDashboard";
-import EmployerApplicationTracker from "./pages/EmployerApplicationTracker"; // <-- New import
+import EmployerApplicationTracker from "./pages/EmployerApplicationTracker";
+import Messenger from "./pages/Messenger";
 import "./styles/App.css";
 import { TokenContext } from "./components/TokenContext";
 
@@ -73,6 +74,11 @@ function App() {
                     Employer Dashboard
                   </Link>
                 )}
+                {token && (
+                  <Link className="app-nav__link" to="/messenger">
+                    Messenger
+                  </Link>
+                )}
               </nav>
               <div className="auth-container">
                 {token && !employerFlag && (
@@ -129,6 +135,15 @@ function App() {
                   Your Jobs
                 </Link>
               )}
+              {token && (
+                <Link
+                  className="app-nav__link"
+                  to="/messenger"
+                  onClick={toggleNav}
+                >
+                  Messenger
+                </Link>
+              )}
               {/* Auth button (Sign In / Sign Out) in mobile overlay */}
               <Auth onClick={toggleNav} />
             </div>
@@ -149,6 +164,7 @@ function App() {
               path="/employer-application-tracker"
               element={<EmployerApplicationTracker />}
             />
+            <Route path="/messenger" element={<Messenger />} />
           </Routes>
         </main>
       </div>
