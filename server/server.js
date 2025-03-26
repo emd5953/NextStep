@@ -117,7 +117,7 @@ client
 
         // Find user by email or phone
         const user = await collection.findOne({
-          $or: [{ email }, { phone }],
+          $or: [{ email }],
         });
 
         if (!user) {
@@ -228,7 +228,7 @@ client
         });
 
         if (existingUser) {
-          return res.status(400).json({
+          return res.status(409).json({
             error:
               existingUser.email === email
                 ? "Email already registered"
@@ -357,7 +357,7 @@ client
         console.log("Auth token is valid");
 
         const collection = db.collection("users");
-
+        //finds profile in MongoDB
         const profile = await collection.findOne(
           { _id: ObjectId.createFromHexString(decoded.id) },
           { projection: { password: 0 } }
@@ -368,7 +368,7 @@ client
             message: "No matching record found. Check your access token.",
           });
         }
-
+        //retrieves all of profile's attributes
         res.status(200).json(profile);
       } catch (error) {
         if (error.name === "TokenExpiredError") {
@@ -489,15 +489,17 @@ client
           audience: process.env.GOOGLE_CLIENT_ID,
         });
 
+        //Retrieve user profile properties from verifyIdToken/ticket
+        //IN this case we retrieve email, full name, first name, last name, and profile picture if present 
         const { email, name, given_name, family_name, picture } = ticket.getPayload();
         //console.log(ticket.getPayload());
-        const collection = db.collection("users");
+        const collection = db.collection("users"); 
 
         // Check if user exists
         let user = await collection.findOne({ email });
 
         if (!user) {
-          // Create new user if doesn't exist
+          // Create new user if doesn't exist in MongoDB
           const newUser = {
             full_name: name,
             lastName: family_name,
@@ -507,7 +509,7 @@ client
             employerFlag: false,
             emailVerified: true,
           };
-
+          //create a new profile in MongoDB if one doesn't already exist
           const result = await collection.insertOne(newUser);
           user = { ...newUser, _id: result.insertedId };
         }
@@ -527,6 +529,102 @@ client
       } catch (error) {
         console.error("Google authentication error:", error);
         res.status(401).json({ error: "Invalid Google token" });
+      }
+    });
+
+    /* ------------------
+       Get All Users (for messenger)
+    ------------------ */
+    app.get("/users", async (req, res) => {
+      try {
+        const token = req.headers.authorization?.split(" ")[1];
+        if (!token) {
+          return res.status(401).json({ message: "User not authenticated" });
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const collection = db.collection("users");
+        
+        // Get all users except the current user
+        const users = await collection.find(
+          { 
+            _id: { $ne: ObjectId.createFromHexString(decoded.id) }
+          },
+          { 
+            projection: { 
+              _id: 1,
+              full_name: 1,
+              email: 1
+            }
+          }
+        ).toArray();
+
+        res.status(200).json(users);
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Failed to retrieve users" });
+      }
+    });
+
+    /* ------------------
+       Get Messages
+    ------------------ */
+    app.get("/messages", async (req, res) => {
+      try {
+        const token = req.headers.authorization?.split(" ")[1];
+        if (!token) {
+          return res.status(401).json({ message: "User not authenticated" });
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const messagesCollection = db.collection("messages");
+        
+        // Get all messages where the user is either sender or receiver
+        const messages = await messagesCollection.find({
+          $or: [
+            { senderId: decoded.id },
+            { receiverId: decoded.id }
+          ]
+        }).sort({ createdAt: -1 }).toArray();
+
+        res.status(200).json(messages);
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Failed to retrieve messages" });
+      }
+    });
+
+    /* ------------------
+       Send Message
+    ------------------ */
+    app.post("/messages", async (req, res) => {
+      try {
+        const token = req.headers.authorization?.split(" ")[1];
+        if (!token) {
+          return res.status(401).json({ message: "User not authenticated" });
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const { receiverId, content } = req.body;
+
+        if (!content || !receiverId) {
+          return res.status(400).json({ error: "Message content and receiver ID are required" });
+        }
+
+        const messagesCollection = db.collection("messages");
+        
+        const message = {
+          senderId: decoded.id,
+          receiverId,
+          content,
+          createdAt: new Date(),
+        };
+
+        await messagesCollection.insertOne(message);
+        res.status(201).json(message);
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Failed to send message" });
       }
     });
 
