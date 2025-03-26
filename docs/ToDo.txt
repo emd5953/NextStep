@@ -75,3 +75,24 @@ Misc.
  Finalize to-do list and updates
  Practice Comprehension real quick
  Did we implement Edit My Profile feature in profiles page? #3 of to do list due today
+
+
+
+
+#WEEKLY MEETING 7
+Immediate:
+ Frontend for mobile
+ Revise styling
+ AI chatbot???
+ Ask about what the other project is doing
+ The employer: 
+   application tracking
+   candidate profiles move to applicant tracking
+   Company profile
+   Job posting and tracking
+Important:
+ Deploy the website
+ Finish mobile
+ 
+ 
+
