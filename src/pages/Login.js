@@ -113,6 +113,10 @@ const Login = () => {
   // Google OAuth
   // ======================
   const handleGoogleSuccess = async (credentialResponse) => {
+    if (!credentialResponse?.credential) {
+      console.error("No credential returned from Google");
+      return alert("Google login failed. Please try again.");
+    }
     try {
       const response = await axios.post("https://nextstep-td90.onrender.com/auth/google", {
         token: credentialResponse.credential,
