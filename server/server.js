@@ -635,7 +635,7 @@ client
     // Start the server
     app.listen(PORT, (err) => {
       if (err) console.log("Error starting server:", err);
-      console.log(`Server listening on : Hosted_By_Render`);
+      console.log(`Server listening on ${PORT}`);
     });
   })
   .catch((error) => {
