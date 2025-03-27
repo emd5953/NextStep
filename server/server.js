@@ -11,6 +11,8 @@ const jwt = require("jsonwebtoken");
 const multer = require("multer");
 const { OAuth2Client } = require("google-auth-library");
 const { sendVerificationCode, verifyCode } = require("./middleware/smsAuth");
+const nodemailer = require("nodemailer");
+const crypto = require("crypto");
 
 const app = express();
 
@@ -31,6 +33,16 @@ const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 // Middleware
 app.use(express.json());
 app.use(cors());
+
+// Regex for validating email format
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Regex for validating password requirements:
+// - At least 7 characters
+// - At least one uppercase letter
+// - At least one number
+// - At least one special character (non-word character)
+const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{7,}$/;
 
 // MongoDB Connection
 const uri = process.env.MONGODB_URI;           // e.g. "mongodb+srv://..."
@@ -211,6 +223,19 @@ client
           employerFlag,
           verificationCode,
         } = req.body;
+
+        // Validate email format using the pre-declared regex
+        if (!emailRegex.test(email)) {
+          return res.status(400).json({ error: "Invalid email format." });
+        }
+
+        // Validate password using the pre-declared regex
+        if (!passwordRegex.test(password)) {
+          return res.status(400).json({
+            error:
+             "Password must be at least 7 characters long, include one uppercase letter, one number, and one special character.",
+          });
+        }
 
         // Verify the phone number if code is provided
         if (verificationCode) {
