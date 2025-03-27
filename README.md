@@ -1,70 +1,131 @@
-# Getting Started with Create React App
+# NextStep - A Swipe-Based Job Matching App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<img src="src/assets//NextStep_Logo.png">
 
-## Available Scripts
+NextStep is a **web and mobile job-matching platform** designed to simplify the job search process using a **swipe-based** interface. It leverages **AI-driven recommendations** and **real-time tracking** to connect job seekers with employers efficiently.
 
-In the project directory, you can run:
+###  Table of Contents
+- [Overview](#overview)
+- [Core Objectives](#core-objectives)
+- [Technology Stack](#technology-stack)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Running the Application](#running-the-application)
+- [API Endpoints](#api-endpoints)
+- [Contributing](#contributing)
+- [License](#license)
+---
 
-### `npm start`
+### Overview 
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+**NextStep** is a job-matching application with a **swipe-based** interface that helps job seekers efficiently browse and apply for jobs. Employers can post job listings, track applications, and connect with candidates in real time.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
 
-### `npm test`
+### **Core Objectives** 
+- **Swipe-Based Job Discovery** – Browse jobs with a swipe-like/scroll experience inspired from popular apps such as Hinge, Tiktok, Tinder.
+- **AI-Powered Job Recommendations** – Tailored job suggestions based on profile & history  
+- **One-Click Apply** – Apply instantly with stored profile/resume  
+- **Application Tracking** – Track job application statuses in real-time  
+- **Employer Dashboard** – Post jobs, review candidates, and schedule interviews  
+- **Multi-Platform Support** – Accessible via Web and Mobile  
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+### **Technology Stack** 
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+#### **Frontend**
+- **Framework**: React.js(Web)/React Native (Mobile)
+- **Styling**: TailwindCSS
+- **React Router** – Frontend navigation
+- **Axios** – API communication
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+#### **Backend**
+- **Node.js** – Server-side runtime
+- **Express.js** – Hosting
+- **MongoDB Atlas** – Cloud-based NoSQL database
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+   **<u>Future Use?</u>**
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- **Mongoose** – ODM for MongoDB schema validation
+- **JWT (JSON Web Tokens)** – Authentication system
+- **Firebase Cloud Messaging (FCM)** – Push notifications
+- **AWS/GCP** – Cloud hosting (for scalability)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+#### **DevOps & Deployment**
+- pending.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+---
 
-## Learn More
+### **Installation** 
+```bash
+# 1️⃣ Clone the Repository
+git clone https://github.com/drewstake/nextstep.git
+cd nextstep
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+# 2️⃣ Install Backend Dependencies
+cd backend
+npm install
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+# 3️⃣ Install Frontend Dependencies
+cd ../src
+npm install
+```
+### **Configuration**
+Before running the app, configure the environment variables.
 
-### Code Splitting
+#### Frontend .env File
+```bash
+REACT_APP_BACKEND_URL=http://localhost:5500
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+#### Backend .env File
+```bash
+MONGO_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/nextstep
+PORT=5500
+JWT_SECRET=your_jwt_secret
+FIREBASE_SERVER_KEY=your_firebase_server_key
+```
 
-### Analyzing the Bundle Size
+### **Running The Application**
+```bash
+# 1️⃣ Start Backend
+cd backend
+npm start
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Server will run on http://localhost:5500
 
-### Making a Progressive Web App
+#2️⃣ Start Frontend
+cd src
+npm start
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Frontend will run on http://localhost:3000
+```
+### **API Endpoints**
+|Method	 |    Endpoint	            |    Description                |
+|--------|--------------------------|-------------------------------|
+|POST	 |  /api/register	        |   Register a new user         |
+|POST	 |  /api/login	            |   Authenticate user           |
+|GET	 |  /api/jobs	            |   Retrieve job listings       |
+|POST	 |  /api/apply	            |   Apply for a job             |
+|GET	 |  /api/applications       |	Get user’s job applications |
+|DELETE	 |  /api/applications/:id	|   Withdraw an application     |
 
-### Advanced Configuration
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### **Contributing**
+We welcome contributions! Follow these steps:
 
-### Deployment
+- Fork the repository 
+- Create a new branch (feature/your-feature-name)
+- Commit your changes
+- Push to your fork
+- Submit a pull request
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### **License**
+This project is licensed under the MIT License.
 
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### 📢 **Future Enhancements**
+- Real-Time Chat for Employers & Candidates
+- AI-Powered Resume Screening
+- Interview Scheduling with Google Calendar

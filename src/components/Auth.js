@@ -1,45 +1,41 @@
-import React, { useState } from 'react';
+// File: /src/components/Auth.js
+import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { TokenContext } from "./TokenContext";
 
 const Auth = () => {
-  const [isSignedIn, setIsSignedIn] = useState(false);
+  const navigate = useNavigate();
+  const { token, setToken, setEmployerFlag } = useContext(TokenContext);
 
-  const handleAuth = () => {
-    setIsSignedIn(!isSignedIn); // Toggle sign-in state
+  const handleSignInClick = () => {
+    // Redirect to /login
+    navigate("/login");
+  };
+
+  const handleSignOutClick = () => {
+    // Redirect to /login
+    setToken(null);
+    navigate('/login');
+    setEmployerFlag(false);
+    localStorage.removeItem("token");
+    localStorage.removeItem("employerFlag");
+    navigate("/login");
   };
 
   return (
-    <div style={styles.container}>
-      {isSignedIn ? (
-        <p style={styles.message}>Welcome back! 🎉</p>
-      ) : (
-        <button style={styles.button} onClick={handleAuth}>Sign In</button>
+    <div>
+      {!token && (
+        <button className="auth__button" onClick={handleSignInClick}>
+          Sign In
+        </button>
+      )}
+      {token && (
+        <button className="auth__button" onClick={handleSignOutClick}>
+          Sign Out
+        </button>
       )}
     </div>
   );
-};
-
-const styles = {
-  container: {
-    textAlign: 'center',
-    marginTop: '30px',
-  },
-  button: {
-    padding: '12px 25px',
-    fontSize: '18px',
-    fontWeight: 'bold',
-    background: 'linear-gradient(90deg, #ff9966, #ff5e62)',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '25px',
-    cursor: 'pointer',
-    transition: 'all 0.3s ease',
-    boxShadow: '0 5px 15px rgba(255, 94, 98, 0.4)',
-  },
-  message: {
-    fontSize: '1.2rem',
-    fontWeight: 'bold',
-    color: '#fff',
-  },
 };
 
 export default Auth;
