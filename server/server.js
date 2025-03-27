@@ -484,6 +484,10 @@ client
     app.post("/auth/google", async (req, res) => {
       try {
         const { token } = req.body;
+        if (!token) {
+          return res.status(400).json({ error: "Missing token in request body" });
+        }
+  
         const ticket = await googleClient.verifyIdToken({
           idToken: token,
           audience: process.env.GOOGLE_CLIENT_ID,
