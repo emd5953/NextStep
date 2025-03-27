@@ -16,7 +16,7 @@ const Messenger = () => {
   const fetchMessages = useCallback(async () => {
     if (!token) return;
     try {
-      const response = await fetch('http://localhost:4000/messages', {
+      const response = await fetch('https://nextstep-td90.onrender.com/messages', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -32,7 +32,7 @@ const Messenger = () => {
   const fetchUsers = useCallback(async () => {
     if (!token) return;
     try {
-      const response = await fetch('http://localhost:4000/users', {
+      const response = await fetch('https://nextstep-td90.onrender.com/users', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -50,7 +50,7 @@ const Messenger = () => {
     if (!selectedUser || !newMessage.trim() || !token) return;
 
     try {
-      const response = await fetch('http://localhost:4000/messages', {
+      const response = await fetch('https://nextstep-td90.onrender.com/messages', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

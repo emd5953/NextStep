@@ -26,7 +26,7 @@ const Profile = () => {
     const fetchProfile = async () => {
       if (token) {
         try {
-          const response = await axios.get(`http://localhost:4000/profile`, {
+          const response = await axios.get(`https://nextstep-td90.onrender.com/profile`, {
             headers: { Authorization: `Bearer ${token}` }
           });
           setResume(response.data.resume);
@@ -97,7 +97,7 @@ const Profile = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:4000/updateprofile', formData, {
+      const response = await axios.post('https://nextstep-td90.onrender.com/updateprofile', formData, {
         headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" }
       });
       console.log(`${response.status} ${response.statusText}\n`);

@@ -46,7 +46,7 @@ const Login = () => {
   // ======================
   const handleSendVerificationCode = async (phone, isSignup = false) => {
     try {
-      await axios.post("http://localhost:4000/send-verification", {
+      await axios.post("https://nextstep-td90.onrender.com/send-verification", {
         phoneNumber: phone,
       });
       if (isSignup) {
@@ -72,7 +72,7 @@ const Login = () => {
           ? { email: loginEmail, password: loginPassword }
           : { phone: loginPhone, verificationCode };
 
-      const response = await axios.post("http://localhost:4000/signin", loginData);
+      const response = await axios.post("https://nextstep-td90.onrender.com/signin", loginData);
 
       setToken(response.data.token);
       setEmployerFlag(response.data.isEmployer);
@@ -96,7 +96,7 @@ const Login = () => {
     };
 
     try {
-      await axios.post("http://localhost:4000/signup", signupData);
+      await axios.post("https://nextstep-td90.onrender.com/signup", signupData);
       alert("Sign up successful!");
       navigate("/login");
     } catch (error) {
@@ -114,7 +114,7 @@ const Login = () => {
   // ======================
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
-      const response = await axios.post("http://localhost:4000/auth/google", {
+      const response = await axios.post("https://nextstep-td90.onrender.com/auth/google", {
         token: credentialResponse.credential,
       });
       setToken(response.data.token);

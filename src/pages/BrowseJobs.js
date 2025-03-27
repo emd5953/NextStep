@@ -29,7 +29,7 @@ const BrowseJobs = () => {
     e.preventDefault();
     // For now, just log the search query. Later, you could use this to filter the jobs or make a new API call.
     console.log('Searching for:', searchQuery);
-    const response = await axios.get('http://localhost:4000/jobs?q=' + searchQuery);
+    const response = await axios.get('https://nextstep-td90.onrender.com/jobs?q=' + searchQuery);
     setJobs(response.data);
   };
 
@@ -39,7 +39,7 @@ const BrowseJobs = () => {
       return;
     }
     try {
-      const response = await axios.post('http://localhost:4000/apply', { _id: jobId }, {
+      const response = await axios.post('https://nextstep-td90.onrender.com/apply', { _id: jobId }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       console.log(`${response.status} ${response.statusText}\n`);
