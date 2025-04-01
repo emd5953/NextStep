@@ -11,8 +11,6 @@ const jwt = require("jsonwebtoken");
 const multer = require("multer");
 const { OAuth2Client } = require("google-auth-library");
 const { sendVerificationCode, verifyCode } = require("./middleware/smsAuth");
-const nodemailer = require("nodemailer");
-const crypto = require("crypto");
 
 const app = express();
 
@@ -25,6 +23,7 @@ console.log("Environment check:", {
     !!process.env.TWILIO_PHONE_NUMBER,
   mongoConfigured: !!process.env.MONGODB_URI,
   googleConfigured: !!process.env.GOOGLE_CLIENT_ID,
+  env: process.env.NODE_ENV,
 });
 
 // Initialize Google OAuth client
@@ -34,19 +33,31 @@ const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 app.use(express.json());
 app.use(cors());
 
-// Regex for validating email format
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+// JWT Verification Middleware
+const verifyToken = (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) {
+    return res.status(401).json({ error: "Unauthorized. Missing or invalid token." });
+  }
 
-// Regex for validating password requirements:
-// - At least 7 characters
-// - At least one uppercase letter
-// - At least one number
-// - At least one special character (non-word character)
-const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{7,}$/;
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch (error) {
+    if (error.name === 'TokenExpiredError') {
+      return res.status(401).json({
+        error: "Your session has expired. Please sign in again.",
+        code: "TOKEN_EXPIRED"
+      });
+    }
+    return res.status(401).json({ error: "Invalid authentication token." });
+  }
+};
 
 // MongoDB Connection
 const uri = process.env.MONGODB_URI;           // e.g. "mongodb+srv://..."
-const dbName = "mydb";                         // or process.env.DB_NAME
+const dbName = process.env.NODE_ENV === 'test' ? "mydb_test" : "mydb";                         // or process.env.DB_NAME
 const client = new MongoClient(uri);
 const PORT = process.env.PORT || 4000;
 
@@ -55,50 +66,57 @@ client
   .connect()
   .then(() => {
     const db = client.db(dbName);
-    console.log(`Connected to MongoDB: ${new Date().toLocaleString()}`);
+    //console.log(`Connected to MongoDB: ${new Date().toLocaleString()}`);
 
     /******************************************
      *        ROUTES DEFINITION START         *
      ******************************************/
 
     /* ------------------
-       Apply to a Job
+       Tracks Apply(right-swipe), Skip, and Ignore(left-swipe) Jobs
+       mode: 1 for apply, 2 for skip, 3 for ignore
     ------------------ */
-    app.post("/apply", async (req, res) => {
+    // define constants for the swipe modes
+    const APPLY = 1;
+    const IGNORE = 2;
+
+    app.post("/jobsTracker", verifyToken, async (req, res) => {
       try {
         const applicationsCollection = db.collection("applications");
-        // retrieve job._id from req.body
-        const { _id } = req.body;
+        const jobsCollection = db.collection("Jobs");
+        const { _id, swipeMode } = req.body;
 
-        // decode user._id from token
-        const token = req.headers.authorization?.split(" ")[1];
-        if (!token) {
+        // First verify if the job exists
+        const job = await jobsCollection.findOne({
+          _id: ObjectId.createFromHexString(_id)
+        });
 
-          return res
-            .status(401)
-            .json({ error: "Unauthorized. Missing or invalid token." });
+        if (!job) {
+          return res.status(404).json({ error: "Job not found" });
         }
-
-
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
         const applicationInfo = {
           job_id: ObjectId.createFromHexString(_id),
-          user_id: ObjectId.createFromHexString(decoded.id),
+          user_id: ObjectId.createFromHexString(req.user.id),
           date_applied: new Date(),
-          status: "Pending",
+          status: swipeMode === APPLY ? "Pending" :
+            swipeMode === IGNORE ? "Ignored" : "Unknown",
+          swipeMode: swipeMode,
+          swipeAction: swipeMode === APPLY ? "Applied" :
+            swipeMode === IGNORE ? "Ignored" : "Unknown"
         };
 
         // Check if this user has already applied for this job
         const existingApplication = await applicationsCollection.findOne({
           job_id: ObjectId.createFromHexString(_id),
-          user_id: ObjectId.createFromHexString(decoded.id),
+          user_id: ObjectId.createFromHexString(req.user.id),
+          swipeMode: APPLY
         });
 
         if (existingApplication) {
           return res.status(409).json({
             error:
-              "You've already applied for this job. Check your application status in 'Your Jobs'.",
+              "You've already applied for this job. Check your application status in 'My Jobs'.",
           });
         }
 
@@ -107,10 +125,10 @@ client
 
         res.status(200).json({
           job_id: _id,
-          user_id: decoded.id,
+          user_id: req.user.id,
         });
       } catch (err) {
-        console.error(err);
+        //console.error(err);
         res.status(500).json({
           error: `Failed to save job application. ${err.message}`,
         });
@@ -123,7 +141,7 @@ client
     ------------------ */
     app.post("/signin", async (req, res) => {
       try {
-        console.log("/signin called");
+        //console.log("/signin called");
         const collection = db.collection("users");
         const { email, password, phone, verificationCode } = req.body;
 
@@ -146,7 +164,7 @@ client
           // If signing in with email, verify password
           const passwordMatch = await bcrypt.compare(password, user.password);
           if (!passwordMatch) {
-            return res.status(401).json({ message: "Invalid password." });
+            return res.status(401).json({ message: "Invalid credentials" });
           }
         }
 
@@ -163,7 +181,7 @@ client
           isEmployer: user.employerFlag,
         });
       } catch (err) {
-        console.error(err);
+        //console.error(err);
         res.status(500).json({ error: "Failed to retrieve users" });
       }
     });
@@ -171,7 +189,7 @@ client
     /* ------------------
        Send Verification Code (Twilio call)
     ------------------ */
-    app.post("/send-verification", async (req, res) => {
+/*     app.post("/send-verification", async (req, res) => {
       try {
         const { phoneNumber } = req.body;
         const sent = await sendVerificationCode(phoneNumber);
@@ -180,18 +198,18 @@ client
             .status(200)
             .json({ message: "Verification code sent successfully" });
         } else {
-          res.status(500).json({ error: "Failed to send verification code" });
+          res.status(409).json({ error: "Failed to send verification code" });
         }
       } catch (error) {
         console.error(error);
-        res.status(500).json({ error: "Server error" });
+        res.status(500).json({ error: "Server error. See logs for more details." });
       }
     });
-
+*/
     /* ------------------
        Verify Code (Twilio)
     ------------------ */
-    app.post("/verify-code", async (req, res) => {
+/*    app.post("/verify-code", async (req, res) => {
       try {
         const { phoneNumber, code } = req.body;
         const result = verifyCode(phoneNumber, code);
@@ -205,7 +223,7 @@ client
         res.status(500).json({ error: "Server error" });
       }
     });
-
+ */
     /* ------------------
        Sign Up (Phone verification optional)
     ------------------ */
@@ -223,19 +241,6 @@ client
           employerFlag,
           verificationCode,
         } = req.body;
-
-        // Validate email format using the pre-declared regex
-        if (!emailRegex.test(email)) {
-          return res.status(400).json({ error: "Invalid email format." });
-        }
-
-        // Validate password using the pre-declared regex
-        if (!passwordRegex.test(password)) {
-          return res.status(400).json({
-            error:
-             "Password must be at least 7 characters long, include one uppercase letter, one number, and one special character.",
-          });
-        }
 
         // Verify the phone number if code is provided
         if (verificationCode) {
@@ -274,7 +279,7 @@ client
         await collection.insertOne(newUser);
         res.status(201).json({ message: "User created successfully" });
       } catch (error) {
-        console.error(error);
+        //console.error(error);
         res
           .status(400)
           .json({ error: `Error creating user. ${error.message}` });
@@ -284,15 +289,8 @@ client
     /* ------------------
        Get Applications (for logged-in user)
     ------------------ */
-    app.get("/applications", async (req, res) => {
+    app.get("/applications", verifyToken, async (req, res) => {
       try {
-        const token = req.headers.authorization?.split(" ")[1];
-        if (!token) {
-          return res.status(401).json({ message: "User not authenticated" });
-        }
-
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        console.log("Auth token is valid. in applications list");
 
         const applicationsCollection = db.collection("applications");
 
@@ -300,7 +298,7 @@ client
           .aggregate([
             {
               $match: {
-                user_id: ObjectId.createFromHexString(decoded.id),
+                user_id: ObjectId.createFromHexString(req.user.id),
               },
             },
             {
@@ -317,29 +315,46 @@ client
 
         res.status(200).json(applicationsWithJobDetails);
       } catch (error) {
-        console.error(`Error in /applications. ${error}`);
-        if (error.name === "JsonWebTokenError") {
-          return res.status(401).json({ message: "Invalid token" });
-        }
-        res
-          .status(500)
-          .json({ error: `Error searching applications. ${error.message}` });
+        //console.error(`Error in /applications. ${error}`);
+        res.status(500).json({ error: `Error searching applications. ${error.message}` });
       }
     });
 
     /* ------------------
-       Search Jobs
+       Get Single Job by ID
+    ------------------ */
+    app.get("/jobs/:jobId", async (req, res) => {
+      try {
+        const collection = db.collection("Jobs");
+        const jobId = req.params.jobId;
+
+        // Validate if the jobId is a valid MongoDB ObjectId
+        if (!ObjectId.isValid(jobId)) {
+          //console.error("Invalid job ID format:", jobId);
+          return res.status(400).json({ error: "Invalid job ID format" });
+        }
+
+        const job = await collection.findOne({
+          _id: ObjectId.createFromHexString(jobId)
+        });
+
+        if (!job) {
+          //console.error("Job not found with ID:", jobId);
+          return res.status(404).json({ error: "Job not found" });
+        }
+
+        res.status(200).json(job);
+      } catch (error) {
+        //console.error("Error fetching job:", error);
+        res.status(500).json({ error: "Failed to fetch job details" });
+      }
+    });
+
+    /* ------------------
+       Browse Jobs
     ------------------ */
     app.get("/jobs", async (req, res) => {
       try {
-        // Optional: Check token if you want to ensure only authenticated users can search
-        const token = req.headers.authorization?.split(" ")[1];
-        if (token) {
-          jwt.verify(token, process.env.JWT_SECRET);
-          console.log("Auth token is valid");
-        }
-
-        console.log("in job search");
         const collection = db.collection("Jobs");
 
         const queryText = req.query.q || "";
@@ -358,10 +373,124 @@ client
         const jobs = await collection.find(query).toArray();
         res.status(200).json(jobs);
       } catch (error) {
-        console.error(`Error in /jobs. ${error}`);
-        if (error.name === "JsonWebTokenError") {
-          return res.status(401).json({ message: "Invalid token" });
+        //console.error(`Error in /jobs. ${error}`);
+        res.status(500).json({ error: `Error searching jobs. ${error}` });
+      }
+    });
+
+    /* ------------------
+       Create New Job Posting
+    ------------------ */
+    app.post("/jobs", verifyToken, async (req, res) => {
+      try {
+        // Verify that the user is an employer
+        if (!req.user.isEmployer) {
+          return res.status(403).json({ error: "Only employers can create job postings" });
         }
+
+        const collection = db.collection("Jobs");
+        const {
+          title,
+          companyName,
+          companyWebsite,
+          salaryRange,
+          benefits,
+          locations,
+          schedule,
+          jobDescription,
+          skills
+        } = req.body;
+
+        // Validate required fields
+        if (!title || !companyName || !jobDescription) {
+          return res.status(400).json({ error: "Title, company name, and job description are required" });
+        }
+
+        const newJob = {
+          title,
+          companyName,
+          companyWebsite,
+          salaryRange,
+          benefits: benefits || [],
+          locations: Array.isArray(locations) ? locations : [locations],
+          schedule,
+          jobDescription,
+          skills: Array.isArray(skills) ? skills : [skills],
+          createdAt: new Date(),
+          employerId: ObjectId.createFromHexString(req.user.id)
+        };
+
+        const result = await collection.insertOne(newJob);
+        res.status(201).json({
+          message: "Job posting created successfully",
+          jobId: result.insertedId
+        });
+      } catch (error) {
+        //console.error("Error creating job posting:", error);
+        res.status(500).json({ error: "Failed to create job posting" });
+      }
+    });
+
+    /* ------------------
+      Jobs to show in the homepage
+    ------------------ */
+    app.get("/retrieveJobsForHomepage", async (req, res) => {
+      try {
+        //console.log("in job search");
+        const jobsCollection = db.collection("Jobs");
+        const applicationsCollection = db.collection("applications");
+
+        const queryText = req.query.q || "";
+        const query = {
+          $or: [
+            { title: { $regex: queryText, $options: "i" } },
+            { jobDescription: { $regex: queryText, $options: "i" } },
+            { skills: { $regex: queryText, $options: "i" } },
+            { locations: { $regex: queryText, $options: "i" } },
+            { benefits: { $regex: queryText, $options: "i" } },
+            { schedule: { $regex: queryText, $options: "i" } },
+            { salary: { $regex: queryText, $options: "i" } },
+          ],
+        };
+
+        // Check if user is authenticated
+        const token = req.headers.authorization?.split(" ")[1];
+        let jobs = [];
+
+        // Base job search query
+        const baseJobs = await jobsCollection.find(query).toArray();
+
+        if (token) {
+          try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            //              user_id: ObjectId.createFromHexString(decoded.id),
+
+            // Get applied job IDs for the user
+            const appliedJobsResult = await applicationsCollection
+              .find({
+                user_id: ObjectId.createFromHexString(decoded.id)
+              })
+              .project({ job_id: 1, _id: 0 })
+              .toArray();
+
+            const appliedJobIds = appliedJobsResult.map(app => app.job_id);
+
+            // Filter out already applied jobs
+            jobs = baseJobs.filter(job =>
+              !appliedJobIds.some(appliedId =>
+                appliedId.toString() === job._id.toString()
+              )
+            );
+
+          } catch (error) {
+            // If token is invalid, just continue without filtering
+            jobs = baseJobs;
+          }
+        }
+
+        res.status(200).json(jobs);
+      } catch (error) {
+        //console.error(`Error in /jobs. ${error}`);
         res.status(500).json({ error: `Error searching jobs. ${error}` });
       }
     });
@@ -369,22 +498,12 @@ client
     /* ------------------
        Get Profile (for logged-in user)
     ------------------ */
-    app.get("/profile", async (req, res) => {
+    app.get("/profile", verifyToken, async (req, res) => {
       try {
-        const token = req.headers.authorization?.split(" ")[1];
-        if (!token) {
-          return res
-            .status(401)
-            .json({ error: "Unauthorized", message: "Check your access token." });
-        }
-
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        console.log("Auth token is valid");
 
         const collection = db.collection("users");
-        //finds profile in MongoDB
         const profile = await collection.findOne(
-          { _id: ObjectId.createFromHexString(decoded.id) },
+          { _id: ObjectId.createFromHexString(req.user.id) },
           { projection: { password: 0 } }
         );
 
@@ -393,21 +512,10 @@ client
             message: "No matching record found. Check your access token.",
           });
         }
-        //retrieves all of profile's attributes
         res.status(200).json(profile);
       } catch (error) {
-        if (error.name === "TokenExpiredError") {
-          console.log("Token has expired");
-          return res.status(401).json({ message: "Token has expired" });
-        }
-        if (error.name === "JsonWebTokenError") {
-          console.log("Token is not valid:", error.message);
-          return res.status(401).json({ message: "Invalid token" });
-        }
-        console.error(`Error in /profile. ${error}`);
-        res
-          .status(500)
-          .json({ error: `Error fetching user profile. ${error.message}` });
+        //console.error(`Error in /profile. ${error}`);
+        res.status(500).json({ error: `Error fetching user profile. ${error.message}` });
       }
     });
 
@@ -419,20 +527,12 @@ client
 
     app.post(
       "/updateprofile",
+      verifyToken,
       upload.fields([{ name: "photo" }, { name: "resume" }]),
       async (req, res) => {
         try {
-          const token = req.headers.authorization?.split(" ")[1];
-          if (!token) {
-            return res
-              .status(401)
-              .json({ error: "Unauthorized", message: "Check your token." });
-          }
 
-          const decoded = jwt.verify(token, process.env.JWT_SECRET);
-          console.log("Auth token is valid");
-
-          const { firstName, lastName, phone, email, location } = req.body;
+          const { firstName, lastName, phone, email, location, full_name } = req.body;
           const collection = db.collection("users");
 
           let resumeFile = null;
@@ -458,12 +558,13 @@ client
             phone,
             email,
             location,
+            full_name,
             ...(encodedPhoto && { encodedPhoto }),
             ...(resumeFile && { resumeFile }),
           };
 
           const result = await collection.updateOne(
-            { _id: ObjectId.createFromHexString(decoded.id) },
+            { _id: ObjectId.createFromHexString(req.user.id) },
             { $set: updatedProfileData }
           );
 
@@ -472,18 +573,8 @@ client
           }
           res.status(200).json({ message: "Profile updated successfully" });
         } catch (err) {
-          if (err.name === "TokenExpiredError") {
-            console.log("Token has expired");
-            return res.status(401).json({ message: "Token has expired" });
-          }
-          if (err.name === "JsonWebTokenError") {
-            console.log("Token is not valid:", err.message);
-            return res.status(401).json({ message: "Invalid token" });
-          }
-          console.log(err);
-          res
-            .status(404)
-            .json({ error: `Error updating user profile. ${err.message}` });
+          //console.error(err);
+          res.status(500).json({ error: `Error updating user profile. ${err.message}` });
         }
       }
     );
@@ -493,12 +584,12 @@ client
     ------------------ */
     app.get("/logout", async (req, res) => {
       try {
-        console.log("/logout called");
+        //console.log("/logout called");
         // Clear cookie (if you use JWT in cookies)
         res.cookie("nextstep_auth", "", { expires: new Date(0), httpOnly: true });
         res.json({ message: "You've been logged out" });
       } catch (err) {
-        console.error(err);
+        //console.error(err);
         res.status(500).json({ error: "Failed to logout" });
       }
     });
@@ -509,10 +600,6 @@ client
     app.post("/auth/google", async (req, res) => {
       try {
         const { token } = req.body;
-        if (!token) {
-          return res.status(400).json({ error: "Missing token in request body" });
-        }
-  
         const ticket = await googleClient.verifyIdToken({
           idToken: token,
           audience: process.env.GOOGLE_CLIENT_ID,
@@ -522,7 +609,7 @@ client
         //IN this case we retrieve email, full name, first name, last name, and profile picture if present 
         const { email, name, given_name, family_name, picture } = ticket.getPayload();
         //console.log(ticket.getPayload());
-        const collection = db.collection("users"); 
+        const collection = db.collection("users");
 
         // Check if user exists
         let user = await collection.findOne({ email });
@@ -556,7 +643,7 @@ client
           isEmployer: user.employerFlag,
         });
       } catch (error) {
-        console.error("Google authentication error:", error);
+        //console.error("Google authentication error:", error);
         res.status(401).json({ error: "Invalid Google token" });
       }
     });
@@ -564,33 +651,27 @@ client
     /* ------------------
        Get All Users (for messenger)
     ------------------ */
-    app.get("/users", async (req, res) => {
+    app.get("/users", verifyToken, async (req, res) => {
       try {
-        const token = req.headers.authorization?.split(" ")[1];
-        if (!token) {
-          return res.status(401).json({ message: "User not authenticated" });
-        }
-
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const collection = db.collection("users");
-        
-        // Get all users except the current user
+
         const users = await collection.find(
-          { 
-            _id: { $ne: ObjectId.createFromHexString(decoded.id) }
+          {
+            _id: { $ne: ObjectId.createFromHexString(req.user.id) }
           },
-          { 
-            projection: { 
+          {
+            projection: {
               _id: 1,
               full_name: 1,
               email: 1
             }
           }
-        ).toArray();
+        ).sort({ full_name: 1 })
+        .toArray();
 
         res.status(200).json(users);
       } catch (error) {
-        console.error(error);
+        //console.error(error);
         res.status(500).json({ error: "Failed to retrieve users" });
       }
     });
@@ -598,42 +679,71 @@ client
     /* ------------------
        Get Messages
     ------------------ */
-    app.get("/messages", async (req, res) => {
+    app.get("/messages", verifyToken, async (req, res) => {
       try {
-        const token = req.headers.authorization?.split(" ")[1];
-        if (!token) {
-          return res.status(401).json({ message: "User not authenticated" });
-        }
-
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const messagesCollection = db.collection("messages");
-        
-        // Get all messages where the user is either sender or receiver
+
         const messages = await messagesCollection.find({
           $or: [
-            { senderId: decoded.id },
-            { receiverId: decoded.id }
+            { senderId: req.user.id },
+            { receiverId: req.user.id }
           ]
         }).sort({ createdAt: -1 }).toArray();
 
         res.status(200).json(messages);
       } catch (error) {
-        console.error(error);
+        //console.error(error);
         res.status(500).json({ error: "Failed to retrieve messages" });
+      }
+    });
+
+
+  /* ------------------
+       Mark Messages as Read
+    ------------------ */
+      app.put("/messages/read/:contactId", verifyToken, async (req, res) => {
+      try {
+        const messagesCollection = db.collection("messages");
+        const contactId = req.params.contactId;
+        const userId = req.user.id;
+        const readTimestamp = new Date(); // Current timestamp
+    
+        const result = await messagesCollection.updateMany(
+          {
+            $and: [
+              {
+                $or: [
+                  { senderId: contactId, receiverId: userId },
+                  { senderId: userId, receiverId: contactId },
+                ],
+              },
+              { read_timestamp: null }, // Only mark unread messages
+            ],
+          },
+          {
+            $set: { read_timestamp: readTimestamp },
+          }
+        );
+    
+        if (result.modifiedCount > 0) {
+          res.status(200).json({
+            message: `${result.modifiedCount} messages marked as read.`,
+            modifiedCount: result.modifiedCount,
+          });
+        } else {
+          res.status(200).json({ message: "No unread messages found for this contact." });
+        }
+      } catch (error) {
+        //console.error(error);
+        res.status(500).json({ error: "Failed to mark messages as read" });
       }
     });
 
     /* ------------------
        Send Message
     ------------------ */
-    app.post("/messages", async (req, res) => {
+    app.post("/messages", verifyToken, async (req, res) => {
       try {
-        const token = req.headers.authorization?.split(" ")[1];
-        if (!token) {
-          return res.status(401).json({ message: "User not authenticated" });
-        }
-
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const { receiverId, content } = req.body;
 
         if (!content || !receiverId) {
@@ -641,10 +751,32 @@ client
         }
 
         const messagesCollection = db.collection("messages");
-        
+        const usersCollection = db.collection("users");
+
+        // Get sender and receiver details
+        const [sender, receiver] = await Promise.all([
+          usersCollection.findOne(
+            { _id: ObjectId.createFromHexString(req.user.id) },
+            { projection: { full_name: 1, first_name: 1, last_name: 1, email: 1 } }
+          ),
+          usersCollection.findOne(
+            { _id: ObjectId.createFromHexString(receiverId) },
+            { projection: { full_name: 1, first_name: 1, last_name: 1, email: 1 } }
+          )
+        ]);
+
+        // Get display names
+        const senderName = sender.full_name || `${sender.first_name || ''} ${sender.last_name || ''}`.trim();
+        const receiverName = receiver.full_name || `${receiver.first_name || ''} ${receiver.last_name || ''}`.trim();
+        const senderEmail = sender.email;
+        const receiverEmail = receiver.email;
         const message = {
-          senderId: decoded.id,
+          senderId: req.user.id,
           receiverId,
+          senderName,
+          receiverName,
+          senderEmail,
+          receiverEmail,
           content,
           createdAt: new Date(),
         };
@@ -652,8 +784,475 @@ client
         await messagesCollection.insertOne(message);
         res.status(201).json(message);
       } catch (error) {
-        console.error(error);
+        //console.error(error);
         res.status(500).json({ error: "Failed to send message" });
+      }
+    });
+
+    /* ------------------
+       Get Recent Contacts
+    ------------------ */
+    app.get("/myRecentContacts", verifyToken, async (req, res) => {
+      try {
+        const messagesCollection = db.collection("messages");
+        const usersCollection = db.collection("users");
+
+        const contacts = await messagesCollection.aggregate([
+          {
+            $match: {
+              $or: [
+                { senderId: req.user.id },
+                { receiverId: req.user.id },
+              ],
+            },
+          },
+          {
+            $group: {
+              _id: {
+                contactId: {
+                  $cond: {
+                    if: { $eq: ['$senderId', req.user.id] },
+                    then: '$receiverId',
+                    else: '$senderId',
+                  },
+                },
+                contactName: {
+                  $cond: {
+                    if: { $eq: ['$senderId', req.user.id] },
+                    then: '$receiverName',
+                    else: '$senderName',
+                  },
+                },
+              },
+              countOfUnreadMessages: {
+                $sum: {
+                  $cond: {
+                    if: {
+                      $and: [
+                        { $eq: ['$receiverId', req.user.id] },
+                        { $not: ['$read_timestamp'] },
+                      ],
+                    },
+                    then: 1,
+                    else: 0,
+                  },
+                },
+              },
+            },
+          },
+          {
+            $project: {
+              _id: 0,
+              _id: '$_id.contactId',
+              full_name: '$_id.contactName',
+              countOfUnreadMessages: 1,
+            },
+          },
+          {
+            $sort: { full_name: 1, _id: 1 },
+          },
+        ]).toArray();
+
+        ////console.log('Unique Contacts with Unread Message Counts:', contacts);
+
+        res.status(200).json(contacts);
+      } catch (error) {
+        //console.error(error);
+        res.status(500).json({ error: "Failed to retrieve recent contacts" });
+      }
+    });
+
+    /* ------------------
+       Get Employer's Applications with Details
+    ------------------ */
+    app.get("/employer/applications", verifyToken, async (req, res) => {
+      try {
+        // Verify that the user is an employer
+        if (!req.user.isEmployer) {
+          return res.status(403).json({ error: "Only employers can access this endpoint" });
+        }
+
+        const applicationsCollection = db.collection("applications");
+        const jobsCollection = db.collection("Jobs");
+        const usersCollection = db.collection("users");
+
+        // Get all applications for jobs posted by this employer
+        const applications = await applicationsCollection.aggregate([
+          {
+            $lookup: {
+              from: "Jobs",
+              localField: "job_id",
+              foreignField: "_id",
+              as: "jobDetails"
+            }
+          },
+          {
+            $unwind: "$jobDetails"
+          },
+          {
+            $match: {
+              "jobDetails.employerId": ObjectId.createFromHexString(req.user.id)
+            }
+          },
+          {
+            $lookup: {
+              from: "users",
+              localField: "user_id",
+              foreignField: "_id",
+              as: "userDetails"
+            }
+          },
+          {
+            $unwind: "$userDetails"
+          },
+          {
+            $project: {
+              _id: 1,
+              job_id: 1,
+              user_id: 1,
+              date_applied: 1,
+              status: 1,
+              swipeMode: 1,
+              swipeAction: 1,
+              "jobDetails.title": 1,
+              "jobDetails.companyName": 1,
+              "userDetails.full_name": 1,
+              "userDetails.resume": 1
+            }
+          }
+        ]).toArray();
+
+        // Transform the data to match the frontend format
+        const transformedApplications = applications.map(app => ({
+          id: app._id,
+          applicantId: app.user_id,
+          applicantName: app.userDetails.full_name,
+          position: app.jobDetails.title,
+          dateApplied: new Date(app.date_applied).toLocaleDateString(),
+          status: app.status,
+          notes: "", // This can be added to the schema if needed
+          resume: app.userDetails.resume,
+          editing: false
+        }));
+
+        res.status(200).json(transformedApplications);
+      } catch (error) {
+        //console.error("Error fetching employer applications:", error);
+        res.status(500).json({ error: "Failed to fetch applications" });
+      }
+    });
+
+    /* ------------------
+       Update Application Status
+    ------------------ */
+    app.put("/employer/applications/:applicationId", verifyToken, async (req, res) => {
+      try {
+        // Verify that the user is an employer
+        if (!req.user.isEmployer) {
+          return res.status(403).json({ error: "Only employers can update applications" });
+        }
+
+        const { applicationId } = req.params;
+        const { status, notes } = req.body;
+
+        // Validate status
+        const validStatuses = ["Pending", "Reviewed", "Interviewing", "Offered", "Rejected"];
+        if (!validStatuses.includes(status)) {
+          return res.status(400).json({ error: "Invalid status value" });
+        }
+
+        const applicationsCollection = db.collection("applications");
+        
+        // First verify that this application belongs to a job posted by this employer
+        const application = await applicationsCollection.aggregate([
+          {
+            $match: {
+              _id: ObjectId.createFromHexString(applicationId)
+            }
+          },
+          {
+            $lookup: {
+              from: "Jobs",
+              localField: "job_id",
+              foreignField: "_id",
+              as: "jobDetails"
+            }
+          },
+          {
+            $unwind: "$jobDetails"
+          },
+          {
+            $match: {
+              "jobDetails.employerId": ObjectId.createFromHexString(req.user.id)
+            }
+          }
+        ]).toArray();
+
+        if (application.length === 0) {
+          return res.status(404).json({ error: "Application not found or unauthorized" });
+        }
+
+        // Update the application
+        const result = await applicationsCollection.updateOne(
+          { _id: ObjectId.createFromHexString(applicationId) },
+          { 
+            $set: { 
+              status,
+              updatedAt: new Date()
+            }
+          }
+        );
+
+        if (result.modifiedCount === 0) {
+          return res.status(404).json({ error: "Application not found" });
+        }
+
+        res.status(200).json({ message: "Application status updated successfully" });
+      } catch (error) {
+        //console.error("Error updating application status:", error);
+        res.status(500).json({ error: "Failed to update application status" });
+      }
+    });
+
+    /* ------------------
+       Get Application Details
+    ------------------ */
+    app.get("/employer/applications/:applicationId", verifyToken, async (req, res) => {
+      try {
+        // Verify that the user is an employer
+        if (!req.user.isEmployer) {
+          return res.status(403).json({ error: "Only employers can access this endpoint" });
+        }
+
+        const { applicationId } = req.params;
+        const applicationsCollection = db.collection("applications");
+        const jobsCollection = db.collection("Jobs");
+        const usersCollection = db.collection("users");
+
+        const application = await applicationsCollection.aggregate([
+          {
+            $match: {
+              _id: ObjectId.createFromHexString(applicationId)
+            }
+          },
+          {
+            $lookup: {
+              from: "Jobs",
+              localField: "job_id",
+              foreignField: "_id",
+              as: "jobDetails"
+            }
+          },
+          {
+            $unwind: "$jobDetails"
+          },
+          {
+            $match: {
+              "jobDetails.employerId": ObjectId.createFromHexString(req.user.id)
+            }
+          },
+          {
+            $lookup: {
+              from: "users",
+              localField: "user_id",
+              foreignField: "_id",
+              as: "userDetails"
+            }
+          },
+          {
+            $unwind: "$userDetails"
+          }
+        ]).toArray();
+
+        if (application.length === 0) {
+          return res.status(404).json({ error: "Application not found or unauthorized" });
+        }
+
+        res.status(200).json(application[0]);
+      } catch (error) {
+        //console.error("Error fetching application details:", error);
+        res.status(500).json({ error: "Failed to fetch application details" });
+      }
+    });
+
+    app.get("/userProfile/:userId", async (req, res) => {
+      try {
+        const { userId } = req.params;
+        const usersCollection = db.collection("users");
+        const user = await usersCollection.findOne(
+          { _id: ObjectId.createFromHexString(userId) },
+          { projection: { password: 0 } }  // Exclude password field
+        );
+        res.status(200).json(user);
+      } catch (error) {
+        //console.error("Error fetching applicant profile:", error);
+        res.status(500).json({ error: "Failed to fetch applicant profile" });
+      }
+    });
+    /* ------------------
+       Update Job Posting
+    ------------------ */
+    app.put("/employer/jobs/:jobId", verifyToken, async (req, res) => {
+      try {
+        if (!req.user.isEmployer) {
+          return res.status(403).json({ error: "Only employers can update jobs" });
+        }
+
+        const { jobId } = req.params;
+        const {
+          title,
+          companyName,
+          companyWebsite,
+          salaryRange,
+          benefits,
+          locations,
+          schedule,
+          jobDescription,
+          skills
+        } = req.body;
+
+        // Validate required fields
+        if (!title || !companyName || !jobDescription) {
+          return res.status(400).json({ error: "Title, company name, and job description are required" });
+        }
+
+        const jobsCollection = db.collection("Jobs");
+
+        // Verify job ownership
+        const job = await jobsCollection.findOne({
+          _id: ObjectId.createFromHexString(jobId),
+          employerId: ObjectId.createFromHexString(req.user.id)
+        });
+
+        if (!job) {
+          return res.status(404).json({ error: "Job not found or unauthorized" });
+        }
+
+        // Update the job
+        const result = await jobsCollection.updateOne(
+          { _id: ObjectId.createFromHexString(jobId) },
+          {
+            $set: {
+              title,
+              companyName,
+              companyWebsite,
+              salaryRange,
+              benefits: Array.isArray(benefits) ? benefits : [benefits],
+              locations: Array.isArray(locations) ? locations : [locations],
+              schedule,
+              jobDescription,
+              skills: Array.isArray(skills) ? skills : [skills],
+              updatedAt: new Date()
+            }
+          }
+        );
+
+        if (result.modifiedCount === 0) {
+          return res.status(404).json({ error: "Job not found" });
+        }
+
+        res.status(200).json({ message: "Job updated successfully" });
+      } catch (error) {
+        //console.error("Error updating job:", error);
+        res.status(500).json({ error: "Failed to update job" });
+      }
+    });
+
+    /* ------------------
+       Delete Job Posting
+    ------------------ */
+    app.delete("/employer/jobs/:jobId", verifyToken, async (req, res) => {
+      try {
+        if (!req.user.isEmployer) {
+          return res.status(403).json({ error: "Only employers can delete jobs" });
+        }
+
+        const { jobId } = req.params;
+        const jobsCollection = db.collection("Jobs");
+
+        // Verify job ownership
+        const job = await jobsCollection.findOne({
+          _id: ObjectId.createFromHexString(jobId),
+          employerId: ObjectId.createFromHexString(req.user.id)
+        });
+
+        if (!job) {
+          return res.status(404).json({ error: "Job not found or unauthorized" });
+        }
+
+        // Delete the job
+        const result = await jobsCollection.deleteOne({
+          _id: ObjectId.createFromHexString(jobId)
+        });
+
+        if (result.deletedCount === 0) {
+          return res.status(404).json({ error: "Job not found" });
+        }
+
+        res.status(200).json({ message: "Job deleted successfully" });
+      } catch (error) {
+        //console.error("Error deleting job:", error);
+        res.status(500).json({ error: "Failed to delete job" });
+      }
+    });
+
+    /* ------------------
+       Search Employer's Job Postings
+    ------------------ */
+    app.get("/employer/jobs/search", verifyToken, async (req, res) => {
+      try {
+        if (!req.user.isEmployer) {
+          return res.status(403).json({ error: "Only employers can search jobs" });
+        }
+
+        const { query } = req.query;
+        const jobsCollection = db.collection("Jobs");
+        const applicationsCollection = db.collection("applications");
+
+        // First, get all jobs matching the search criteria
+        const jobs = await jobsCollection.aggregate([
+          {
+            $match: {
+              employerId: ObjectId.createFromHexString(req.user.id),
+              $or: [
+                { title: { $regex: query, $options: "i" } },
+                { companyName: { $regex: query, $options: "i" } },
+                { jobDescription: { $regex: query, $options: "i" } },
+                { skills: { $regex: query, $options: "i" } },
+                { locations: { $regex: query, $options: "i" } }
+              ]
+            }
+          },
+          {
+            $lookup: {
+              from: "applications",
+              localField: "_id",
+              foreignField: "job_id",
+              as: "applications"
+            }
+          },
+          {
+            $project: {
+              _id: 1,
+              title: 1,
+              companyName: 1,
+              companyWebsite: 1,
+              salaryRange: 1,
+              benefits: 1,
+              locations: 1,
+              schedule: 1,
+              jobDescription: 1,
+              skills: 1,
+              createdAt: 1,
+              applicationCount: { $size: "$applications" }
+            }
+          }
+        ]).toArray();
+
+        res.status(200).json(jobs);
+      } catch (error) {
+        //console.error("Error searching jobs:", error);
+        res.status(500).json({ error: "Failed to search jobs" });
       }
     });
 
@@ -661,12 +1260,16 @@ client
      *         ROUTES DEFINITION END          *
      ******************************************/
 
-    // Start the server
-    app.listen(PORT, (err) => {
-      if (err) console.log("Error starting server:", err);
-      console.log(`Server listening on ${PORT}`);
-    });
+    // Start the server only if not in test environment
+    if (process.env.NODE_ENV !== 'test') {
+      app.listen(PORT, (err) => {
+        if (err) console.log("Error starting server:", err);
+        console.log(`Server listening on PORT ${PORT}`);
+      });
+    }
   })
   .catch((error) => {
     console.error("Error connecting to MongoDB:", error);
   });
+
+module.exports = app;

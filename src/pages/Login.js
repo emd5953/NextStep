@@ -4,8 +4,14 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { TokenContext } from "../components/TokenContext";
 import { GoogleLogin } from "@react-oauth/google";
-
+import NotificationBanner from "../components/NotificationBanner";
 const Login = () => {
+  // ======================
+  // Error state
+  // ======================
+  const [error, setError] = useState(null);
+  const [message, setMessage] = useState(null);
+
   // ======================
   // Login form state
   // ======================
@@ -37,16 +43,20 @@ const Login = () => {
   useEffect(() => {
     if (token) {
       setToken(token);
-      navigate("/profile");
+      if (employerFlag) {
+        navigate("/employer-dashboard");
+      } else {
+        navigate("/profile");
+      }
     }
-  }, [token, navigate, setToken]);
+  }, [token, navigate, setToken, employerFlag]);
 
   // ======================
   // Phone Verification
   // ======================
   const handleSendVerificationCode = async (phone, isSignup = false) => {
     try {
-      await axios.post("https://nextstep-td90.onrender.com/send-verification", {
+      await axios.post("http://localhost:4000/send-verification", {
         phoneNumber: phone,
       });
       if (isSignup) {
@@ -54,10 +64,10 @@ const Login = () => {
       } else {
         setShowVerification(true);
       }
-      alert("You will receive a phone call with your verification code!");
+      setError("You will receive a phone call with your verification code!");
     } catch (error) {
       console.error("Error initiating verification call:", error);
-      alert("Failed to initiate verification call. Please try again.");
+      setError("Failed to initiate verification call. Please try again.");
     }
   };
 
@@ -72,13 +82,21 @@ const Login = () => {
           ? { email: loginEmail, password: loginPassword }
           : { phone: loginPhone, verificationCode };
 
-      const response = await axios.post("https://nextstep-td90.onrender.com/signin", loginData);
-
+      const response = await axios.post("http://localhost:4000/signin", loginData);
       setToken(response.data.token);
       setEmployerFlag(response.data.isEmployer);
     } catch (error) {
       console.error("Login error:", error);
-      alert("Login failed. Please check the console for more details.");
+      
+      // Handle network errors
+      if (!error.response) {
+        setError("Unable to connect to the server. Please check your internet connection and try again. Also ensure that the server API is available.");
+        return;
+      }else if (error.response.data && error.response.data.message) {
+        setError(error.response.data.message);
+      }else{
+        setError("An unexpected error occurred. Please try again later. If the problem persists, contact support.");
+      }
     }
   };
 
@@ -96,15 +114,14 @@ const Login = () => {
     };
 
     try {
-      await axios.post("https://nextstep-td90.onrender.com/signup", signupData);
-      alert("Sign up successful!");
+      await axios.post("http://localhost:4000/signup", signupData);
+      setMessage("Sign up successful! Please log in.");
       navigate("/login");
     } catch (error) {
-      debugger; 
       if (error.response && error.response.status === 409) {
-        alert(error.response.data.error); // Display the error message from API
+        setError(error.response.data.error);
       } else {
-        alert('An unexpected error occurred. Please try again later.');
+        setError('An unexpected error occurred. Please try again later.');
       }
     }
   };
@@ -113,12 +130,8 @@ const Login = () => {
   // Google OAuth
   // ======================
   const handleGoogleSuccess = async (credentialResponse) => {
-    if (!credentialResponse?.credential) {
-      console.error("No credential returned from Google");
-      return alert("Google login failed. Please try again.");
-    }
     try {
-      const response = await axios.post("https://nextstep-td90.onrender.com/auth/google", {
+      const response = await axios.post("http://localhost:4000/auth/google", {
         token: credentialResponse.credential,
       });
       setToken(response.data.token);
@@ -126,13 +139,13 @@ const Login = () => {
       navigate("/profile");
     } catch (error) {
       console.error("Google login error:", error);
-      alert("Google login failed. Please try again.");
+      setError("Google login failed. Please try again.");
     }
   };
 
   const handleGoogleError = () => {
     console.error("Google login failed");
-    alert("Google login failed. Please try again.");
+    setError("Google login failed. Please try again.");
   };
 
   // ======================
@@ -140,6 +153,8 @@ const Login = () => {
   // ======================
   return (
     <div className="login-page">
+      {error && <NotificationBanner message={error} type="error" onDismiss={() => setError(null)} />}
+      {message && <NotificationBanner message={message} type="success" onDismiss={() => setMessage(null)} />}
       <div className="login-section">
         <div className="container-fluid">
           <div className="row no-gutters full-height justify-content-center">

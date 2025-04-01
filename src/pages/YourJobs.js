@@ -6,10 +6,12 @@ import moment from 'moment';
 
 import '../styles/YourJobs.css';
 import { TokenContext } from '../components/TokenContext';
+import NotificationBanner from '../components/NotificationBanner';
 
 const YourJobs = () => {
-  const { token } = useContext(TokenContext);
-
+  const { token, setToken } = useContext(TokenContext);
+  const [error, setError] = useState(null);
+  const [message, setMessage] = useState(null);
   const [ myApplications, setMyApplications ] = useState([]);
 
   const formatDate = (dateString) => {
@@ -21,7 +23,7 @@ const YourJobs = () => {
       console.log("fetching applications");
       if (token) {
         try {
-          const response = await axios.get(`https://nextstep-td90.onrender.com/applications`, {
+          const response = await axios.get(`http://localhost:4000/applications`, {
             headers: { Authorization: `Bearer ${token}` }
           });
           console.log(`${response.status} ${response.statusText}\n`);
@@ -29,13 +31,17 @@ const YourJobs = () => {
           
         } catch (error) {
           console.error('Applications error:', error);
+          if (error.response && error.response.status === 401) {
+            setToken(null); // Clear the token when we get a 401
+            setError("Your session has expired. Please sign in again.");
+          }
         }
       }
     };
 
     fetchMyApplications();
   },
-  [token]);
+  [token, setToken]);
   //const [jobs, setJobs] = useState(initialJobs);
   const [editedNote, setEditedNote] = useState("");
   const saveInitiated = useRef(false);
@@ -58,7 +64,9 @@ const YourJobs = () => {
 
   return (
     <div className="your-jobs-container">
-      <h1>Your Jobs</h1>
+      {error && <NotificationBanner message={error} type="error" onDismiss={() => setError(null)} />}
+      {message && <NotificationBanner message={message} type="success" onDismiss={() => setMessage(null)} />}
+      <h1>My Jobs</h1>
       <p>Track and update your job applications below:</p>
       <table className="jobs-table">
         <thead>
