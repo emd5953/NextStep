@@ -20,7 +20,7 @@ const BrowseJobs = () => {
     const fetchJobs = async () => {
       try {
         // Replace the URL with your actual API endpoint.
-        const response = await axios.get('http://localhost:4000/jobs?keyword=');
+        const response = await axios.get('http://localhost:https://nextstep-td90.onrender.com/jobs?keyword=');
         setJobs(response.data);
       } catch (error) {
         console.error('Error fetching jobs:', error);
@@ -34,7 +34,7 @@ const BrowseJobs = () => {
     e.preventDefault();
     // For now, just log the search query. Later, you could use this to filter the jobs or make a new API call.
     console.log('Searching for:', searchQuery);
-    const response = await axios.get('http://localhost:4000/jobs?q=' + searchQuery);
+    const response = await axios.get('http://localhost:https://nextstep-td90.onrender.com/jobs?q=' + searchQuery);
     setJobs(response.data);
   };
 
@@ -44,7 +44,7 @@ const BrowseJobs = () => {
       return;
     }
     try {
-      const response = await axios.post('http://localhost:4000/jobsTracker', { _id: jobId, swipeMode: APPLY }, {
+      const response = await axios.post('http://localhost:https://nextstep-td90.onrender.com/jobsTracker', { _id: jobId, swipeMode: APPLY }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       console.log(`${response.status} ${response.statusText}\n`);

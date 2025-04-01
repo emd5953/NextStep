@@ -30,7 +30,7 @@ const Swipe = () => {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/retrieveJobsForHomepage?q=', {
+        const response = await axios.get('http://localhost:https://nextstep-td90.onrender.com/retrieveJobsForHomepage?q=', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setJobs(response.data);
@@ -48,7 +48,7 @@ const Swipe = () => {
       return;
     }
     try {
-      await axios.post('http://localhost:4000/jobsTracker', { _id: jobId, swipeMode }, {
+      await axios.post('http://localhost:https://nextstep-td90.onrender.com/jobsTracker', { _id: jobId, swipeMode }, {
         headers: { Authorization: `Bearer ${token}` }
       });
 

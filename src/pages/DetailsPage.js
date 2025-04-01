@@ -43,7 +43,7 @@ const DetailsPage = () => {
   useEffect(() => {
     const fetchJobDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:4000/jobs/${id}`);
+        const response = await axios.get(`http://localhost:https://nextstep-td90.onrender.com/jobs/${id}`);
         setJob(response.data);
         setLoading(false);
       } catch (err) {
@@ -63,7 +63,7 @@ const DetailsPage = () => {
 
     try {
       await axios.post(
-        `http://localhost:4000/jobs/${id}/apply`,
+        `http://localhost:https://nextstep-td90.onrender.com/jobs/${id}/apply`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
