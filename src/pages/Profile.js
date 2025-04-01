@@ -30,7 +30,7 @@ const Profile = () => {
     const fetchProfile = async () => {
       if (token) {
         try {
-          const response = await axios.get(`http://localhost:https://nextstep-td90.onrender.com/profile`, {
+          const response = await axios.get(`https://nextstep-td90.onrender.com/profile`, {
             headers: { Authorization: `Bearer ${token}` }
           });
           setResume(response.data.resume);
@@ -93,7 +93,7 @@ const Profile = () => {
     }
 
     try {
-      await axios.post('http://localhost:https://nextstep-td90.onrender.com/updateprofile', formData, {
+      await axios.post('https://nextstep-td90.onrender.com/updateprofile', formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setMessage("Profile Updated");

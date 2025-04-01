@@ -23,7 +23,7 @@ const YourJobs = () => {
       console.log("fetching applications");
       if (token) {
         try {
-          const response = await axios.get(`http://localhost:https://nextstep-td90.onrender.com/applications`, {
+          const response = await axios.get(`https://nextstep-td90.onrender.com/applications`, {
             headers: { Authorization: `Bearer ${token}` }
           });
           console.log(`${response.status} ${response.statusText}\n`);

@@ -25,7 +25,7 @@ const Details = () => {
 
   const handleApplyNow = async () => {
     try {
-      await axios.post('http://localhost:https://nextstep-td90.onrender.com/jobsTracker', {
+      await axios.post('https://nextstep-td90.onrender.com/jobsTracker', {
         _id: job._id,
         swipeMode: 1 // 1 for apply
       }, {
@@ -44,7 +44,7 @@ const Details = () => {
   useEffect(() => {
     const fetchJobDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:https://nextstep-td90.onrender.com/jobs/${jobId}`);
+        const response = await axios.get(`https://nextstep-td90.onrender.com/jobs/${jobId}`);
         setJob(response.data);
       } catch (error) {
         console.error("Error fetching job details:", error);

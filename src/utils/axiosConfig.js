@@ -5,7 +5,7 @@ import axios from 'axios';
 
 // Create axios instance with default config
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:https://nextstep-td90.onrender.com',
+  baseURL: 'https://nextstep-td90.onrender.com',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json'
