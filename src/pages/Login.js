@@ -131,7 +131,7 @@ const Login = () => {
   // ======================
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
-      const response = await axios.post("https://nextstep-td90.onrender.com/auth/google/callback", {
+      const response = await axios.post("https://nextstep-td90.onrender.com/auth/google", {
         token: credentialResponse.credential,
       });
       setToken(response.data.token);
