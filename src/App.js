@@ -35,7 +35,7 @@ function App() {
     const fetchUserProfile = async () => {
       if (token) {
         try {
-          const response = await axios.get("http://localhost:4000/profile", {
+          const response = await axios.get("https://nextstep-td90.onrender.com/profile", {
             headers: { Authorization: `Bearer ${token}` },
           });
           const user = response.data;
