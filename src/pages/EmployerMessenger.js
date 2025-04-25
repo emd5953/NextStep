@@ -1,4 +1,3 @@
-// used only for applicant to employer messaging
 import React, { useState, useEffect, useContext, useCallback, useRef } from 'react';
 import { TokenContext } from '../components/TokenContext';
 import jwt_decode from 'jwt-decode';
@@ -6,12 +5,11 @@ import axiosInstance from '../utils/axiosConfig';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Messenger.css';
 
-const Messenger = () => {
+const EmployerMessenger = () => {
   const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const [contacts, setContacts] = useState([]);
-  const [newContact, setNewContact] = useState('');
-  const [employers, setEmployers] = useState([]);
+  const [applicants, setApplicants] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [selectedContact, setSelectedContact] = useState('');
   const [showNewMessagePanel, setShowNewMessagePanel] = useState(false);
@@ -20,153 +18,151 @@ const Messenger = () => {
   const currentUserId = decoded?.id;
   const isEmployer = decoded?.employerFlag || false;
   const messagesEndRef = useRef(null);
+  const timedDelay = 5000;
 
-  // Redirect if user is an employer
+  const scrollToBottom = () => {
+//console.log('scrollToBottom');
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   useEffect(() => {
-    if (isEmployer) {
-      navigate('/employer-dashboard');
+    scrollToBottom();
+  }, [messages]);
+
+  // Redirect if user is not an employer
+  useEffect(() => {
+    if (!isEmployer) {
+      navigate('/messenger');
     }
   }, [isEmployer, navigate]);
 
-  const fetchMyExchanges = useCallback(async () => {
+  const fetchEmployerMessages = useCallback(async () => {
+//console.log('fetchEmployerMessages');
     if (!token) return;
     try {
-      const response = await axiosInstance.get('/messages');
-      setMessages(response.data);
+      const response = await axiosInstance.get('/employer/messages');
+//console.log('fetchEmployerMessages response', response.data.length);
+      if (response.data.length > 0) {
+        setMessages(response.data);
+      }
+      console.log('messages', response.data);
     } catch (error) {
       console.error('Error fetching messages:', error);
     }
   }, [token]);
 
   const refreshMessages = useCallback(async () => {
-    fetchMyExchanges();
+//console.log('refreshMessages');
+    await fetchEmployerMessages();
     if (selectedContact?._id) {
       const currentContact = contacts.find(c => c._id === selectedContact._id);
       if (currentContact?.countOfUnreadMessages > 0) {
         setTimeout(() => {
           markMessagesAsRead(selectedContact._id);
-        }, 2000);
+        }, timedDelay);
       }
     }
-    scrollToBottom(); // Scroll to bottom only when there are unread messages
+  }, [fetchEmployerMessages, selectedContact, contacts]);
 
-  }, [fetchMyExchanges, selectedContact, contacts]);
-
-  const fetchEmployersFromApplications = async () => {
+  const fetchApplicantsFromJobs = async () => {
+//console.log('fetchApplicantsFromJobs');
     try {
-      const response = await axiosInstance.get('/employersFromApplications');
-      setEmployers(response.data);
+      const response = await axiosInstance.get('/employer/applicants');
+      setApplicants(response.data);
     } catch (error) {
-      console.error('Error fetching employers from applications:', error);
+      console.error('Error fetching applicants:', error);
     }
   };
 
-  const fetchEmployerContacts = async () => {
+  const fetchApplicantContacts = async () => {
+//console.log('fetchApplicantContacts');
     try {
-      const response = await axiosInstance.get('/myRecentEmployerContacts');
+      const response = await axiosInstance.get('/employer/recent-applicant-contacts');
+//console.log('fetchApplicantContacts response', response.data.length);
       setContacts(response.data);
     } catch (error) {
-      console.error('Error fetching employer contacts:', error);
+      console.error('Error fetching applicant contacts:', error);
     }
   };
 
   useEffect(() => {
-    if (!token) return;
+    if (!token) {
+      navigate("/login");
+      return;
+    }
 
-    fetchMyExchanges();
-    fetchEmployerContacts();
-    fetchEmployersFromApplications();
+    fetchEmployerMessages();
+    fetchApplicantContacts();
+    fetchApplicantsFromJobs();
 
     const interval = setInterval(() => {
-      fetchMyExchanges();
-      fetchEmployerContacts();
-    }, 2000);
+      fetchEmployerMessages();
+      fetchApplicantContacts();
+    }, timedDelay);
 
     return () => clearInterval(interval);
-  }, [token, fetchMyExchanges]);
+  }, [token, fetchEmployerMessages, navigate]);
 
-  // Separate effect for handling unread messages
   useEffect(() => {
+
     if (selectedContact?._id) {
       const currentContact = contacts.find(c => c._id === selectedContact._id);
       if (currentContact?.countOfUnreadMessages > 0) {
         setTimeout(() => {
           markMessagesAsRead(selectedContact._id);
-        }, 2000);
+        }, timedDelay);
       }
     }
   }, [selectedContact, contacts]);
 
-  const setSelectedContactForNewMessage = async (pickedEmployer) => {
-    setNewContact(pickedEmployer);
-    setSelectedContact(pickedEmployer);
-    scrollToBottom(); // Scroll to bottom only when there are unread messages
-
-  };
-
   const handleUserSelected = (user) => {
+//console.log('handleUserSelected');
     setSelectedContact(user);
-    // Mark messages as read if there are unread messages
-    if (user.countOfUnreadMessages > 0) {
-      markMessagesAsRead(user._id);
-    }
-
-    // Refresh contacts after selection
-    fetchEmployerContacts();
-    scrollToBottom(); // Scroll to bottom only when there are unread messages
-
+    markMessagesAsRead(user._id);
   };
 
   const markMessagesAsRead = async (contactId) => {
+//console.log('markMessagesAsRead');
     try {
-      await axiosInstance.put(`/messages/read/company/${contactId}`);
+      const response = await axiosInstance.put(`/employer/messages/read/${contactId}`);
+      setMessages(response.data.messages);
+//console.log('markMessagesAsRead response', response.data.messages.length);
     } catch (error) {
       console.error('Error marking messages as read:', error);
     }
   };
 
   const sendMessage = async (e) => {
+//console.log('sendMessage');
     e.preventDefault();
     if (!selectedContact?._id || !newMessage || !token) return;
 
     try {
-      // Sending to a company
-      await axiosInstance.post('/messages/company', {
-        companyId: selectedContact._id,
+      await axiosInstance.post('/employer/messages', {
+        applicantId: selectedContact._id,
         content: newMessage?.trim()
       });
 
       setNewMessage('');
-      setNewContact('');
-      refreshMessages(); // Refresh messages after sending
+      //refreshMessages();
+      markMessagesAsRead(selectedContact._id);
     } catch (error) {
       console.error('Error sending message:', error);
     }
   };
 
-  // Find the selected company's name from the most recent message
-  let selectedCompanyName = messages.find(msg =>
-    (msg.companyId === selectedContact._id && msg.senderId === currentUserId) ||
-    (msg.companyId === selectedContact._id && msg.receiverId === currentUserId)
-  )?.companyName || '';
+  let selectedApplicantName = messages.find(msg =>
+    (msg.applicantId === selectedContact._id && msg.senderId === currentUserId) ||
+    (msg.applicantId === selectedContact._id && msg.receiverId === currentUserId)
+  )?.applicantName || '';
 
-  if (!selectedCompanyName && newContact) {
-    selectedCompanyName = newContact.companyName || newContact.companyDetails?.name || '';
-  }
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  if (!token) {
-    navigate('/login');
-  }
+  //console.log("Recomputation triggered");
 
   return (
     <div className="messenger-container">
       <div className="messenger-sidebar">
         <div className="sidebar-header">
-          <h2>Employer Contacts</h2>
+          <h2>Applicant Contacts</h2>
           <button
             className="new-message-btn"
             onClick={() => setShowNewMessagePanel(true)}
@@ -175,7 +171,6 @@ const Messenger = () => {
           </button>
         </div>
 
-        {/* Contacts list */}
         <div className="users-list">
           {contacts.map(contact => (
             <div
@@ -183,25 +178,34 @@ const Messenger = () => {
               className={`user-item ${selectedContact?._id === contact._id ? 'selected' : ''}`}
               onClick={() => handleUserSelected(contact)}
             >
-              <div className="user-item-name">
+              <div className="user-item-header">
                 <div className="contact-name">
-                  {contact.companyName}
+                  {contact.name}
                   {contact.countOfUnreadMessages > 0 && (
                     <span className="unread-badge">{contact.countOfUnreadMessages}</span>
                   )}
                 </div>
+                {contact.lastMessageTimestamp && (
+                  <div className="contact-timestamp" style={{ fontSize: '0.8em', color: '#666' }}>
+                    {new Date(contact.lastMessageTimestamp).toLocaleString('en-US', {
+                      month: 'short',
+                      day: '2-digit'
+                    })}
+                  </div>
+                )}
               </div>
+              <div className="contact-email">{contact.email}</div>
+              <div className="contact-phone">{contact.phone}</div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* New message panel */}
       {showNewMessagePanel && (
         <div className="new-message-panel">
           <div className="new-message-content">
             <div className="new-message-header">
-              <h3>Select a Company</h3>
+              <h3>Select an Applicant</h3>
               <button
                 className="close-btn"
                 onClick={() => setShowNewMessagePanel(false)}
@@ -210,40 +214,35 @@ const Messenger = () => {
               </button>
             </div>
             <div className="all-users-list">
-              {employers && employers.length > 0 ? (
-                employers.map(employer => (
+              {applicants && applicants.length > 0 ? (
+                applicants.map(applicant => (
                   <div
-                    key={employer._id}
+                    key={applicant._id}
                     className="user-item"
                     onClick={() => {
-                      setSelectedContactForNewMessage(employer);
+                      setSelectedContact(applicant);
                       setShowNewMessagePanel(false);
                     }}
                   >
-                    <div className="user-item-name">{employer.companyDetails.name}</div>
+                    <div className="user-item-name">{applicant.name}</div>
                   </div>
                 ))
               ) : (
-                <div className="no-results">No companies found</div>
+                <div className="no-results">No applicants found</div>
               )}
             </div>
           </div>
         </div>
       )}
 
-      {/* Messages Panel */}
       <div className="messenger-main">
-        {selectedContact?._id || newContact ? (
+        {selectedContact?._id ? (
           <>
             <div className="messenger-header">
-              <h3>{newContact ? newContact.companyName : selectedCompanyName}</h3>
+              <h3>{selectedApplicantName}</h3>
             </div>
             <div className="messages-container">
               {messages
-                .filter(msg =>
-                  (msg.companyId === selectedContact._id && msg.senderId === currentUserId) ||
-                  (msg.companyId === selectedContact._id && msg.receiverId === currentUserId)
-                )
                 .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
                 .map(message => (
                   <div
@@ -252,7 +251,7 @@ const Messenger = () => {
                   >
                     <div className="message-content">{message.content}</div>
                     <div className="message-time">
-                      {new Date(message.createdAt).toLocaleTimeString()}
+                      {new Date(message.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                     </div>
                   </div>
                 ))}
@@ -266,18 +265,14 @@ const Messenger = () => {
                 placeholder="Type a message..."
                 className="message-input"
               />
-              <button
-                type="submit"
-                className="send-button"
-                disabled={!newMessage?.trim()}
-              >
+              <button type="submit" className="send-button">
                 Send
               </button>
             </form>
           </>
         ) : (
-          <div className="no-chat-selected">
-            <p>Select a company to start messaging</p>
+          <div className="no-conversation-selected">
+            <p>Select a conversation or start a new one</p>
           </div>
         )}
       </div>
@@ -285,4 +280,4 @@ const Messenger = () => {
   );
 };
 
-export default Messenger; 
+export default EmployerMessenger; 

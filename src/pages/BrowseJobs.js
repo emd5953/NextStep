@@ -5,22 +5,29 @@ import JobCard from '../components/JobCard';
 import '../styles/BrowseJobs.css';
 import { TokenContext } from '../components/TokenContext';
 import NotificationBanner from '../components/NotificationBanner';
+import { API_SERVER } from '../config';
 
 // Define swipe mode constants
 const APPLY = 1;
 
 const BrowseJobs = () => {
   const [jobs, setJobs] = useState([]);
+  const [searchInput, setSearchInput] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
-  const { token } = useContext(TokenContext);
+  const [isSearching, setIsSearching] = useState(false);
+  const { token, name, email } = useContext(TokenContext);
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
 
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        // Replace the URL with your actual API endpoint.
-        const response = await axios.get('https://nextstep-td90.onrender.com/jobs?keyword=');
+        // Initial fetch without search query
+        const response = await axios.get(`${API_SERVER}/jobs`, 
+          token ? {
+            headers: { Authorization: `Bearer ${token}` }
+          } : undefined
+        );
         setJobs(response.data);
       } catch (error) {
         console.error('Error fetching jobs:', error);
@@ -28,14 +35,25 @@ const BrowseJobs = () => {
     };
 
     fetchJobs();
-  }, []);
+  }, [token]);
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    // For now, just log the search query. Later, you could use this to filter the jobs or make a new API call.
-    console.log('Searching for:', searchQuery);
-    const response = await axios.get('https://nextstep-td90.onrender.com/jobs?q=' + searchQuery);
-    setJobs(response.data);
+    setIsSearching(true);
+    setSearchQuery(searchInput); // Update the actual search query when button is clicked
+    try {
+      const response = await axios.get(`${API_SERVER}/jobs?q=` + searchInput, 
+        token ? {
+          headers: { Authorization: `Bearer ${token}` }
+        } : undefined
+      );
+      setJobs(response.data);
+    } catch (error) {
+      console.error('Error searching jobs:', error);
+      setError('Failed to search jobs. Please try again.');
+    } finally {
+      setIsSearching(false);
+    }
   };
 
   const handleApply = async (jobId) => {
@@ -44,11 +62,22 @@ const BrowseJobs = () => {
       return;
     }
     try {
-      const response = await axios.post('https://nextstep-td90.onrender.com/jobsTracker', { _id: jobId, swipeMode: APPLY }, {
+      await axios.post(`${API_SERVER}/jobsTracker`, { 
+        _id:jobId, 
+        email,
+        name,
+        swipeMode: APPLY 
+      }, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      console.log(`${response.status} ${response.statusText}\n`);
       setMessage("Applied successfully!");
+      // Refresh the jobs list after successful application
+      const response = await axios.get(`${API_SERVER}/jobs?q=` + searchQuery, 
+        token ? {
+          headers: { Authorization: `Bearer ${token}` }
+        } : undefined
+      );
+      setJobs(response.data);
     } catch (error) {
       if (error.response && error.response.status === 409) {
         console.log(error.response.data.error + jobId);
@@ -63,21 +92,31 @@ const BrowseJobs = () => {
     <div className="browse-jobs-container">
       {error && <NotificationBanner message={error} type="error" onDismiss={() => setError(null)} />}
       {message && <NotificationBanner message={message} type="success" onDismiss={() => setMessage(null)} />}
+      {isSearching && <div className="search-overlay" />}
       <h1>Browse Jobs</h1>
 
       {/* Search Bar */}
       <form className="job-search-form" onSubmit={handleSearch}>
         <input
           type="text"
-          placeholder="Search for jobs..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Tell me in your own words... e.g. 'Any high paying job'"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
           className="job-search-input"
         />
-        <button type="submit" className="job-search-button">
-          Search
+        <button type="submit" className="job-search-button" disabled={isSearching}>
+          {isSearching ? 'Wait...' : 'Search'}
         </button>
       </form>
+
+      {/* Job Count */}
+      <div className="job-count-label">
+        {jobs.length > 0 ? (
+          <p>Found {jobs.length} {jobs.length === 1 ? 'job' : 'jobs'}</p>
+        ) : (
+          <p>No jobs found</p>
+        )}
+      </div>
 
       {/* Job Listings */}
       <div className="jobs-list">

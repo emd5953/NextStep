@@ -1,12 +1,13 @@
 import axios from 'axios';
+import { API_SERVER } from '../config';
 
 // Use this component to make requests to the server
 // it will handle token expiration and redirect to login page
 
 // Create axios instance with default config
 const axiosInstance = axios.create({
-  baseURL: 'https://nextstep-td90.onrender.com',
-  timeout: 10000,
+  baseURL: API_SERVER,
+  timeout: 20000,
   headers: {
     'Content-Type': 'application/json'
   }
@@ -20,6 +21,13 @@ axiosInstance.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    
+    // Add companyId to headers if it exists in localStorage
+    const companyId = localStorage.getItem('companyId');
+    if (companyId) {
+      config.headers['X-Company-ID'] = companyId;
+    }
+    
     return config;
   },
   (error) => {

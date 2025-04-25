@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { TokenContext } from "../components/TokenContext";
 import { GoogleLogin } from "@react-oauth/google";
 import NotificationBanner from "../components/NotificationBanner";
+import { API_SERVER } from '../config';
+
 const Login = () => {
   // ======================
   // Error state
@@ -29,14 +31,13 @@ const Login = () => {
   const [signupPhone, setSignupPhone] = useState("");
   const [signupEmail, setSignupEmail] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
-  const [signupVerificationCode, setSignupVerificationCode] = useState("");
-  const [showSignupVerification, setShowSignupVerification] = useState(false);
+  const [setShowSignupVerification] = useState(false);
 
   // ======================
   // Context & Navigation
   // ======================
   const navigate = useNavigate();
-  const { token, setToken, employerFlag, setEmployerFlag } =
+  const { token, setToken, employerFlag, setEmployerFlag, setEmail, setName, setCompanyId } =
     useContext(TokenContext);
 
   // If a token already exists, redirect to profile
@@ -56,7 +57,7 @@ const Login = () => {
   // ======================
   const handleSendVerificationCode = async (phone, isSignup = false) => {
     try {
-      await axios.post("https://nextstep-td90.onrender.com/send-verification", {
+      await axios.post(`${API_SERVER}/send-verification`, {
         phoneNumber: phone,
       });
       if (isSignup) {
@@ -76,27 +77,25 @@ const Login = () => {
   // ======================
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
+    setError("");
     try {
       const loginData =
         loginMethod === "email"
           ? { email: loginEmail, password: loginPassword }
           : { phone: loginPhone, verificationCode };
 
-      const response = await axios.post("https://nextstep-td90.onrender.com/signin", loginData);
+      const response = await axios.post(`${API_SERVER}/signin`, loginData);
       setToken(response.data.token);
-      setEmployerFlag(response.data.isEmployer);
-    } catch (error) {
-      console.error("Login error:", error);
-      
-      // Handle network errors
-      if (!error.response) {
-        setError("Unable to connect to the server. Please check your internet connection and try again. Also ensure that the server API is available.");
-        return;
-      }else if (error.response.data && error.response.data.message) {
-        setError(error.response.data.message);
-      }else{
-        setError("An unexpected error occurred. Please try again later. If the problem persists, contact support.");
+      setEmployerFlag(response.data.employerFlag);
+      setName(response.data.full_name);
+      setEmail(response.data.email);
+
+      if (response.data.companyId) {
+        setCompanyId(response.data.companyId);
       }
+      navigate("/");
+    } catch (err) {
+      setError(err.response?.data?.message || "An error occurred during login");
     }
   };
 
@@ -114,8 +113,8 @@ const Login = () => {
     };
 
     try {
-      await axios.post("https://nextstep-td90.onrender.com/signup", signupData);
-      setMessage("Sign up successful! Please log in.");
+      await axios.post(`${API_SERVER}/signup`, signupData);
+      setMessage("Account created. Please check your email for verification instructions.");
       navigate("/login");
     } catch (error) {
       if (error.response && error.response.status === 409) {
@@ -129,17 +128,21 @@ const Login = () => {
   // ======================
   // Google OAuth
   // ======================
-  const handleGoogleSuccess = async (credentialResponse) => {
+  const handleGoogleSuccess = async (response) => {
     try {
-      const response = await axios.post("https://nextstep-td90.onrender.com/auth/google", {
-        token: credentialResponse.credential,
+      const res = await axios.post(`${API_SERVER}/auth/google`, {
+        token: response.credential,
       });
-      setToken(response.data.token);
-      setEmployerFlag(response.data.isEmployer);
-      navigate("/profile");
-    } catch (error) {
-      console.error("Google login error:", error);
-      setError("Google login failed. Please try again.");
+      setToken(res.data.token);
+      setEmployerFlag(res.data.employerFlag);
+      setName(res.data.full_name);
+      setEmail(res.data.email);
+      if (res.data.companyId) {
+        setCompanyId(res.data.companyId);
+      }
+      navigate("/");
+    } catch (err) {
+      setError(err.response?.data?.message || "An error occurred during Google login");
     }
   };
 
@@ -350,7 +353,7 @@ const Login = () => {
                             </div>
 
                             {/* Verification Call Button / Input */}
-                            {!showSignupVerification ? (
+                            {/* {!showSignupVerification ? (
                               <button
                                 type="button"
                                 className="login-btn mt-2"
@@ -374,7 +377,7 @@ const Login = () => {
                                 />
                                 <i className="login-form-icon uil uil-key-skeleton"></i>
                               </div>
-                            )}
+                            )} */}
 
                             <div className="login-form-group mt-2">
                               <input

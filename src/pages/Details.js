@@ -6,6 +6,7 @@ import axios from "axios";
 import "../styles/Details.css";
 import NotificationBanner from "../components/NotificationBanner";
 import { TokenContext } from '../components/TokenContext';
+import { API_SERVER } from '../config';
 
 const Details = () => {
   const { jobId, returnTo } = useParams();
@@ -13,7 +14,7 @@ const Details = () => {
   const [job, setJob] = useState(null);
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
-  const { token } = useContext(TokenContext);
+  const { token, email, name, employerFlag } = useContext(TokenContext);
 
   const handleBackToJobs = async () => {
     if (returnTo === "jobs") {
@@ -25,8 +26,10 @@ const Details = () => {
 
   const handleApplyNow = async () => {
     try {
-      await axios.post('https://nextstep-td90.onrender.com/jobsTracker', {
+      await axios.post(`${API_SERVER}/jobsTracker`, {
         _id: job._id,
+        name,
+        email,
         swipeMode: 1 // 1 for apply
       }, {
         headers: {
@@ -44,7 +47,7 @@ const Details = () => {
   useEffect(() => {
     const fetchJobDetails = async () => {
       try {
-        const response = await axios.get(`https://nextstep-td90.onrender.com/jobs/${jobId}`);
+        const response = await axios.get(`${API_SERVER}/jobs/${jobId}`);
         setJob(response.data);
       } catch (error) {
         console.error("Error fetching job details:", error);
@@ -79,7 +82,7 @@ const Details = () => {
             <a href={job.companyWebsite} target="_blank" rel="noopener noreferrer">
               {job.companyName}
             </a>
-            <span className="job-location">{job.locations.join(", ")}</span>
+            <span className="job-location2">{job.locations.join(", ")}</span>
           </div>
         </div>
 
@@ -113,9 +116,11 @@ const Details = () => {
           <button onClick={handleBackToJobs} className="back-button">
             Back to Jobs
           </button>
-          <button onClick={handleApplyNow} className="apply-button">
-            Apply Now
-          </button>
+          {!employerFlag && (
+            <button onClick={handleApplyNow} className="apply-button">
+              Apply Now
+            </button>
+          )}
         </div>
       </div>
     </div>

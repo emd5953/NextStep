@@ -4,9 +4,11 @@ import React, { createContext, useState, useEffect } from "react";
 export const TokenContext = createContext();
 
 export const TokenProvider = ({ children }) => {
-  console.log("Token init!!");
   const [token, setToken] = useState(() => localStorage.getItem("token"));
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [employerFlag, setEmployerFlag] = useState(() => localStorage.getItem("employerFlag") === "true");
+  const [companyId, setCompanyId] = useState(() => localStorage.getItem("companyId"));
   const [profileUpdateTrigger, setProfileUpdateTrigger] = useState(0);
 
   useEffect(() => {
@@ -19,7 +21,14 @@ export const TokenProvider = ({ children }) => {
 
   useEffect(() => {
     localStorage.setItem("employerFlag", employerFlag);
-  }, [employerFlag]);
+    localStorage.setItem("email", email);
+    localStorage.setItem("name", name);
+    if (companyId) {
+      localStorage.setItem("companyId", companyId);
+    } else {
+      localStorage.removeItem("companyId");
+    }
+  }, [employerFlag, name, email, companyId]);
 
   const triggerProfileUpdate = () => {
     setProfileUpdateTrigger(prev => prev + 1);
@@ -32,6 +41,12 @@ export const TokenProvider = ({ children }) => {
         setToken, 
         employerFlag, 
         setEmployerFlag,
+        name,
+        email,
+        setName,
+        setEmail,
+        companyId,
+        setCompanyId,
         profileUpdateTrigger,
         triggerProfileUpdate 
       }}

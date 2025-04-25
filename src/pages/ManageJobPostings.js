@@ -15,15 +15,19 @@ const ManageJobPostings = () => {
   // Form state
   const [formData, setFormData] = useState({
     title: '',
-    companyName: '',
-    companyWebsite: '',
     salaryRange: '',
     benefits: [],
     locations: [],
     schedule: '',
     jobDescription: '',
-    skills: []
+    skills: [],
+    companyId: ''
   });
+
+  // Add temporary state for array fields
+  const [tempBenefits, setTempBenefits] = useState('');
+  const [tempLocations, setTempLocations] = useState('');
+  const [tempSkills, setTempSkills] = useState('');
 
   const fetchJobs = useCallback(async () => {
     try {
@@ -60,49 +64,83 @@ const ManageJobPostings = () => {
 
   const handleCreateJob = async (e) => {
     e.preventDefault();
+    
+    // Convert string inputs to arrays
+    const jobData = {
+      ...formData,
+      benefits: tempBenefits.split(',').map(b => b.trim()).filter(b => b),
+      locations: tempLocations.split(',').map(l => l.trim()).filter(l => l),
+      skills: tempSkills.split(',').map(s => s.trim()).filter(s => s)
+    };
+    
     try {
-      await axiosInstance.post('/jobs', formData);
+      await axiosInstance.post('/jobs', jobData);
       setMessage('Job created successfully');
       setShowCreateForm(false);
       setFormData({
         title: '',
-        companyName: '',
-        companyWebsite: '',
         salaryRange: '',
         benefits: [],
         locations: [],
         schedule: '',
         jobDescription: '',
-        skills: []
+        skills: [],
+        companyId: ''
       });
+      // Reset temporary fields
+      setTempBenefits('');
+      setTempLocations('');
+      setTempSkills('');
       fetchJobs();
     } catch (error) {
       console.error('Error creating job:', error);
-      setError('Failed to create job. Please try again.');
+      // Display the specific error message from the server if available
+      if (error.response && error.response.data && error.response.data.error) {
+        setError(error.response.data.error);
+      } else {
+        setError('Failed to create job. Please try again.');
+      }
     }
   };
 
   const handleUpdateJob = async (e) => {
     e.preventDefault();
+    
+    // Convert string inputs to arrays
+    const jobData = {
+      ...formData,
+      benefits: tempBenefits.split(',').map(b => b.trim()).filter(b => b),
+      locations: tempLocations.split(',').map(l => l.trim()).filter(l => l),
+      skills: tempSkills.split(',').map(s => s.trim()).filter(s => s)
+    };
+        
     try {
-      await axiosInstance.put(`/employer/jobs/${editingJob._id}`, formData);
+      await axiosInstance.put(`/employer/jobs/${editingJob._id}`, jobData);
       setMessage('Job updated successfully');
       setEditingJob(null);
       setFormData({
         title: '',
-        companyName: '',
-        companyWebsite: '',
         salaryRange: '',
         benefits: [],
         locations: [],
         schedule: '',
         jobDescription: '',
-        skills: []
+        skills: [],
+        companyId: ''
       });
+      // Reset temporary fields
+      setTempBenefits('');
+      setTempLocations('');
+      setTempSkills('');
       fetchJobs();
     } catch (error) {
       console.error('Error updating job:', error);
-      setError('Failed to update job. Please try again.');
+      // Display the specific error message from the server if available
+      if (error.response && error.response.data && error.response.data.error) {
+        setError(error.response.data.error);
+      } else {
+        setError('Failed to update job. Please try again.');
+      }
     }
   };
 
@@ -123,15 +161,18 @@ const ManageJobPostings = () => {
     setEditingJob(job);
     setFormData({
       title: job.title,
-      companyName: job.companyName,
-      companyWebsite: job.companyWebsite,
       salaryRange: job.salaryRange,
       benefits: job.benefits,
       locations: job.locations,
       schedule: job.schedule,
       jobDescription: job.jobDescription,
-      skills: job.skills
+      skills: job.skills,
+      companyId: job.companyId
     });
+    // Set temporary fields for editing
+    setTempBenefits(job.benefits.join(', '));
+    setTempLocations(job.locations.join(', '));
+    setTempSkills(job.skills.join(', '));
   };
 
   const handleInputChange = (e) => {
@@ -142,12 +183,22 @@ const ManageJobPostings = () => {
     }));
   };
 
-  const handleArrayInputChange = (e, field) => {
-    const { value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [field]: value.split(',').map(item => item.trim())
-    }));
+  // Add handlers for array field changes
+  const handleArrayFieldChange = (e) => {
+    const { name, value } = e.target;
+    switch (name) {
+      case 'benefits':
+        setTempBenefits(value);
+        break;
+      case 'locations':
+        setTempLocations(value);
+        break;
+      case 'skills':
+        setTempSkills(value);
+        break;
+      default:
+        break;
+    }
   };
 
   if (loading) {
@@ -195,29 +246,7 @@ const ManageJobPostings = () => {
                   required
                 />
               </div>
-              
-              <div className="form-group">
-                <label>Company Name</label>
-                <input
-                  type="text"
-                  name="companyName"
-                  value={formData.companyName}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              
-              <div className="form-group">
-                <label>Company Website</label>
-                <input
-                  type="url"
-                  name="companyWebsite"
-                  value={formData.companyWebsite}
-                  onChange={handleInputChange}
-                  required
-                />
-              </div>
-              
+                            
               <div className="form-group">
                 <label>Salary Range</label>
                 <input
@@ -233,8 +262,9 @@ const ManageJobPostings = () => {
                 <label>Benefits (comma-separated)</label>
                 <input
                   type="text"
-                  value={formData.benefits.join(', ')}
-                  onChange={(e) => handleArrayInputChange(e, 'benefits')}
+                  name="benefits"
+                  value={tempBenefits}
+                  onChange={handleArrayFieldChange}
                   required
                 />
               </div>
@@ -243,8 +273,9 @@ const ManageJobPostings = () => {
                 <label>Locations (comma-separated)</label>
                 <input
                   type="text"
-                  value={formData.locations.join(', ')}
-                  onChange={(e) => handleArrayInputChange(e, 'locations')}
+                  name="locations"
+                  value={tempLocations}
+                  onChange={handleArrayFieldChange}
                   required
                 />
               </div>
@@ -274,8 +305,9 @@ const ManageJobPostings = () => {
                 <label>Skills (comma-separated)</label>
                 <input
                   type="text"
-                  value={formData.skills.join(', ')}
-                  onChange={(e) => handleArrayInputChange(e, 'skills')}
+                  name="skills"
+                  value={tempSkills}
+                  onChange={handleArrayFieldChange}
                   required
                 />
               </div>
@@ -291,14 +323,13 @@ const ManageJobPostings = () => {
                     setEditingJob(null);
                     setFormData({
                       title: '',
-                      companyName: '',
-                      companyWebsite: '',
                       salaryRange: '',
                       benefits: [],
                       locations: [],
                       schedule: '',
                       jobDescription: '',
-                      skills: []
+                      skills: [],
+                      companyId: ''
                     });
                   }}
                 >

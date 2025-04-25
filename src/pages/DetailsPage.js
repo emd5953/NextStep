@@ -31,6 +31,7 @@ import {
   TrendingUp,
   School,
 } from "@mui/icons-material";
+import { API_SERVER } from '../config';
 
 const DetailsPage = () => {
   const { id } = useParams();
@@ -43,7 +44,7 @@ const DetailsPage = () => {
   useEffect(() => {
     const fetchJobDetails = async () => {
       try {
-        const response = await axios.get(`https://nextstep-td90.onrender.com/jobs/${id}`);
+        const response = await axios.get(`${API_SERVER}/jobs/${id}`);
         setJob(response.data);
         setLoading(false);
       } catch (err) {
@@ -63,7 +64,7 @@ const DetailsPage = () => {
 
     try {
       await axios.post(
-        `https://nextstep-td90.onrender.com/jobs/${id}/apply`,
+        `${API_SERVER}/jobs/${id}/apply`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
