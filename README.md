@@ -1,6 +1,6 @@
 # NextStep - A Swipe-Based Job Matching App
 
-<img src="src/assets//NextStep_Logo.png">
+<img src="src/assets/NextStep_Logo.png">
 
 NextStep is a **web and mobile job-matching platform** designed to simplify the job search process using a **swipe-based** interface. It leverages **AI-driven recommendations** and **real-time tracking** to connect job seekers with employers efficiently.
 
@@ -43,10 +43,12 @@ NextStep is a **web and mobile job-matching platform** designed to simplify the 
 - **Node.js** – Server-side runtime
 - **Express.js** – Middleware
 - **MongoDB Atlas** – Cloud-based NoSQL database
-- **Mongoose** – ODM for MongoDB schema validation
+- **MongoDB Client** – MongoDB SDK
 - **JWT (JSON Web Tokens)** – Authentication system
 - **Firebase Cloud Messaging (FCM)** – Push notifications
 - **AWS/GCP** – Cloud hosting (for scalability)
+- **Jest** - Unit testing
+- **JSDoc** - Code documentation
 
 
 #### **DevOps & Deployment**
@@ -56,43 +58,54 @@ NextStep is a **web and mobile job-matching platform** designed to simplify the 
 
 ### **Installation** 
 ```bash
-# 1️⃣ Clone the Repository
+# 1 Clone the Repository
 git clone https://github.com/drewstake/nextstep.git
 cd nextstep
 
-# 2️⃣ Install Backend Dependencies
-cd backend
+# 2 Install Backend Dependencies
+cd server
 npm install
 
-# 3️⃣ Install Frontend Dependencies
+# 3 Run server unit tests (you must be in server folder)
+cd server
+npm test
+# Run unit tests with code coverage report (you must be in server folder)
+npm run test:coverage 
+
+# 4 Install Frontend Dependencies
 cd ../src
 npm install
+
+# 5 Regenerate jsdocs (currently available only for server-side API code but must be run from the NextStep root folder where the README.md file is located)
+# Notice: JSdoc is a global install. Hence, must be installed separately.
+npm install -g jsdoc
+jsdoc -c jsdoc.json
 ```
 ### **Configuration**
 Before running the app, configure the environment variables.
 
 #### Frontend .env File
 ```bash
-REACT_APP_BACKEND_URL=http://localhost:5500
+REACT_APP_BACKEND_URL=http://localhost:4000
 ```
 
 #### Backend .env File
 ```bash
 MONGO_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/nextstep
-PORT=5500
+PORT=4000
 JWT_SECRET=your_jwt_secret
 FIREBASE_SERVER_KEY=your_firebase_server_key
 ```
 
 ### **Running The Application**
 ```bash
-# 1️⃣ Start Backend
+# 1 Start Backend
 cd backend
 npm start
 
-Server will run on http://localhost:5500
+Server will run on http://localhost:4000
 
-#2️⃣ Start Frontend
+# 2 Start Frontend
 cd src
 npm start
 
@@ -121,7 +134,7 @@ We welcome contributions! Follow these steps:
 ### **License**
 This project is licensed under the MIT License.
 
-### 📢 **Future Enhancements**
+### **Future Enhancements**
 - Real-Time Chat for Employers & Candidates
 - AI-Powered Resume Screening
 - Interview Scheduling with Google Calendar
